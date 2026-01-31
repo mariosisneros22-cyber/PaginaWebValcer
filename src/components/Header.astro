@@ -1,0 +1,85 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<header>
+  <nav>
+    <div class="logo">
+      <a href="/">Valcer</a>
+    </div>
+    
+    <ul class="nav-links">
+      <li>
+        <a href="/" class={currentPath === '/' ? 'active' : ''}>
+          Inicio
+        </a>
+      </li>
+      <li>
+        <a href="/proyectos" class={currentPath === '/proyectos' ? 'active' : ''}>
+          Proyectos
+        </a>
+      </li>
+      <li>
+        <a href="/servicios" class={currentPath === '/servicios' ? 'active' : ''}>
+          Servicios
+        </a>
+      </li>
+      <li>
+        <a href="/nosotros" class={currentPath === '/nosotros' ? 'active' : ''}>
+          Nosotros
+        </a>
+      </li>
+      <li>
+        <a href="/contacto" class={currentPath === '/contacto' ? 'active' : ''}>
+          Contacto
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #666;
+  }
+
+  .nav-links a.active {
+    color: #0066cc;
+    font-weight: 600;
+  }
+</style>

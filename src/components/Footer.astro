@@ -1,0 +1,71 @@
+---
+// src/components/Footer.astro
+---
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Valcer</h3>
+      <p>Tu empresa de confianza</p>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Enlaces</h4>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/productos">Productos</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Contacto</h4>
+      <p>Email: info@valcer.com</p>
+      <p>Tel: +51 123 456 789</p>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2026 Valcer. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: #333;
+    color: white;
+    padding: 2rem 0 1rem;
+    margin-top: 4rem;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .footer-section h3,
+  .footer-section h4 {
+    margin-bottom: 1rem;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-section a {
+    color: #ccc;
+    text-decoration: none;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #555;
+  }
+</style>
