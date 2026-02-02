@@ -1,0 +1,47 @@
+:root {
+  /* Colores */
+  --color-primary: #1139ebe3;
+  --color-primary-dark: #1433e0be;
+  --color-secondary: #4c3aec;
+  --color-text: #333;
+  --color-text-light: #666;
+  --color-text-lighter: #999;
+  --color-background: #ffffff;
+  --color-background-light: #f8f9fa;
+  --color-border: #e0e0e0;
+  
+  /* Espaciados responsive */
+  --spacing-xs: clamp(0.5rem, 2vw, 1rem);
+  --spacing-sm: clamp(1rem, 3vw, 1.5rem);
+  --spacing-md: clamp(2rem, 5vw, 3rem);
+  --spacing-lg: clamp(3rem, 7vw, 5rem);
+  --spacing-xl: clamp(4rem, 10vw, 8rem);
+  
+  /* ✏️ TIPOGRAFÍA - AQUÍ CAMBIAS LOS TAMAÑOS */
+  --text-xs: clamp(0.7rem, 1.5vw, 0.8rem);      /* Más pequeño */
+  --text-sm: clamp(0.8rem, 2vw, 0.9rem);        /* Pequeño */
+  --text-base: clamp(0.9rem, 2.5vw, 1rem);      /* Base - reducido */
+  --text-lg: clamp(1rem, 3vw, 1.2rem);          /* Grande */
+  --text-xl: clamp(1.2rem, 4vw, 1.5rem);        /* Extra grande */
+  --text-2xl: clamp(1.5rem, 5vw, 2.5rem);       /* 2XL */
+  --text-3xl: clamp(2rem, 6vw, 3.5rem);         /* 3XL */
+  
+  /* 🎨 FUENTE - AQUÍ CAMBIAS EL TIPO DE LETRA */
+  --font-primary: 'Inter', 'Roboto', system-ui, -apple-system, sans-serif;
+  --font-secondary: 'Poppins', 'Montserrat', sans-serif;
+  --font-mono: 'Fira Code', 'Consolas', monospace;
+  
+  /* Anchos */
+  --container-width: 1200px;
+  --header-height: 70px;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+  
+  /* Transiciones */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}

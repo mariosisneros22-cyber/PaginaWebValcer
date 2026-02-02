@@ -1,15 +1,197 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+// Importa las imágenes
+import img1 from '../assets/hero/hero_1.jpg';
+import img2 from '../assets/hero/hero_2.jpg';
+import img3 from '../assets/hero/hero_3.jpg';
+// Agrega más importaciones aquí según necesites
+
+const heroImages = [img1, img2, img3];
 ---
 
 <Layout title="Valcer - Inicio">
-  <section>
-    <h1>Bienvenido a Valcer</h1>
-    <p>Contenido de la página de inicio</p>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-slider">
+      {heroImages.map((image, index) => (
+        <div class={`slide ${index === 0 ? 'active' : ''}`}>
+          <Image 
+            src={image} 
+            alt={`Slide ${index + 1}`} 
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+        </div>
+      ))}
+      
+      <div class="hero-content">
+        <h1>Bienvenido a Valcer</h1>
+        <p>Tu empresa de confianza</p>
+      </div>
+      
+      <button class="slide-btn prev" id="prevBtn">‹</button>
+      <button class="slide-btn next" id="nextBtn">›</button>
+    </div>
   </section>
   
-  <section>
-    <h2>Nuestros servicios</h2>
-    <p>Descripción de servicios...</p>
-  </section>    
+  <!-- Presentacion corta -->
+  <section class="section">
+    <div class="container">
+      <div class="presentacion">
+        <h2>Sobre Valcer</h2>
+        <!--cambiar el texto -->
+        <p> 
+        VALCER es una empresa especializada en servicios industriales y construcción, 
+        con amplia experiencia en el sector. Nos comprometemos a entregar soluciones 
+        de calidad que cumplen con los más altos estándares de seguridad y eficiencia.
+        </p>
+        <a href="/nosotros" class="btn btn-primary">Más información</a>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 93vh;
+    overflow: hidden;
+  }
+
+  .hero-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-content {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    color: white;
+    text-align: left;
+    z-index: 10;
+  }
+
+  .hero-content h1 {
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .hero-content p {
+    color: white;
+    font-size: var(--text-xl);
+  }
+
+  .slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    font-size: 3rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .slide-btn.prev {
+    left: 20px;
+  }
+
+  .slide-btn.next {
+    right: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      height: 60vh;
+    }
+    
+    .hero-content {
+      left: 5%;
+    }
+    
+    .slide-btn {
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  /* presentacion */
+  .presentacion{
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .presentacion h2 {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .presentacion p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+  }
+</style>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  //cambios por NodeJs.Timeout
+  let autoSlide: ReturnType<typeof setTimeout>;
+
+  function showSlide(index: number) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    showSlide(currentSlide);
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    showSlide(currentSlide);
+  }
+
+  function startAutoSlide() {
+    autoSlide = setInterval(nextSlide, 5000);
+  }
+
+  document.getElementById('nextBtn')?.addEventListener('click', () => {
+    clearInterval(autoSlide);
+    nextSlide();
+    startAutoSlide();
+  });
+
+  document.getElementById('prevBtn')?.addEventListener('click', () => {
+    clearInterval(autoSlide);
+    prevSlide();
+    startAutoSlide();
+  });
+
+  startAutoSlide();
+</script>
