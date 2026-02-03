@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-primary);
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
@@ -20,7 +20,7 @@ body {
 
 /* === TIPOGRAFÍA === */
 h1 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-3xl);
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: var(--spacing-sm);

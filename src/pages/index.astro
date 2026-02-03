@@ -1,12 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import ServicioCard from '../components/servicioCard.astro';
 
-// Importa las imágenes
-import img1 from '../assets/hero/hero_1.jpg';
-import img2 from '../assets/hero/hero_2.jpg';
-import img3 from '../assets/hero/hero_3.jpg';
-// Agrega más importaciones aquí según necesites
+import img1 from '../assets/home/hero_1.jpg';
+import img2 from '../assets/home/hero_2.jpg';
+import img3 from '../assets/home/hero_3.jpg';
 
 const heroImages = [img1, img2, img3];
 ---
@@ -38,25 +37,165 @@ const heroImages = [img1, img2, img3];
   <!-- Presentacion corta -->
   <section class="section">
     <div class="container">
-      <div class="presentacion">
-        <h2>Sobre Valcer</h2>
-        <!--cambiar el texto -->
-        <p> 
-        VALCER es una empresa especializada en servicios industriales y construcción, 
-        con amplia experiencia en el sector. Nos comprometemos a entregar soluciones 
-        de calidad que cumplen con los más altos estándares de seguridad y eficiencia.
-        </p>
-        <a href="/nosotros" class="btn btn-primary">Más información</a>
+      <div class="presentacion-grid">
+        <div class="presentacion-imagen">
+          <div class="imagen-box">
+            <img src="/src/assets/home/about.jpg" alt="VALCER">
+          </div>
+        </div> 
+      
+        <div class="presentacion-texto">
+          <h2>Sobre Valcer</h2>
+          <!--cambiar el texto -->
+          <p> 
+            VALCER es una empresa especializada en servicios industriales y construcción, 
+            con amplia experiencia en el sector. Nos comprometemos a entregar soluciones 
+            de calidad que cumplen con los más altos estándares de seguridad y eficiencia.
+          </p>
+          <a href="/nosotros" class="btn btn-primary">Más información</a>
+        </div>
       </div>
     </div>
   </section>
+
+
+  <!-- Servicios -->
+  <section class="section servicios-section">
+    <div class="container">
+      <h2 class="servicios-titulo">Nuestros Servicios</h2>
+      
+      <div class="servicios-grid">
+        <ServicioCard
+          icon="construccion"
+          title="Servicio 1"
+          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue.."
+        />
+        <ServicioCard
+          icon="mantenimiento"
+          title="Servicio 2"
+          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
+        />
+        <ServicioCard
+          icon="fabricacion"
+          title="Servicio 3"
+          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
+        />
+        <ServicioCard
+          icon="consultoria"
+          title="Servicio 4"
+          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
+        />
+      </div>
+
+      <div class="servicios-boton">
+        <a href="/servicios" class="btn btn-primary">Conoce más</a>
+      </div>
+    </div>
+  </section>
+
+    <!-- Valor Diferencial -->
+  <section class="section valor-seccion">
+    <div class="container">
+      <h2 class="valor-titulo">Por qué elegir Valcer</h2>
+      <div class="valor-grid">
+
+        <div class="valor-item">
+          <div class="valor-numero">01</div>
+          <h3>Experiencia Industrial</h3>
+          <p>Más de 15 años trabajando en proyectos de alta complejidad en el sector industrial.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">02</div>
+          <h3>Estándares de Calidad</h3>
+          <p>Cumplimos con las certificaciones internacionales más exigentes en cada proyecto.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">03</div>
+          <h3>Equipo Especializado</h3>
+          <p>Profesionales altamente capacitados en construcción, fabricación y mantenimiento.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">04</div>
+          <h3>Compromiso y Seguridad</h3>
+          <p>Seguridad laboral como prioridad. Cumplimiento estricto de plazos y presupuestos.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Proyectos Destacados -->
+  <section class="section">
+    <div class="container">
+      <h2 class="proyectos-titulo">Proyectos Destacados</h2>
+      <div class="proyectos-grid">
+
+        <!-- Reemplaza los src por tus imágenes reales -->
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 1" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 2" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 3" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 4" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 5" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+        <div class="proyecto-card">
+          <img src="/src/assets/home/about.jpg" alt="Proyecto 6" />
+          <div class="proyecto-overlay">
+            <h3>Nombre del Proyecto</h3>
+            <p>Descripción breve</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="proyectos-boton">
+        <a href="/proyectos" class="btn btn-primary">Ver todos los proyectos</a>
+      </div>
+    </div>
+  </section>
+
 </Layout>
 
 <style>
   .hero {
     position: relative;
     width: 100%;
-    height: 93vh;
+    height: 100vh;
     overflow: hidden;
   }
 
@@ -77,6 +216,22 @@ const heroImages = [img1, img2, img3];
     opacity: 1;
   }
 
+
+  /*oscuro inicio*/
+
+
+  .slide::after { 
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  /*oscuro fin*/
+
   .slide :global(img) {
     width: 100%;
     height: 100%;
@@ -85,9 +240,10 @@ const heroImages = [img1, img2, img3];
 
   .hero-content {
     position: absolute;
+    bottom: 10%;
     top: 50%;
     left: 5%;
-    transform: translateY(-50%);
+    transform: none;
     color: white;
     text-align: left;
     z-index: 10;
@@ -96,11 +252,12 @@ const heroImages = [img1, img2, img3];
   .hero-content h1 {
     color: white;
     margin-bottom: 1rem;
+    font-size: var(--text-3xl);
   }
 
   .hero-content p {
     color: white;
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
   }
 
   .slide-btn {
@@ -131,6 +288,14 @@ const heroImages = [img1, img2, img3];
     .hero-content {
       left: 5%;
     }
+
+    .hero-content h1 {
+    font-size: var(--text-2xl);
+    }
+
+    .hero-content p {
+    font-size: var(--text-xl);
+    }
     
     .slide-btn {
       font-size: 2rem;
@@ -139,19 +304,224 @@ const heroImages = [img1, img2, img3];
   }
 
   /* presentacion */
-  .presentacion{
-    max-width: 800px;
-    margin: 0 auto;
+  .presentacion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    align-items: center;
+    min-height: 600px;
+    padding: var(--spacing-lg) 0;
+  }
+
+  .imagen-box {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .imagen-box::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -1;
+  }
+
+  .imagen-box img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .presentacion-texto h2 {
+  font-size: var(--text-2xl);  /* Titulo mas grande */
+  margin-bottom: var(--spacing-md);
+  }
+
+  .presentacion-texto p {
+    font-size: var(--text-lg);  /* Texto mas grande */
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 768px) {
+    .presentacion-grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
+  }
+
+  /* servicios */
+  .servicios-titulo {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .servicios-section {
+    background: rgb(39, 149, 223);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .servicios-boton {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+  }
+
+  @media (max-width: 768px) {
+    .servicios-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+   /* valor diferencial */
+  .valor-seccion {
+    background: var(--color-background-light);
+  }
+
+  .valor-titulo {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .valor-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .valor-item {
     text-align: center;
   }
 
-  .presentacion h2 {
-    margin-bottom: var(--spacing-sm);
+  .valor-numero {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-sm);
   }
 
-  .presentacion p {
-    margin-bottom: var(--spacing-md);
-    line-height: 1.8;
+  .valor-item h3 {
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .valor-item p {
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .valor-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .valor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* proyectos destacados */
+  .proyectos-titulo {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .proyectos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .proyecto-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    cursor: pointer;
+  }
+
+  .proyecto-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .proyecto-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .proyecto-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--spacing-md);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+
+  .proyecto-card:hover .proyecto-overlay {
+    opacity: 1;
+  }
+
+  .proyecto-overlay h3 {
+    color: white;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .proyecto-overlay p {
+    color: #a0aec0;
+    font-size: var(--text-sm);
+    margin-bottom: 0;
+  }
+
+  .proyectos-boton {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+  }
+
+  @media (max-width: 768px) {
+    .proyectos-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-sm);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .proyectos-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .proyecto-overlay {
+      opacity: 1;
+    }
   }
 </style>
 
@@ -194,4 +564,6 @@ const heroImages = [img1, img2, img3];
   });
 
   startAutoSlide();
+
+  
 </script>

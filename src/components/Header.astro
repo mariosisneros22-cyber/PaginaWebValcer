@@ -52,10 +52,31 @@ const currentPath = Astro.url.pathname;
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background: var(--color-background);
-    box-shadow: var(--shadow-sm);
+    background: transparent;
     z-index: 1000;
+    transition: background 0.3s ease;
   }
+
+
+  .header.scrolled {
+    background: white;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .header.scrolled .logo a,
+  .header.scrolled .nav-links a {
+    color: var(--color-text);
+  }
+
+  .header.scrolled .nav-links a.active {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .header.scrolled .menu-toggle span {
+    background: var(--color-text);
+  }
+
 
   .nav {
     display: flex;
@@ -70,7 +91,7 @@ const currentPath = Astro.url.pathname;
   .logo a {
     font-size: var(--text-xl);
     font-weight: 700;
-    color: var(--color-text);
+    color: white;
     transition: color var(--transition-fast);
   }
 
@@ -105,7 +126,7 @@ const currentPath = Astro.url.pathname;
   }
 
   .nav-links a {
-    color: var(--color-text-light);
+    color: white;
     font-weight: 500;
     font-size: var(--text-base);
     transition: color var(--transition-fast);
@@ -116,8 +137,9 @@ const currentPath = Astro.url.pathname;
   }
 
   .nav-links a.active {
-    color: var(--color-primary);
+    color: white;
     font-weight: 600;
+    text-decoration: underline;
   }
 
   /* RESPONSIVE - Tablet y móvil */
@@ -163,27 +185,35 @@ const currentPath = Astro.url.pathname;
     const navLinks = document.getElementById('navLinks');
 
     if (menuToggle && navLinks) {
-      // Remover listeners anteriores clonando el elemento
-      const newMenuToggle = menuToggle.cloneNode(true);
-      menuToggle.parentNode?.replaceChild(newMenuToggle, menuToggle);
-
-      // Agregar nuevo listener
-      newMenuToggle.addEventListener('click', () => {
+      menuToggle.onclick = () => {
         navLinks.classList.toggle('active');
-      });
+      };
 
-      // Cerrar menú al hacer click en un link
       navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
+        link.onclick = () => {
           navLinks.classList.remove('active');
-        });
+        };
       });
     }
   }
 
-  // Ejecutar en la carga inicial
-  setupMenu();
+  function handleScroll() {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 50) {
+      header?.classList.add('scrolled');
+    } else {
+      header?.classList.remove('scrolled');
+    }
+  }
 
-  // Ejecutar después de cada navegación con View Transitions
-  document.addEventListener('astro:page-load', setupMenu);
+  // Ejecutar solo una vez
+  setupMenu();
+  handleScroll();
+  window.addEventListener('scroll', handleScroll, { passive: true });
+
+  // Re-ejecutar después de navegación
+  document.addEventListener('astro:page-load', () => {
+    setupMenu();
+    handleScroll();
+  });
 </script>
