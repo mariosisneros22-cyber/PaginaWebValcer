@@ -1,7 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/hero/staticHero.astro';
+import contactoHero from '../assets/pages/contacto/contactoHero.jpg';
 ---
 
-<Layout title="Contacto">
-  <h1>Contacto</h1>
+<Layout title="Valcer - Contacto">
+  <PageHero 
+    title="Contacto" 
+    image={contactoHero} 
+  />
+  
+  <!-- Resto del contenido -->
 </Layout>

@@ -1,39 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+
+import Layout from '../layouts/Layout.astro';
+
 import ServicioCard from '../components/servicioCard.astro';
+import SliderHero from '../components/hero/sliderHero.astro';
 
-import img1 from '../assets/pages/index/hero_1.jpg';
-import img2 from '../assets/pages/index/hero_2.jpg';
-import img3 from '../assets/pages/index/hero_3.jpg';
-import about from '../assets/pages/index/about.jpg';
-
-const heroImages = [img1, img2, img3];
+import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage.ts';
 ---
 
 <Layout title="Valcer - Inicio">
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-slider">
-      {heroImages.map((image, index) => (
-        <div class={`slide ${index === 0 ? 'active' : ''}`}>
-          <Image 
-            src={image} 
-            alt={`Slide ${index + 1}`} 
-            loading={index === 0 ? 'eager' : 'lazy'}
-          />
-        </div>
-      ))}
-      
-      <div class="hero-content">
-        <h1>Bienvenido a Valcer</h1>
-        <p>Tu empresa de confianza</p>
-      </div>
-      
-      <button class="slide-btn prev" id="prevBtn">‹</button>
-      <button class="slide-btn next" id="nextBtn">›</button>
-    </div>
-  </section>
+  <SliderHero 
+    images={heroImages}
+    title="Bienvenido a Valcer"
+    subtitle="Tu empresa de confianza"
+  />
   
   <!-- Presentacion corta -->
   <section class="section">
@@ -247,116 +228,7 @@ const heroImages = [img1, img2, img3];
 </Layout>
 
 <style>
-  .hero {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .hero-slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-  }
-
-  .slide.active {
-    opacity: 1;
-  }
-
-
-  /*oscuro inicio*/
-
-
-  .slide::after { 
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--header-height);
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 1;
-  }
-  /*oscuro fin*/
-
-  .slide :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .hero-content {
-    position: absolute;
-    bottom: 10%;
-    top: 50%;
-    left: 5%;
-    transform: none;
-    color: white;
-    text-align: left;
-    z-index: 10;
-  }
-
-  .hero-content h1 {
-    color: white;
-    margin-bottom: 1rem;
-    font-size: var(--text-3xl);
-  }
-
-  .hero-content p {
-    color: white;
-    font-size: var(--text-2xl);
-  }
-
-  .slide-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-    font-size: 3rem;
-    padding: 1rem 1.5rem;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  .slide-btn.prev {
-    left: 20px;
-  }
-
-  .slide-btn.next {
-    right: 20px;
-  }
-
-  @media (max-width: 768px) {
-    .hero {
-      height: 60vh;
-    }
-    
-    .hero-content {
-      left: 5%;
-    }
-
-    .hero-content h1 {
-    font-size: var(--text-2xl);
-    }
-
-    .hero-content p {
-    font-size: var(--text-xl);
-    }
-    
-    .slide-btn {
-      font-size: 2rem;
-      padding: 0.5rem 1rem;
-    }
-  }
+ 
 
   /* presentacion */
   .presentacion-grid {
@@ -663,44 +535,5 @@ const heroImages = [img1, img2, img3];
 </style>
 
 <script>
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  //cambios por NodeJs.Timeout
-  let autoSlide: ReturnType<typeof setTimeout>;
-
-  function showSlide(index: number) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    slides[index].classList.add('active');
-  }
-
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    showSlide(currentSlide);
-  }
-
-  function prevSlide() {
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    showSlide(currentSlide);
-  }
-
-  function startAutoSlide() {
-    autoSlide = setInterval(nextSlide, 5000);
-  }
-
-  document.getElementById('nextBtn')?.addEventListener('click', () => {
-    clearInterval(autoSlide);
-    nextSlide();
-    startAutoSlide();
-  });
-
-  document.getElementById('prevBtn')?.addEventListener('click', () => {
-    clearInterval(autoSlide);
-    prevSlide();
-    startAutoSlide();
-  });
-
-  startAutoSlide();
-
-  
+ 
 </script>
