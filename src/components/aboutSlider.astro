@@ -1,0 +1,166 @@
+---
+import { Image } from 'astro:assets';
+
+interface Card {
+  title: string;
+  content: string;
+  image: any;
+}
+
+interface Props {
+  cards: Card[];
+}
+
+const { cards } = Astro.props;
+---
+
+<div class="about-slider">
+  <div class="cards-container">
+    {cards.map((card, index) => (
+      <div class={`about-card ${index === 0 ? 'active' : ''}`}>
+        <div class="card-content">
+          <div class="card-texto">
+            <h2>{card.title}</h2>   
+            <p>{card.content}</p>
+          </div>
+          <div class="card-imagen">
+            <Image src={card.image} alt={card.title} />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <div class="slider-controls">
+    <div class="slider-indicators">
+        {cards.map((_, index) => (
+        <button 
+            class={`indicator ${index === 0 ? 'active' : ''}`}
+            data-index={index}
+            aria-label={`Card ${index + 1}`}
+        ></button>
+        ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .about-slider {
+    width: 100%;
+  }
+
+
+  .cards-container {
+    position: relative;
+    min-height: 400px;
+  }
+
+  .about-card {
+    display: none;
+  }
+
+  .about-card.active {
+    display: block;
+    border: solid 1px var(--color-border);
+    border-radius: 20px;
+    padding-left: 5%;
+  }
+
+  .card-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+  }
+
+  .card-texto h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .card-texto p {
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .card-imagen {
+    width: 100%;
+  }
+
+  .card-imagen :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--spacing-md);
+  }
+
+  .slider-indicators {
+    display: flex;
+    gap: 15px;
+  }
+
+ .indicator {
+    width: 80px;  /* Más ancho */
+    height: 4px;
+    background: #ccc;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+ .indicator.active {
+    background: var(--color-primary);
+  }
+
+ .indicator:hover {
+    background: #999;
+ }
+
+ .indicator.active:hover {
+    background: var(--color-primary);
+  }
+
+  @media (max-width: 768px) {
+    .card-content {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+    }
+  }
+</style>
+
+<script>
+  function initAboutSlider() {
+    let currentCard = 0;
+    const cards = document.querySelectorAll('.about-card');
+    const indicators = document.querySelectorAll('.indicator');
+    const totalCards = cards.length;
+
+    if (totalCards === 0) return;
+
+    function showCard(index: number) {
+      cards.forEach(card => card.classList.remove('active'));
+      indicators.forEach(ind => ind.classList.remove('active'));
+      
+      cards[index].classList.add('active');
+      indicators[index].classList.add('active');
+      currentCard = index;
+    }
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        showCard(index);
+      });
+    });
+  }
+
+  initAboutSlider();
+  document.addEventListener('astro:page-load', initAboutSlider);
+</script>

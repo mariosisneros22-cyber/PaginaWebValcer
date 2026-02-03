@@ -3,10 +3,12 @@ import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
 
+import AboutSlider from '../components/aboutSlider.astro';
 import ServicioCard from '../components/servicioCard.astro';
 import SliderHero from '../components/hero/sliderHero.astro';
+import Button from '../components/button.astro';
 
-import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage.ts';
+import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.ts';
 ---
 
 <Layout title="Valcer - Inicio">
@@ -19,22 +21,8 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
   <!-- Presentacion corta -->
   <section class="section">
     <div class="container">
-      <div class="presentacion-grid">
-        <div class="presentacion-imagen">
-          <Image class="image-box" src={about} alt="VALCER">
-        </div> 
-      
-        <div class="presentacion-texto">
-          <h2>Sobre Valcer</h2>
-          <!--cambiar el texto -->
-          <p> 
-            VALCER es una empresa especializada en servicios industriales y construcción, 
-            con amplia experiencia en el sector. Nos comprometemos a entregar soluciones 
-            de calidad que cumplen con los más altos estándares de seguridad y eficiencia.
-          </p>
-          <a href="/nosotros" class="btn btn-primary">Más información</a>
-        </div>
-      </div>
+      <h2> TITULO H2 </h1>
+      <AboutSlider cards={aboutCards} />
     </div>
   </section>
 
@@ -67,9 +55,8 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
         />
       </div>
 
-      <div class="servicios-boton">
-        <a href="/servicios" class="btn btn-primary">Conoce más</a>
-      </div>
+      <Button href="/proyectos">Ver más</Button>
+
     </div>
   </section>
 
@@ -110,7 +97,12 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
   <!-- Proyectos Destacados -->
   <section class="section">
     <div class="container">
-      <h2 class="proyectos-titulo">Proyectos Destacados</h2>
+
+      <div class="proyectos-ht">
+        <h2 class="proyectos-titulo">Proyectos Destacados</h2>
+        <Button href="/proyectos">Ver todos los proyectos</Button>
+      </div>
+    
       <div class="proyectos-grid">
 
         <!-- Reemplaza los src por tus imágenes reales -->
@@ -163,10 +155,7 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
         </div>
 
       </div>
-      <div class="proyectos-boton">
-        <a href="/proyectos" class="btn btn-primary">Ver todos los proyectos</a>
-      </div>
-    </div>
+     
   </section>
 
     <!-- Nuestros Clientes -->
@@ -230,65 +219,10 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
 <style>
  
 
-  /* presentacion */
-  .presentacion-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;  /* Cambiado de spacing-xl a 0 */
-    align-items: center;
-    min-height: 600px;
-    padding: var(--spacing-lg) 0;
-    position: relative;
-  }
-
-  .presentacion-imagen {
-    position: relative;
-    z-index: 2;  /* Imagen encima */
-  }
-
-  .presentacion-imagen::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: 15px;
-    width: 95%;
-    height: 100%;
-    background: rgb(163, 221, 255);
-    z-index: -1;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-  }
-
-  .presentacion-texto {
-    background: rgb(163, 221, 255);
-    border: 1px solid var(--color-border);
-    padding: var(--spacing-lg);
-    padding-left: calc(var(--spacing-lg) + 50px);  /* Espacio extra a la izquierda */
-    max-height: 520px;
-    margin-left: -50px;  /* Sobrepasa la imagen */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 1;  /* Cuadro detrás */
-  }
-  .presentacion-texto h2 {
-  font-size: var(--text-2xl);  /* Titulo mas grande */
-  margin-bottom: var(--spacing-md);
-  }
-
-  .presentacion-texto p {
-    font-size: var(--text-lg);  /* Texto mas grande */
-    margin-bottom: var(--spacing-md);
-    line-height: 1.8;
-  }
-
-  @media (max-width: 768px) {
-    .presentacion-grid {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-md);
-    }
-  }
+ 
 
   /* servicios */
+  
   .servicios-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
@@ -378,10 +312,17 @@ import { heroImages, about, aboutSlides } from '../assets/pages/index/indexImage
   }
 
   /* proyectos destacados */
-  .proyectos-titulo {
-    text-align: left;
+  .proyectos-ht {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* ← centra verticalmente */
     margin-bottom: var(--spacing-lg);
   }
+
+  .proyectos-titulo {
+    margin: 0; /* ← MUY IMPORTANTE */
+  }
+
 
   .proyectos-grid {
     display: grid;
