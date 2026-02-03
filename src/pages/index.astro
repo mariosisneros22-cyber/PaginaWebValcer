@@ -3,9 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import ServicioCard from '../components/servicioCard.astro';
 
-import img1 from '../assets/home/hero_1.jpg';
-import img2 from '../assets/home/hero_2.jpg';
-import img3 from '../assets/home/hero_3.jpg';
+import img1 from '../assets/pages/index/hero_1.jpg';
+import img2 from '../assets/pages/index/hero_2.jpg';
+import img3 from '../assets/pages/index/hero_3.jpg';
+import about from '../assets/pages/index/about.jpg';
 
 const heroImages = [img1, img2, img3];
 ---
@@ -39,9 +40,7 @@ const heroImages = [img1, img2, img3];
     <div class="container">
       <div class="presentacion-grid">
         <div class="presentacion-imagen">
-          <div class="imagen-box">
-            <img src="/src/assets/home/about.jpg" alt="VALCER">
-          </div>
+          <Image class="image-box" src={about} alt="VALCER">
         </div> 
       
         <div class="presentacion-texto">
@@ -135,7 +134,7 @@ const heroImages = [img1, img2, img3];
 
         <!-- Reemplaza los src por tus imágenes reales -->
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 1" />
+          <Image src={about} alt="Proyecto 1" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -143,7 +142,7 @@ const heroImages = [img1, img2, img3];
         </div>
 
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 2" />
+          <Image src={about} alt="Proyecto 2" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -151,7 +150,7 @@ const heroImages = [img1, img2, img3];
         </div>
 
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 3" />
+          <Image src={about} alt="Proyecto 3" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -159,7 +158,7 @@ const heroImages = [img1, img2, img3];
         </div>
 
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 4" />
+          <Image src={about} alt="Proyecto 4" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -167,7 +166,7 @@ const heroImages = [img1, img2, img3];
         </div>
 
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 5" />
+          <Image src={about} alt="Proyecto 5" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -175,7 +174,7 @@ const heroImages = [img1, img2, img3];
         </div>
 
         <div class="proyecto-card">
-          <img src="/src/assets/home/about.jpg" alt="Proyecto 6" />
+          <Image src={about} alt="Proyecto 6" />
           <div class="proyecto-overlay">
             <h3>Nombre del Proyecto</h3>
             <p>Descripción breve</p>
@@ -189,6 +188,62 @@ const heroImages = [img1, img2, img3];
     </div>
   </section>
 
+    <!-- Nuestros Clientes -->
+  <section class="clientes-seccion">
+    <div class="container">
+      <h2 class="clientes-titulo">Nuestros Clientes</h2>
+    </div>
+
+    <!-- El carrusel va fuera del container para que el fade se extienda full-width -->
+    <div class="carrusel-wrapper">
+      <div class="carrusel-track">
+        <!-- Logo 1 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 1" />
+        </div>
+        <!-- Logo 2 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 2" />
+        </div>
+        <!-- Logo 3 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 3" />
+        </div>
+        <!-- Logo 4 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 4" />
+        </div>
+        <!-- Logo 5 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 5" />
+        </div>
+        <!-- Logo 6 -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 6" />
+        </div>
+
+        <!-- Duplicados para que el loop se vea infinito -->
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 1" />
+        </div>
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 2" />
+        </div>
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 3" />
+        </div>
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 4" />
+        </div>
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 5" />
+        </div>
+        <div class="cliente-logo">
+          <Image src={about} alt="Cliente 6" />
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
@@ -307,35 +362,42 @@ const heroImages = [img1, img2, img3];
   .presentacion-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
+    gap: 0;  /* Cambiado de spacing-xl a 0 */
     align-items: center;
     min-height: 600px;
     padding: var(--spacing-lg) 0;
-  }
-
-  .imagen-box {
     position: relative;
-    width: 100%;
-    max-width: 500px;
   }
 
-  .imagen-box::before {
+  .presentacion-imagen {
+    position: relative;
+    z-index: 2;  /* Imagen encima */
+  }
+
+  .presentacion-imagen::before {
     content: '';
     position: absolute;
     top: -15px;
-    left: -15px;
-    width: 100%;
+    left: 15px;
+    width: 95%;
     height: 100%;
-    background: black;
+    background: rgb(163, 221, 255);
     z-index: -1;
+    border: 1px solid rgba(255, 255, 255, 0.5);
   }
 
-  .imagen-box img {
-    width: 100%;
-    height: auto;
-    display: block;
+  .presentacion-texto {
+    background: rgb(163, 221, 255);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-lg);
+    padding-left: calc(var(--spacing-lg) + 50px);  /* Espacio extra a la izquierda */
+    max-height: 520px;
+    margin-left: -50px;  /* Sobrepasa la imagen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;  /* Cuadro detrás */
   }
-
   .presentacion-texto h2 {
   font-size: var(--text-2xl);  /* Titulo mas grande */
   margin-bottom: var(--spacing-md);
@@ -521,6 +583,81 @@ const heroImages = [img1, img2, img3];
 
     .proyecto-overlay {
       opacity: 1;
+    }
+  }
+
+  /* clientes */
+  .clientes-seccion {
+    background: var(--color-background-light);
+    padding: var(--spacing-lg) 0;
+    overflow: hidden;
+  }
+
+  .clientes-titulo {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .carrusel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    /* Fade transparente en los bordes izquierdo y derecho */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+
+  .carrusel-track {
+    display: flex;
+    width: max-content;
+    animation: carrusel-scroll 25s linear infinite;
+  }
+
+  /* Pausa al hacer hover */
+  .carrusel-wrapper:hover .carrusel-track {
+    animation-play-state: paused;
+  }
+
+  .cliente-logo {
+    flex-shrink: 0;
+    width: 180px;
+    height: 80px;
+    margin: 0 var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cliente-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Escala de grises por defecto */
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: filter var(--transition-normal), opacity var(--transition-normal);
+  }
+
+  .cliente-logo:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+
+  @keyframes carrusel-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      /* Mueve exactamente la mitad (los originales) para que el loop sea perfecto */
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cliente-logo {
+      width: 140px;
+      height: 60px;
+      margin: 0 var(--spacing-sm);
     }
   }
 </style>
