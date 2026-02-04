@@ -23,8 +23,10 @@ const { images, title, subtitle } = Astro.props;
     ))}
     
     <div class="hero-content">
-      <h1>{title}</h1>
-      <p>{subtitle}</p>
+      <div class="hero-container">
+        <h1>{title}</h1>
+        <p>{subtitle}</p>
+      </div>
     </div>
     
     <button class="slide-btn prev" id="prevBtn">‹</button>
@@ -36,7 +38,7 @@ const { images, title, subtitle } = Astro.props;
   .hero {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: min(95vh, 900px);
     overflow: hidden;
   }
 
@@ -63,8 +65,8 @@ const { images, title, subtitle } = Astro.props;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--header-height);
-    background: rgba(0, 0, 0, 0.3);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.40);
     z-index: 1;
   }
 
@@ -76,13 +78,15 @@ const { images, title, subtitle } = Astro.props;
 
   .hero-content {
     position: absolute;
-    bottom: 10%;
-    top: 50%;
-    left: 5%;
-    transform: none;
-    color: white;
-    text-align: left;
+    inset: 0;
     z-index: 10;
+    display: flex;
+    align-items: center; /* o flex-end / flex-start */
+  }
+  .hero-container {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
   }
 
   .hero-content h1 {

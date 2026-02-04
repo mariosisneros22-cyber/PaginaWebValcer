@@ -4,11 +4,13 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 
 import AboutSlider from '../components/aboutSlider.astro';
-import ServicioCard from '../components/servicioCard.astro';
+import ServiciosInteractivos from '../components/tableService.astro';
 import SliderHero from '../components/hero/sliderHero.astro';
 import Button from '../components/button.astro';
 
-import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.ts';
+import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/index/indexImage.ts';
+
+
 ---
 
 <Layout title="Valcer - Inicio">
@@ -17,50 +19,38 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     title="Bienvenido a Valcer"
     subtitle="Tu empresa de confianza"
   />
-  
+  <section class = "section">
+    <div class = "container">
+      <!--About us -->
+      <div class ="about-us">
+        <div class="about-us-content">
+          <h2>Sobre Nosotros</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <Button href="/nosotros">Leer más</Button>
+        </div>
+        <div class = "about-us-image"> 
+        <Image src={about} alt="Sobre Nosotros"  loading= "eager"/>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Presentacion corta -->
   <section class="section">
-    <div class="container">
-      <h2> TITULO H2 </h1>
+    <div class="container">     
       <AboutSlider cards={aboutCards} />
     </div>
   </section>
 
-
-  <!-- Servicios -->
+  <!-- Servicios Interactivos -->
   <section class="section servicios-section">
     <div class="container">
       <h2 class="servicios-titulo">Nuestros Servicios</h2>
-      
-      <div class="servicios-grid">
-        <ServicioCard
-          icon="construccion"
-          title="Servicio 1"
-          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue.."
-        />
-        <ServicioCard
-          icon="mantenimiento"
-          title="Servicio 2"
-          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
-        />
-        <ServicioCard
-          icon="fabricacion"
-          title="Servicio 3"
-          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
-        />
-        <ServicioCard
-          icon="consultoria"
-          title="Servicio 4"
-          description="Lorem ipsum dolor sit amet consectetur adipiscing elit, interdum odio dictumst dis varius dui, nullam natoque inceptos in auctor congue."
-        />
-      </div>
-
+      <ServiciosInteractivos servicios={infoServicios} />
       <Button href="/proyectos">Ver más</Button>
-
     </div>
   </section>
 
-    <!-- Valor Diferencial -->
+  <!-- Valor Diferencial -->
   <section class="section valor-seccion">
     <div class="container">
       <h2 class="valor-titulo">Por qué elegir Valcer</h2>
@@ -105,7 +95,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     
       <div class="proyectos-grid">
 
-        <!-- Reemplaza los src por tus imágenes reales -->
         <div class="proyecto-card">
           <Image src={about} alt="Proyecto 1" />
           <div class="proyecto-overlay">
@@ -156,43 +145,37 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
 
       </div>
      
+    </div>
   </section>
 
-    <!-- Nuestros Clientes -->
+  <!-- Nuestros Clientes -->
   <section class="clientes-seccion">
     <div class="container">
       <h2 class="clientes-titulo">Nuestros Clientes</h2>
     </div>
 
-    <!-- El carrusel va fuera del container para que el fade se extienda full-width -->
     <div class="carrusel-wrapper">
       <div class="carrusel-track">
-        <!-- Logo 1 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 1" />
         </div>
-        <!-- Logo 2 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 2" />
         </div>
-        <!-- Logo 3 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 3" />
         </div>
-        <!-- Logo 4 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 4" />
         </div>
-        <!-- Logo 5 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 5" />
         </div>
-        <!-- Logo 6 -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 6" />
         </div>
 
-        <!-- Duplicados para que el loop se vea infinito -->
+        <!-- Duplicados para loop infinito -->
         <div class="cliente-logo">
           <Image src={about} alt="Cliente 1" />
         </div>
@@ -217,43 +200,80 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
 </Layout>
 
 <style>
- 
+  /* about us */
+  .about-us {
+    display: flex;
+    align-items: stretch;
+    gap: var(--spacing-lg);
+  }
 
- 
+  .about-us-content{
+    flex: 3;
+    min-width: 0;
+  }
 
+  .about-us-image{
+    flex:2;
+  }
+  .about-us-content,
+  .about-us-image {
+    min-width: 0;
+  }
+
+
+  .about-us-content h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .about-us-image {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .about-us-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+
+  @media (max-width: 768px) {
+    .about-us {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .about-us-content,
+    .about-us-image {
+      flex: 1;
+      width: 100%;
+    }
+
+    .about-us-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
   /* servicios */
-  
   .servicios-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
   }
 
   .servicios-section {
-    background: rgb(39, 149, 223);
+    background: #f8fafc;
     padding-left: 0;
     padding-right: 0;
   }
 
-
-  .servicios-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-  }
-
   .servicios-boton {
     text-align: center;
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
   }
 
-  @media (max-width: 768px) {
-    .servicios-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-   /* valor diferencial */
+  /* valor diferencial */
   .valor-seccion {
     background: var(--color-background-light);
   }
@@ -315,14 +335,13 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
   .proyectos-ht {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* ← centra verticalmente */
+    align-items: center;
     margin-bottom: var(--spacing-lg);
   }
 
   .proyectos-titulo {
-    margin: 0; /* ← MUY IMPORTANTE */
+    margin: 0;
   }
-
 
   .proyectos-grid {
     display: grid;
@@ -377,11 +396,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     margin-bottom: 0;
   }
 
-  .proyectos-boton {
-    text-align: center;
-    margin-top: var(--spacing-lg);
-  }
-
   @media (max-width: 768px) {
     .proyectos-grid {
       grid-template-columns: repeat(2, 1fr);
@@ -415,7 +429,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     position: relative;
     width: 100%;
     overflow: hidden;
-    /* Fade transparente en los bordes izquierdo y derecho */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
     mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
   }
@@ -426,7 +439,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     animation: carrusel-scroll 25s linear infinite;
   }
 
-  /* Pausa al hacer hover */
   .carrusel-wrapper:hover .carrusel-track {
     animation-play-state: paused;
   }
@@ -445,7 +457,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    /* Escala de grises por defecto */
     filter: grayscale(100%);
     opacity: 0.6;
     transition: filter var(--transition-normal), opacity var(--transition-normal);
@@ -461,7 +472,6 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
       transform: translateX(0);
     }
     100% {
-      /* Mueve exactamente la mitad (los originales) para que el loop sea perfecto */
       transform: translateX(-50%);
     }
   }
@@ -474,7 +484,3 @@ import { heroImages, about, aboutCards } from '../assets/pages/index/indexImage.
     }
   }
 </style>
-
-<script>
- 
-</script>
