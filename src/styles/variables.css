@@ -8,7 +8,7 @@
   --color-text-lighter: #999;
   --color-background: #ffffff;
   --color-background-light: #f8f9fa;
-  --color-border: #e0e0e0;
+  --color-border: #cfcfcf;
   
   /* Espaciados responsive */
   --spacing-xs: clamp(0.5rem, 2vw, 1rem);

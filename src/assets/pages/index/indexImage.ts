@@ -1,28 +1,45 @@
 import img1 from './hero/hero_1.jpg';   
 import img2 from './hero/hero_2.jpg';
 import img3 from './hero/hero_3.jpg';
+import img4 from './hero/hero_4.jpg';
 
 import about from './about.jpg';
 import about2 from './about2.jpg';
 import about3 from './about3.jpg';
 export { about };
-export const heroImages = [img1, img2, img3];
+export const heroImages = [img1, img2, img3, img4];
 export const aboutCards = [
   {
-    title: "¿Quiénes somos?",
-    content: "VALCER es una empresa líder en servicios industriales y construcción, dedicada a ofrecer soluciones integrales con los más altos estándares de calidad y seguridad.",
-    image: about,
+    title: "Años de experiencia",
+    metric: "15+",
+    content: "Más de una década desarrollando soluciones estables, escalables y adaptadas a las necesidades reales de cada cliente.",
+    icon: '/icons/align-center-vertical.svg'
   },
   {
-    title: "Experiencia",
-    content: "Con más de 15 años en el sector, hemos completado proyectos de alta complejidad en minería, construcción y manufactura, consolidándonos como referentes del mercado.",
-    image: about2,
+    title: "Proyectos entregados",
+    metric: "120+",
+    content: "Hemos participado en proyectos de distintas industrias, cumpliendo plazos y manteniendo altos estándares de calidad.",
+    icon: '/icons/anchor.svg'
   },
   {
-    title: "Proyectos realizados",
-    content: "Hemos ejecutado exitosamente más de 100 proyectos para empresas líderes en diversos sectores industriales, manteniendo un 98% de satisfacción del cliente.",
-    image: about3,
+    title: "Satisfacción del cliente",
+    metric: "98%",
+    content: "Nuestro enfoque está centrado en relaciones a largo plazo, priorizando resultados medibles y comunicación constante.",
+    icon: '/icons/archive-box.svg'
   },
+  {
+    title: "Equipo especializado",
+    metric: "25+",
+    content: "Contamos con un equipo multidisciplinario de profesionales comprometidos con la mejora continua y la innovación.",
+    icon: '/icons/baseball.svg'
+  },
+  {
+    title: "Presencia regional",
+    metric: "8 regiones",
+    content: "Colaboramos con clientes en distintos mercados, adaptándonos a contextos culturales y técnicos diversos.",
+    icon: '/icons/battery-full.svg'
+  }
+
 ];
 // Define tus servicios aquí
 export const infoServicios = [
