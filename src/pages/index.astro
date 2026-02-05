@@ -3,15 +3,13 @@ import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
 
-import AboutSlider from '../components/aboutSlider.astro';
-import SliderHero from '../components/hero/sliderHero.astro';
-import Button from '../components/button.astro';
-import Tab from '../components/tab.astro';
+import Slider from '../components/sections/infoSlider.astro';
+import Tab from '../components/sections/infoTab.astro';
+import SliderHero from '../components/sections/hero/sliderHero.astro';
+import Button from '../components/ui/button.astro';
 
-import {serviceTabs} from '../assets/pages/index/exportContent.ts'
-import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/index/indexImage.ts';
-
-
+import {serviceTabs} from '../utils/exportContent.ts'
+import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage.ts';
 ---
 
 <Layout title="Valcer - Inicio">
@@ -34,7 +32,7 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
         </div>
       </div>
 
-      <AboutSlider cards={aboutCards} />
+      <Slider cards={infoCards} />
 
     </div>
 
@@ -48,11 +46,27 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
   </section>
 
   <!-- Valor Diferencial -->
-  <section class="section">
-    <div class="container">
-      <h2 class="valor-titulo">Por qué elegir Valcer</h2>
-      <div class="valor-grid">
+  <section class="section section-video">
+    <video
+      class="section-video-bg"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    >
+      <source
+        src="/videos/fondo.mp4"
+        type="video/mp4"
+      />
+    </video>
 
+    <div class="section-overlay"></div>
+
+    <div class="container section-content">
+      <h2 class="valor-titulo">Por qué elegir Valcer</h2>
+
+      <div class="valor-grid">
         <div class="valor-item">
           <div class="valor-numero">01</div>
           <h3>Experiencia Industrial</h3>
@@ -62,21 +76,20 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
         <div class="valor-item">
           <div class="valor-numero">02</div>
           <h3>Estándares de Calidad</h3>
-          <p>Cumplimos con las certificaciones internacionales más exigentes en cada proyecto.</p>
+          <p>Cumplimos con las certificaciones internacionales más exigentes.</p>
         </div>
 
         <div class="valor-item">
           <div class="valor-numero">03</div>
           <h3>Equipo Especializado</h3>
-          <p>Profesionales altamente capacitados en construcción, fabricación y mantenimiento.</p>
+          <p>Profesionales altamente capacitados.</p>
         </div>
 
         <div class="valor-item">
           <div class="valor-numero">04</div>
           <h3>Compromiso y Seguridad</h3>
-          <p>Seguridad laboral como prioridad. Cumplimiento estricto de plazos y presupuestos.</p>
+          <p>Seguridad laboral como prioridad.</p>
         </div>
-
       </div>
     </div>
   </section>
@@ -272,12 +285,47 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
   }
 
   /* valor diferencial */
+
+  .section-video {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  /* Capa oscura para legibilidad */
+  .section-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(39, 44, 96, 0.65); /* #272c60 con alpha */
+    z-index: 1;
+  }
+
+  .section-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Ajuste de texto sobre video */
+  .section-video h2,
+  .section-video h3,
+  .section-video p {
+    color: #fff;
+  }
+
   .valor-seccion {
     background: var(--color-background-light);
   }
 
   .valor-titulo {
-    text-align: left;
+    text-align: center;
     margin-bottom: var(--spacing-lg);
   }
 
@@ -312,7 +360,7 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
 
   .valor-item p {
     font-size: var(--text-sm);
-    color: var(--color-text-light);
+    color: white;
     line-height: 1.6;
     margin-bottom: 0;
   }

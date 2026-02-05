@@ -1,0 +1,228 @@
+---
+import { Image } from 'astro:assets';
+import Button from '../ui/button.astro'; 
+
+interface ServiceTab {
+  id: string;
+  label: string;
+  title: string;
+  description:string;
+  points?: string[];
+  image?: ImageMetadata;
+}
+
+interface Props {
+  tabs: ServiceTab[];
+}
+
+const { tabs } = Astro.props;
+---
+<div class="tabs">
+  <div class="tabs-header-row">
+    <div class="tab-headers" role="tablist">
+      {tabs.map((tab, index) => (
+        <button
+          class={`tab-button ${index === 0 ? 'active' : ''}`}
+          role="tab"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? '0' : '-1'}
+          data-index={index}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+
+    <h2 class="tabs-title">Nuestros <br /> servicios</h2>
+  </div>
+
+  <div class="tab-panels">
+    {tabs.map((tab, index) => (
+      <div
+        class={`tab-panel ${index === 0 ? 'active' : ''}`}
+        role="tabpanel"
+        data-index={index}
+      >
+        <div class="panel-layout">
+          <div class="panel-text">
+            <h3>{tab.title}</h3>
+            <p class="panel-description">{tab.description}</p>
+
+            {tab.points && (
+              <ul class="panel-points">
+                {tab.points.map(point => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            )}
+            <Button href="/servicios">Ver más</Button>
+          </div>
+
+          {tab.image && (
+            <div class="panel-image">
+              <Image src={tab.image} alt={tab.title} />
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+
+<style>
+  .tabs {
+    width: 100%;
+  }
+
+  .tab-headers {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tabs-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .tab-button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #666;
+    position: relative;
+
+    white-space: normal;        /* permite salto */
+    text-align: center;
+    line-height: 1.2;
+    max-width: 8rem;            /* controla el ancho del tab */
+  }
+
+  .tabs-title {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tab-button.active {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.5rem;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+  }
+
+  .tab-panels {
+    margin-top: 0.5rem;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .panel-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .panel-text h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .panel-description {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel-points {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .panel-points li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .panel-points li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .panel-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 120px 0 120px 0;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .panel-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+</style>
+
+<script>
+  function initTabs() {
+    const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab-button');
+    const tabPanels = document.querySelectorAll<HTMLDivElement>('.tab-panel');
+
+    if (!tabButtons.length || !tabPanels.length) return;
+
+    tabButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const indexAttr = button.dataset.index;
+        if (indexAttr === undefined) return;
+
+        const index = Number(indexAttr);
+
+        tabButtons.forEach((btn) => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-selected', 'false');
+          btn.setAttribute('tabindex', '-1');
+        });
+
+        tabPanels.forEach((panel) => {
+          panel.classList.remove('active');
+        });
+
+        button.classList.add('active');
+        button.setAttribute('aria-selected', 'true');
+        button.setAttribute('tabindex', '0'); 
+
+        tabPanels[index]?.classList.add('active');
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTabs);
+</script>
+

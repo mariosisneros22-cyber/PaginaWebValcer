@@ -75,7 +75,17 @@ a:hover {
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background: #ffffff;
+  background: #eef6fb;
+}
+
+
+@keyframes float {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(120px, 80px);
+  }
 }
 
 /* === GRID SYSTEM === */
