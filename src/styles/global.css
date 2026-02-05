@@ -73,6 +73,11 @@ a:hover {
   padding: var(--spacing-lg) 0;
 }
 
+.section-2 {
+  padding: var(--spacing-lg) 0;
+  background: #ffffff;
+}
+
 /* === GRID SYSTEM === */
 .grid {
   display: grid;

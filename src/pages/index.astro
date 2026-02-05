@@ -4,10 +4,11 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 
 import AboutSlider from '../components/aboutSlider.astro';
-import ServiciosInteractivos from '../components/tableService.astro';
 import SliderHero from '../components/hero/sliderHero.astro';
 import Button from '../components/button.astro';
+import Tab from '../components/tab.astro';
 
+import {serviceTabs} from '../assets/pages/index/exportContent.ts'
 import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/index/indexImage.ts';
 
 
@@ -40,16 +41,14 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
   </section>
 
   <!-- Servicios Interactivos -->
-  <section class="section servicios-section">
+  <section class="section-2">
     <div class="container">
-      <h2 class="servicios-titulo">Nuestros Servicios</h2>
-      <ServiciosInteractivos servicios={infoServicios} />
-      <Button href="/proyectos">Ver más</Button>
+       <Tab tabs={serviceTabs}      />
     </div>
   </section>
 
   <!-- Valor Diferencial -->
-  <section class="section valor-seccion">
+  <section class="section">
     <div class="container">
       <h2 class="valor-titulo">Por qué elegir Valcer</h2>
       <div class="valor-grid">
@@ -263,9 +262,8 @@ import { heroImages, about, aboutCards, infoServicios } from '../assets/pages/in
   }
 
   .servicios-section {
-    background: #f8fafc;
-    padding-left: 0;
-    padding-right: 0;
+    background: #94daff;
+
   }
 
   .servicios-boton {
