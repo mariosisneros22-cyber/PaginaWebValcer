@@ -7,9 +7,13 @@ import Slider from '../components/sections/infoSlider.astro';
 import Tab from '../components/sections/infoTab.astro';
 import SliderHero from '../components/sections/hero/sliderHero.astro';
 import Button from '../components/ui/button.astro';
+import Card from '../components/sections/infoCards.astro';
+import Carrusel from '../components/sections/carrusel.astro';
 
 import {serviceTabs} from '../utils/exportContent.ts'
-import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage.ts';
+import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
+import { infoCard } from '../utils/projectInfo.ts';
+import { clients } from "../utils/clients";
 ---
 
 <Layout title="Valcer - Inicio">
@@ -28,11 +32,11 @@ import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage
           <Button href="/nosotros">Leer más</Button>
         </div>
         <div class = "about-us-image"> 
-        <Image src={about} alt="Sobre Nosotros"  loading= "eager"/>
+        <Image src={about} alt="Sobre Nosotros"  loading= "lazy"/>
         </div>
       </div>
 
-      <Slider cards={infoCards} />
+      <Slider slider={infoSliders} />
 
     </div>
 
@@ -97,114 +101,21 @@ import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage
   <!-- Proyectos Destacados -->
   <section class="section">
     <div class="container">
+      <Card cards={infoCard} />
 
       <div class="proyectos-ht">
         <h2 class="proyectos-titulo">Proyectos Destacados</h2>
         <Button href="/proyectos">Ver todos los proyectos</Button>
       </div>
     
-      <div class="proyectos-grid">
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 1" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 2" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 3" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 4" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 5" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-        <div class="proyecto-card">
-          <Image src={about} alt="Proyecto 6" />
-          <div class="proyecto-overlay">
-            <h3>Nombre del Proyecto</h3>
-            <p>Descripción breve</p>
-          </div>
-        </div>
-
-      </div>
-     
     </div>
   </section>
 
   <!-- Nuestros Clientes -->
-  <section class="clientes-seccion">
+  <section class="section-2">
     <div class="container">
       <h2 class="clientes-titulo">Nuestros Clientes</h2>
-    </div>
-
-    <div class="carrusel-wrapper">
-      <div class="carrusel-track">
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 1" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 2" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 3" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 4" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 5" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 6" />
-        </div>
-
-        <!-- Duplicados para loop infinito -->
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 1" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 2" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 3" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 4" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 5" />
-        </div>
-        <div class="cliente-logo">
-          <Image src={about} alt="Cliente 6" />
-        </div>
-      </div>
+      <Carrusel clients={clients} />
     </div>
   </section>
 </Layout>
@@ -320,9 +231,6 @@ import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage
     color: #fff;
   }
 
-  .valor-seccion {
-    background: var(--color-background-light);
-  }
 
   .valor-titulo {
     text-align: center;
@@ -383,80 +291,6 @@ import { heroImages, about, infoCards, infoServicios } from '../utils/indexImage
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-lg);
-  }
-
-  .proyectos-titulo {
-    margin: 0;
-  }
-
-  .proyectos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-md);
-  }
-
-  .proyecto-card {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    cursor: pointer;
-  }
-
-  .proyecto-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition-slow);
-  }
-
-  .proyecto-card:hover img {
-    transform: scale(1.05);
-  }
-
-  .proyecto-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: var(--spacing-md);
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-  }
-
-  .proyecto-card:hover .proyecto-overlay {
-    opacity: 1;
-  }
-
-  .proyecto-overlay h3 {
-    color: white;
-    font-weight: 700;
-    margin-bottom: var(--spacing-xs);
-  }
-
-  .proyecto-overlay p {
-    color: #a0aec0;
-    font-size: var(--text-sm);
-    margin-bottom: 0;
-  }
-
-  @media (max-width: 768px) {
-    .proyectos-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-sm);
-    }
-  }
-
-  @media (max-width: 480px) {
-    .proyectos-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .proyecto-overlay {
-      opacity: 1;
-    }
   }
 
   /* clientes */

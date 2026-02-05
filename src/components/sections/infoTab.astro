@@ -60,7 +60,7 @@ const { tabs } = Astro.props;
 
           {tab.image && (
             <div class="panel-image">
-              <Image src={tab.image} alt={tab.title} />
+              <Image src={tab.image} alt={tab.title} loading="lazy" />
             </div>
           )}
         </div>
@@ -172,14 +172,22 @@ const { tabs } = Astro.props;
     color: var(--color-primary);
     font-weight: 600;
   }
+ .panel-image {
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    border-radius: 120px 0 120px 0;
+    display: flex;          /* añadido */
+    align-items: center;    /* añadido */
+    justify-content: center; /* añadido */
+  }
 
   .panel-image img {
     width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 120px 0 120px 0;
+    height: 100%;
+    object-fit: cover;      /* cubre todo el espacio, recorta si es necesario */
+    object-position: center; /* centra la imagen */
   }
-
   /* Mobile */
   @media (max-width: 768px) {
     .panel-layout {

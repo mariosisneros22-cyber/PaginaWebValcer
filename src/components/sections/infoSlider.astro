@@ -1,5 +1,5 @@
 ---
-interface Card {
+interface Slider {
   title: string;
   content: string;
   metric?: string;
@@ -7,26 +7,26 @@ interface Card {
 }
 
 interface Props {
-  cards: Card[];
+  slider: Slider[];
   autoplayInterval?: number;
 }
 
-const { cards, autoplayInterval = 5000 } = Astro.props;
+const { slider, autoplayInterval = 5000 } = Astro.props;
 ---
 
 <div class="about-slider-fade">
   <div class="cards-container">
-    {cards.map((card, index) => (
+    {slider.map((slider, index) => (
       <div class={`about-card ${index === 0 ? 'active' : ''}`}>
-        <div class="card-layout">
-          <div class="card-content">
-            {card.metric && <span class="card-metric">{card.metric}</span>}
-            <h3>{card.title}</h3>
-            <p>{card.content}</p>
+        <div class="slider-layout">
+          <div class="slider-content">
+            {slider.metric && <span class="slider-metric">{slider.metric}</span>}
+            <h3>{slider.title}</h3>
+            <p>{slider.content}</p>
           </div>
-          {card.icon &&(
-            <div class="card-icon">
-              <img src={card.icon} alt="" aria-hidden="true" />
+          {slider.icon &&(
+            <div class="slider-icon">
+              <img src={slider.icon} alt="" aria-hidden="true" />
             </div>
           )}
           
@@ -38,7 +38,7 @@ const { cards, autoplayInterval = 5000 } = Astro.props;
   
   <div class="slider-controls">
     <div class="slider-indicators">
-      {cards.map((_, index) => (
+      {slider.map((_, index) => (
         <button 
           class={`indicator ${index === 0 ? 'active' : ''}`}
           data-index={index}
@@ -74,42 +74,42 @@ const { cards, autoplayInterval = 5000 } = Astro.props;
     opacity: 1;
     pointer-events: auto;
   }
-  .card-layout {
+  .slider-layout {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 2rem;
   }
 
-  .card-content {
+  .slider-content {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .card-metric {
+  .slider-metric {
     font-size: 3rem;
     font-weight: 700;
     color: var(--color-primary);
   }
 
-  .card-content h3 {
+  .slider-content h3 {
     font-size: 1.25rem;
     font-weight: 600;
   }
 
-  .card-content p {
+  .slider-content p {
     font-size: 1rem;
     color: #666;
     line-height: 1.6;
     margin: 0;
   }
-  .card-icon {
+  .slider-icon {
     width: 96px;
     height: 96px;
   }
 
-  .card-icon img {
+  .slider-icon img {
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -150,7 +150,7 @@ const { cards, autoplayInterval = 5000 } = Astro.props;
       padding: 1.5rem;
     }
 
-    .card-metric {
+    .slider-metric {
       font-size: 2.5rem;
     }
   }

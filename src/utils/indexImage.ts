@@ -9,7 +9,7 @@ import about3 from '../assets/images/index/about3.jpg';
 
 export { about, about2, about3 };
 export const heroImages = [img1, img2, img3, img4];
-export const infoCards = [
+export const infoSliders = [
   {
     title: "Años de experiencia",
     metric: "15+",
