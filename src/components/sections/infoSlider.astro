@@ -12,9 +12,10 @@ interface Props {
 }
 
 const { slider, autoplayInterval = 5000 } = Astro.props;
+const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<div class="about-slider-fade">
+<div class="about-slider-fade" data-slider={sliderId}>
   <div class="cards-container">
     {slider.map((slide, index) => (
       <div 
@@ -45,11 +46,13 @@ const { slider, autoplayInterval = 5000 } = Astro.props;
   </div>
   
   <div class="slider-controls">
-    <div class="slider-indicators">
+    <div class="slider-indicators" role="tablist" aria-label="Slider navigation">
       {slider.map((_, index) => (
         <button 
           class={`indicator ${index === 0 ? 'active' : ''}`}
           data-index={index}
+          role="tab"
+          aria-selected={index === 0}
           aria-label={`Slide ${index + 1} de ${slider.length}`}
         ></button>
       ))}
@@ -195,25 +198,47 @@ const { slider, autoplayInterval = 5000 } = Astro.props;
     .about-card {
       transition: none;
     }
+
+    .indicator {
+      transition: none;
+    }
   }
 </style>
 
-<script define:vars={{ autoplayInterval }}>
+<script define:vars={{ autoplayInterval, sliderId }}>
+  // Objeto global para trackear instancias activas
+  window.__sliderInstances = window.__sliderInstances || {};
+
   function initAboutSlider() {
+    const slider = document.querySelector(`[data-slider="${sliderId}"]`);
+    if (!slider) return;
+
+    // Cleanup de instancia anterior si existe
+    if (window.__sliderInstances[sliderId]) {
+      window.__sliderInstances[sliderId].cleanup();
+    }
+
     let currentCard = 0;
     let autoplayTimer = null;
-    const cards = document.querySelectorAll('.about-card');
-    const indicators = document.querySelectorAll('.indicator');
+    const cards = slider.querySelectorAll('.about-card');
+    const indicators = slider.querySelectorAll('.indicator');
     const totalCards = cards.length;
 
     if (totalCards === 0) return;
 
     function showCard(index) {
+      // Validar índice
+      if (index < 0 || index >= totalCards) return;
+
       cards.forEach(card => card.classList.remove('active'));
-      indicators.forEach(ind => ind.classList.remove('active'));
+      indicators.forEach(ind => {
+        ind.classList.remove('active');
+        ind.setAttribute('aria-selected', 'false');
+      });
       
       cards[index].classList.add('active');
       indicators[index].classList.add('active');
+      indicators[index].setAttribute('aria-selected', 'true');
       currentCard = index;
     }
 
@@ -234,43 +259,69 @@ const { slider, autoplayInterval = 5000 } = Astro.props;
       }
     }
 
+    // Event listeners
+    const clickHandlers = [];
     indicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => {
+      const handler = () => {
         showCard(index);
         startAutoplay();
-      });
+      };
+      indicator.addEventListener('click', handler);
+      clickHandlers.push({ element: indicator, handler });
     });
 
-    const slider = document.querySelector('.about-slider-fade');
-    if (slider) {
-      slider.addEventListener('mouseenter', stopAutoplay);
-      slider.addEventListener('mouseleave', startAutoplay);
-    }
+    const mouseEnterHandler = () => stopAutoplay();
+    const mouseLeaveHandler = () => startAutoplay();
+    
+    slider.addEventListener('mouseenter', mouseEnterHandler);
+    slider.addEventListener('mouseleave', mouseLeaveHandler);
 
-    // Pausar cuando tab no está visible
-    document.addEventListener('visibilitychange', () => {
+    const visibilityHandler = () => {
       if (document.hidden) {
         stopAutoplay();
       } else {
         startAutoplay();
       }
-    });
+    };
+    document.addEventListener('visibilitychange', visibilityHandler);
 
-    // Cleanup
+    // Cleanup function
     const cleanup = () => {
       stopAutoplay();
+      
+      // Remover event listeners
+      clickHandlers.forEach(({ element, handler }) => {
+        element.removeEventListener('click', handler);
+      });
+      slider.removeEventListener('mouseenter', mouseEnterHandler);
+      slider.removeEventListener('mouseleave', mouseLeaveHandler);
+      document.removeEventListener('visibilitychange', visibilityHandler);
+      
+      // Remover del registro global
+      delete window.__sliderInstances[sliderId];
     };
 
-    document.addEventListener('astro:before-preparation', cleanup);
+    // Registrar instancia
+    window.__sliderInstances[sliderId] = { cleanup };
 
+    // Iniciar autoplay
     startAutoplay();
   }
 
+  // Ejecutar inmediatamente si el DOM está listo
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAboutSlider);
   } else {
     initAboutSlider();
   }
   
+  // Re-inicializar en navegación de Astro
   document.addEventListener('astro:page-load', initAboutSlider);
+
+  // Cleanup antes de navegación
+  document.addEventListener('astro:before-preparation', () => {
+    if (window.__sliderInstances[sliderId]) {
+      window.__sliderInstances[sliderId].cleanup();
+    }
+  });
 </script>

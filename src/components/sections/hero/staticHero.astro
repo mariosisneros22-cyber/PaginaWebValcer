@@ -1,34 +1,27 @@
 ---
 import { Image } from 'astro:assets';
 
-interface Props {
-  title: string;
-  image: any;
-  imageAlt?: string;
+interface Props{
+    title: string;
+    image: ImageMetadata;  
 }
 
-const { title, image, imageAlt } = Astro.props;
+const { title, image} = Astro.props;
 ---
-
-<section class="page-hero" aria-label="Page header">
-  <Image 
-    src={image} 
-    alt={imageAlt || `${title} hero background`}
-    loading="eager"
-    fetchpriority="high"
-  />
-  <div class="page-hero-content">
-    <div class="hero-container">
-      <h1>{title}</h1>
+<section class="page-hero">
+    <Image src={image} alt={title} />
+    <div class="page-hero-content">
+      <div class="container">
+        <h1>{title}</h1>
+      </div>
     </div>
-  </div>
 </section>
 
 <style>
   .page-hero {
     position: relative;
     width: 100%;
-    height: clamp(300px, 50vh, 600px);
+    height: 50vh;
     overflow: hidden;
   }
 
@@ -44,8 +37,8 @@ const { title, image, imageAlt } = Astro.props;
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.6) 100%
+      rgba(0,0,0,.6),
+      rgba(0,0,0,.3)
     );
     z-index: 1;
   }
@@ -54,41 +47,30 @@ const { title, image, imageAlt } = Astro.props;
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: flex-end;
-    padding-bottom: 3rem;
-    z-index: 2;
-  }
-
-  .hero-container {
-    width: 100%;
-    max-width: var(--container-width);
-    margin: 0 auto;
-    padding: 0 2rem;
+    align-items: flex-start;
+    padding-top: clamp(20rem, 12vh, 10rem);
+    z-index: 2; /* ← clave */
   }
 
   .page-hero-content h1 {
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: var(--text-3xl);
-    line-height: 1.2;
     margin: 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    text-shadow: 0 2px 8px rgba(0,0,0,.4);
   }
+
 
   @media (max-width: 768px) {
     .page-hero {
-      height: clamp(250px, 40vh, 400px);
-    }
-
-    .page-hero-content {
-      padding-bottom: 2rem;
-    }
-
-    .hero-container {
-      padding: 0 1rem;
+      min-height: 50vh;
+      height: auto;
+      padding-block: clamp(6rem, 12vh, 10rem);
     }
 
     .page-hero-content h1 {
       font-size: var(--text-2xl);
     }
   }
+
 </style>
