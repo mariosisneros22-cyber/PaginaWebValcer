@@ -13,22 +13,20 @@ interface Props{
 const { clients } = Astro.props;
 ---
 
-<section class="section-2 clientes-seccion">
+<section class="section clientes-seccion">
   <div class="carrusel-wrapper">
     <div class="carrusel-track">
       {clients.map((client) => (
         <div class="cliente-logo">
           <div class="logo-box">
-            <Image src={client.logo} alt={client.name} loading="lazy" />
-          </div>
-        </div>
-      ))}
-
-      <!-- duplicado automático -->
-      {clients.map((client) => (
-        <div class="cliente-logo">
-          <div class="logo-box">
-            <Image src={client.logo} alt={client.name} loading="lazy" />
+            <Image 
+              src={client.logo} 
+              alt={client.name} 
+              loading="eager"
+              width={180}
+              height={180}
+              quality={80}
+            />
           </div>
         </div>
       ))}
@@ -59,9 +57,9 @@ const { clients } = Astro.props;
 
   .carrusel-track {
     display: flex;
-    gap: var(--spacing-md);
-    width: max-content;
-    animation: scroll 30s linear infinite;
+    gap: var(--spacing-md, 1.5rem);
+    animation: scroll-infinite 30s linear infinite;
+    will-change: transform;
   }
 
   .carrusel-wrapper:hover .carrusel-track {
@@ -71,10 +69,11 @@ const { clients } = Astro.props;
   .cliente-logo {
     flex-shrink: 0;
     width: clamp(120px, 12vw, 180px);
-    height: clamp(120px, 12vw, 180px); /* altura fija igual al ancho */
+    height: clamp(120px, 12vw, 180px);
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #ffffff;
   }
 
   .logo-box {
@@ -89,7 +88,8 @@ const { clients } = Astro.props;
   .logo-box :global(img) {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
     filter: grayscale(100%);
     opacity: 0.65;
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
@@ -101,12 +101,52 @@ const { clients } = Astro.props;
     transform: scale(1.05);
   }
   
-  @keyframes scroll {
-    from {
+  @keyframes scroll-infinite {
+    0% {
       transform: translateX(0);
     }
-    to {
+    100% {
       transform: translateX(-50%);
     }
   }
+
+  @media (max-width: 768px) {
+    .cliente-logo {
+      width: clamp(100px, 15vw, 140px);
+      height: clamp(100px, 15vw, 140px);
+    }
+
+    .logo-box {
+      padding: 1rem;
+    }
+  }
 </style>
+
+<script>
+  function initCarrusel() {
+    const tracks = document.querySelectorAll('.carrusel-track');
+    
+    tracks.forEach(track => {
+      // Clonar TODO el contenido para duplicar
+      const content = Array.from(track.children);
+      
+      // Duplicar suficientes veces para llenar la pantalla + loop
+      const duplicates = 3; // Ajusta según necesites
+      
+      for (let i = 0; i < duplicates; i++) {
+        content.forEach(item => {
+          const clone = item.cloneNode(true) as HTMLElement;
+          track.appendChild(clone);
+        });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCarrusel);
+  } else {
+    initCarrusel();
+  }
+  
+  document.addEventListener('astro:page-load', initCarrusel);
+</script>

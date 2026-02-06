@@ -32,14 +32,12 @@ import { clients } from "../utils/clients";
           <Button href="/nosotros">Leer más</Button>
         </div>
         <div class = "about-us-image"> 
-        <Image src={about} alt="Sobre Nosotros"  loading= "lazy"/>
+          <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
         </div>
       </div>
 
       <Slider slider={infoSliders} />
-
     </div>
-
   </section>
 
   <!-- Servicios Interactivos -->
@@ -57,11 +55,16 @@ import { clients } from "../utils/clients";
       muted
       loop
       playsinline
-      preload="auto"
+      preload="none"
+      poster="/images/logo-video.jpg"
     >
       <source
-        src="/videos/fondo.mp4"
+        src="/videos/fondo-video.mp4"
         type="video/mp4"
+      />
+      <source
+        src="/videos/fondo-video.webm"
+        type="video/webm"
       />
     </video>
 
@@ -99,20 +102,19 @@ import { clients } from "../utils/clients";
   </section>
 
   <!-- Proyectos Destacados -->
-  <section class="section">
+  <section class="section-2">
     <div class="container">
-      <Card cards={infoCard} />
-
       <div class="proyectos-ht">
         <h2 class="proyectos-titulo">Proyectos Destacados</h2>
         <Button href="/proyectos">Ver todos los proyectos</Button>
+        <Card cards={infoCard} />
       </div>
     
     </div>
   </section>
 
   <!-- Nuestros Clientes -->
-  <section class="section-2">
+  <section class="section">
     <div class="container">
       <h2 class="clientes-titulo">Nuestros Clientes</h2>
       <Carrusel clients={clients} />
@@ -135,31 +137,33 @@ import { clients } from "../utils/clients";
 
   .about-us-image{
     flex:2;
-  }
-  .about-us-content,
-  .about-us-image {
     min-width: 0;
   }
-
 
   .about-us-content h2 {
     font-size: var(--text-2xl);
     margin-bottom: var(--spacing-md);
   }
 
+  .about-us-content p {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: var(--spacing-md);
+  }
+
   .about-us-image {
     overflow: hidden;
     aspect-ratio: 4 / 3;
+    border-radius: 8px;
   }
 
-  .about-us-image img {
+  .about-us-image :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: 5px;
-    border: solid 1px var(--color-border);
+    border: 1px solid var(--color-border);
   }
 
 
@@ -179,27 +183,20 @@ import { clients } from "../utils/clients";
       aspect-ratio: 4 / 3;
     }
   }
-  /* servicios */
-  .servicios-titulo {
-    text-align: left;
-    margin-bottom: var(--spacing-lg);
-  }
-
-  .servicios-section {
-    background: #94daff;
-
-  }
-
-  .servicios-boton {
-    text-align: center;
-    margin-top: var(--spacing-xl);
-  }
 
   /* valor diferencial */
 
   .section-video {
     position: relative;
     overflow: hidden;
+    min-height: 500px;
+  }
+
+  .video-poster {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #272c60 0%, #1a1e45 100%);
+    z-index: 0;
   }
 
   .section-video-bg {
@@ -209,13 +206,18 @@ import { clients } from "../utils/clients";
     height: 100%;
     object-fit: cover;
     z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in;
   }
 
-  /* Capa oscura para legibilidad */
+  .section-video-bg[data-loaded="true"] {
+    opacity: 1;
+  }
+
   .section-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(39, 44, 96, 0.65); /* #272c60 con alpha */
+    background: rgba(39, 44, 96, 0.65);
     z-index: 1;
   }
 
@@ -224,27 +226,32 @@ import { clients } from "../utils/clients";
     z-index: 2;
   }
 
-  /* Ajuste de texto sobre video */
   .section-video h2,
   .section-video h3,
   .section-video p {
     color: #fff;
   }
 
-
   .valor-titulo {
     text-align: center;
     margin-bottom: var(--spacing-lg);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
   }
 
   .valor-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
   }
 
   .valor-item {
     text-align: center;
+    padding: var(--spacing-md);
+    transition: transform 0.3s ease;
+  }
+
+  .valor-item:hover {
+    transform: translateY(-8px);
   }
 
   .valor-numero {
@@ -259,23 +266,30 @@ import { clients } from "../utils/clients";
     align-items: center;
     justify-content: center;
     margin: 0 auto var(--spacing-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .valor-item h3 {
     font-weight: 700;
     margin-bottom: var(--spacing-xs);
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
   }
 
   .valor-item p {
     font-size: var(--text-sm);
-    color: white;
+    color: rgba(255, 255, 255, 0.95);
     line-height: 1.6;
-    margin-bottom: 0;
+    margin: 0;
   }
 
   @media (max-width: 768px) {
     .valor-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .section-video {
+      min-height: 600px;
     }
   }
 
@@ -291,76 +305,82 @@ import { clients } from "../utils/clients";
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
   }
 
-  /* clientes */
-  .clientes-seccion {
-    background: var(--color-background-light);
-    padding: var(--spacing-lg) 0;
-    overflow: hidden;
+  .proyectos-titulo {
+    margin: 0;
   }
 
+  /* Clientes */
   .clientes-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
   }
 
-  .carrusel-wrapper {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-  }
-
-  .carrusel-track {
-    display: flex;
-    width: max-content;
-    animation: carrusel-scroll 25s linear infinite;
-  }
-
-  .carrusel-wrapper:hover .carrusel-track {
-    animation-play-state: paused;
-  }
-
-  .cliente-logo {
-    flex-shrink: 0;
-    width: 180px;
-    height: 80px;
-    margin: 0 var(--spacing-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .cliente-logo img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    filter: grayscale(100%);
-    opacity: 0.6;
-    transition: filter var(--transition-normal), opacity var(--transition-normal);
-  }
-
-  .cliente-logo:hover img {
-    filter: grayscale(0%);
-    opacity: 1;
-  }
-
-  @keyframes carrusel-scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .cliente-logo {
-      width: 140px;
-      height: 60px;
-      margin: 0 var(--spacing-sm);
+  @media (prefers-reduced-motion: reduce) {
+    .section-video-bg,
+    .valor-item {
+      transition: none;
     }
   }
 </style>
+
+<script>
+  // Lazy load video optimizado
+  function initVideoLazyLoad() {
+    const video = document.querySelector<HTMLVideoElement>('.section-video-bg');
+    if (!video) return;
+
+    // Detectar si el usuario prefiere datos reducidos
+    const prefersReducedData = 
+      'connection' in navigator && 
+      (navigator as any).connection?.saveData === true;
+
+    // No cargar video en conexiones lentas o con ahorro de datos
+    if (prefersReducedData) {
+      console.log('Video no cargado: ahorro de datos activado');
+      return;
+    }
+
+    // Usar Intersection Observer para cargar solo cuando sea visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Cargar video solo cuando esté cerca del viewport
+            const sources = video.querySelectorAll('source');
+            sources.forEach(source => {
+              const src = source.getAttribute('src');
+              if (src && !source.hasAttribute('data-loaded')) {
+                source.setAttribute('data-loaded', 'true');
+              }
+            });
+
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+              video.setAttribute('data-loaded', 'true');
+            }, { once: true });
+
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '200px' // Comenzar a cargar 200px antes
+      }
+    );
+
+    observer.observe(video);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVideoLazyLoad);
+  } else {
+    initVideoLazyLoad();
+  }
+
+  document.addEventListener('astro:page-load', initVideoLazyLoad);
+</script>

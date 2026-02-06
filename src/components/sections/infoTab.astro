@@ -6,7 +6,7 @@ interface ServiceTab {
   id: string;
   label: string;
   title: string;
-  description:string;
+  description: string;
   points?: string[];
   image?: ImageMetadata;
 }
@@ -17,6 +17,7 @@ interface Props {
 
 const { tabs } = Astro.props;
 ---
+
 <div class="tabs">
   <div class="tabs-header-row">
     <div class="tab-headers" role="tablist">
@@ -25,6 +26,8 @@ const { tabs } = Astro.props;
           class={`tab-button ${index === 0 ? 'active' : ''}`}
           role="tab"
           aria-selected={index === 0 ? 'true' : 'false'}
+          aria-controls={`panel-${index}`}
+          id={`tab-${index}`}
           tabindex={index === 0 ? '0' : '-1'}
           data-index={index}
         >
@@ -41,6 +44,8 @@ const { tabs } = Astro.props;
       <div
         class={`tab-panel ${index === 0 ? 'active' : ''}`}
         role="tabpanel"
+        id={`panel-${index}`}
+        aria-labelledby={`tab-${index}`}
         data-index={index}
       >
         <div class="panel-layout">
@@ -60,7 +65,15 @@ const { tabs } = Astro.props;
 
           {tab.image && (
             <div class="panel-image">
-              <Image src={tab.image} alt={tab.title} loading="lazy" />
+              <Image 
+                src={tab.image} 
+                alt={tab.title}
+                loading={index === 0 ? "eager" : "lazy"}
+                width={600}
+                height={380}
+                quality={80}
+                densities={[1, 2]}
+              />
             </div>
           )}
         </div>
@@ -69,22 +82,24 @@ const { tabs } = Astro.props;
   </div>
 </div>
 
-
 <style>
   .tabs {
     width: 100%;
   }
 
-  .tab-headers {
-    display: flex;
-    gap: 1rem;
-    border-bottom: 1px solid var(--color-border);
-  }
   .tabs-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .tab-headers {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid var(--color-border, #e0e0e0);
+    flex: 1;
   }
 
   .tab-button {
@@ -95,17 +110,30 @@ const { tabs } = Astro.props;
     cursor: pointer;
     color: #666;
     position: relative;
-
-    white-space: normal;        /* permite salto */
+    white-space: normal;
     text-align: center;
-    line-height: 1.2;
-    max-width: 8rem;            /* controla el ancho del tab */
+    line-height: 1.3;
+    max-width: 9rem;
+    transition: color 0.3s ease;
+  }
+
+  .tab-button:hover {
+    color: var(--color-primary);
+  }
+
+  .tab-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   .tabs-title {
     text-align: right;
     font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
     white-space: nowrap;
+    line-height: 1.2;
   }
 
   .tab-button.active {
@@ -117,22 +145,33 @@ const { tabs } = Astro.props;
     content: '';
     position: absolute;
     left: 0;
-    bottom: -0.5rem;
+    bottom: -2px;
     width: 100%;
-    height: 2px;
+    height: 3px;
     background: var(--color-primary);
+    transition: transform 0.3s ease;
   }
 
   .tab-panels {
-    margin-top: 0.5rem;
+    position: relative;
+    min-height: 450px;
   }
 
   .tab-panel {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.4s ease-in-out, visibility 0s 0.4s;
+    pointer-events: none;
   }
 
   .tab-panel.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    transition: opacity 0.4s ease-in-out, visibility 0s 0s;
+    pointer-events: auto;
   }
 
   .panel-layout {
@@ -143,26 +182,28 @@ const { tabs } = Astro.props;
   }
 
   .panel-text h3 {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 0;
   }
 
   .panel-description {
     line-height: 1.6;
     margin-bottom: 1.5rem;
+    color: #555;
   }
 
   .panel-points {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 2rem 0;
   }
 
   .panel-points li {
     margin-bottom: 0.75rem;
-    padding-left: 1.5rem;
+    padding-left: 1.75rem;
     position: relative;
+    line-height: 1.5;
   }
 
   .panel-points li::before {
@@ -170,32 +211,94 @@ const { tabs } = Astro.props;
     position: absolute;
     left: 0;
     color: var(--color-primary);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.1rem;
   }
- .panel-image {
+
+  .panel-image {
     width: 100%;
     height: 380px;
     overflow: hidden;
     border-radius: 120px 0 120px 0;
-    display: flex;          /* añadido */
-    align-items: center;    /* añadido */
-    justify-content: center; /* añadido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
   }
 
-  .panel-image img {
+  .panel-image :global(img) {
     width: 100%;
     height: 100%;
-    object-fit: cover;      /* cubre todo el espacio, recorta si es necesario */
-    object-position: center; /* centra la imagen */
+    object-fit: cover;
+    object-position: center;
   }
-  /* Mobile */
-  @media (max-width: 768px) {
+
+  /* Tablet */
+  @media (max-width: 1024px) {
     .panel-layout {
       grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .panel-image {
+      height: 320px;
+      order: -1;
     }
   }
 
+  /* Mobile */
+  @media (max-width: 768px) {
+    .tabs-header-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
 
+    .tab-headers {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0.5rem;
+    }
+
+    .tab-headers::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      min-width: fit-content;
+      white-space: nowrap;
+      max-width: none;
+    }
+
+    .tabs-title {
+      text-align: left;
+      font-size: 1.5rem;
+    }
+
+    .panel-image {
+      height: 280px;
+      border-radius: 60px 0 60px 0;
+    }
+
+    .panel-text h3 {
+      font-size: 1.375rem;
+    }
+
+    .tab-panels {
+      min-height: 600px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tab-panel,
+    .tab-button {
+      transition: none;
+    }
+  }
 </style>
 
 <script>
@@ -205,32 +308,83 @@ const { tabs } = Astro.props;
 
     if (!tabButtons.length || !tabPanels.length) return;
 
-    tabButtons.forEach((button) => {
+    // Precargar imagen del siguiente tab
+    function preloadNextImage(currentIndex: number) {
+      const nextIndex = (currentIndex + 1) % tabPanels.length;
+      const nextPanel = tabPanels[nextIndex];
+      const img = nextPanel?.querySelector('img[loading="lazy"]');
+      
+      if (img && 'loading' in HTMLImageElement.prototype) {
+        img.setAttribute('loading', 'eager');
+      }
+    }
+
+    // Cambiar tab
+    function switchTab(index: number) {
+      tabButtons.forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+        btn.setAttribute('tabindex', '-1');
+      });
+
+      tabPanels.forEach((panel) => {
+        panel.classList.remove('active');
+      });
+
+      const selectedButton = tabButtons[index];
+      const selectedPanel = tabPanels[index];
+
+      if (selectedButton && selectedPanel) {
+        selectedButton.classList.add('active');
+        selectedButton.setAttribute('aria-selected', 'true');
+        selectedButton.setAttribute('tabindex', '0');
+        selectedPanel.classList.add('active');
+
+        // Precargar siguiente
+        preloadNextImage(index);
+      }
+    }
+
+    // Click en tabs
+    tabButtons.forEach((button, index) => {
       button.addEventListener('click', () => {
-        const indexAttr = button.dataset.index;
-        if (indexAttr === undefined) return;
+        switchTab(index);
+      });
 
-        const index = Number(indexAttr);
+      // Navegación con teclado
+      button.addEventListener('keydown', (e) => {
+        let newIndex = index;
 
-        tabButtons.forEach((btn) => {
-          btn.classList.remove('active');
-          btn.setAttribute('aria-selected', 'false');
-          btn.setAttribute('tabindex', '-1');
-        });
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          newIndex = (index + 1) % tabButtons.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          newIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          newIndex = 0;
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          newIndex = tabButtons.length - 1;
+        } else {
+          return;
+        }
 
-        tabPanels.forEach((panel) => {
-          panel.classList.remove('active');
-        });
-
-        button.classList.add('active');
-        button.setAttribute('aria-selected', 'true');
-        button.setAttribute('tabindex', '0'); 
-
-        tabPanels[index]?.classList.add('active');
+        switchTab(newIndex);
+        tabButtons[newIndex]?.focus();
       });
     });
+
+    // Precargar segunda imagen al inicio
+    preloadNextImage(0);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTabs);
+  } else {
+    initTabs();
   }
 
   document.addEventListener('astro:page-load', initTabs);
 </script>
-
