@@ -1,0 +1,21 @@
+---
+interface Props {
+  color?: string;
+}
+
+const { color = '#333' } = Astro.props as Props;
+---
+
+<span class="timeline-dot" style={`--dot-color: ${color};`}></span>
+
+<style>
+  .timeline-dot {
+    display: inline-block;  /* AÑADIDO: convierte el span en block-level */
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: currentColor;
+    flex-shrink: 0;         /* AÑADIDO: evita que se comprima en flex */
+  }
+
+</style>

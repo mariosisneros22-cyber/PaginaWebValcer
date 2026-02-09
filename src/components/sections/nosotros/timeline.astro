@@ -1,0 +1,154 @@
+---
+import TimelineItem from '../../ui/timelineitem.astro';
+import { timelineData } from '../../../utils/timeline';
+---
+
+<section class="timeline-section">
+  <div class="container">
+    <h2>Historia y trayectoria</h2>
+
+    <div class="timeline">
+      {timelineData.map((item, index) => (
+        <TimelineItem {...item} side={index % 2 === 0 ? 'left' : 'right'} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline-section h2 {
+    margin-bottom: 3rem;
+  }
+
+  .timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-left: 0;
+  }
+
+  /* Línea vertical */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background-color: #e5e5e5;
+    transform: translateX(-50%);
+  }
+
+  /* Línea progreso (animada) */
+  .timeline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: var(--line-progress, 0px); /* 👈 clave */
+    background-color: #333;
+    transform: translateX(-50%);
+    transition: height 0.25s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .timeline {
+      padding-left: 2rem;
+    }
+
+    .timeline::before, .timeline::after {
+      left: 1rem;
+      transform: none;
+    }
+  }
+
+    
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const items = Array.from(
+      document.querySelectorAll<HTMLElement>('.timeline-item')
+    );
+    if (!items.length) return;
+
+    let activeEl: HTMLElement | null = null;
+
+    const timeline = document.querySelector<HTMLElement>('.timeline');
+    const setProgressTo = (el: HTMLElement) => {
+      if (!timeline) return;
+      const tlRect = timeline.getBoundingClientRect();
+      const marker = el.querySelector<HTMLElement>('.timeline-marker');
+      const mRect = (marker ?? el).getBoundingClientRect();
+      const y = (mRect.top + mRect.height / 2) - tlRect.top;
+      timeline.style.setProperty('--line-progress', `${Math.max(0, y)}px`);
+    };
+
+    const visible = new Set<HTMLElement>();
+
+  const getMarkerCenterY = (el: HTMLElement) => {
+    const marker = el.querySelector<HTMLElement>('.timeline-marker') ?? el;
+    const r = marker.getBoundingClientRect();
+    return r.top + r.height / 2;
+  };
+
+  const setActive = (el: HTMLElement) => {
+    // reveal permanente
+    el.classList.add('is-visible');
+
+    // activo (solo uno)
+    if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
+    el.classList.add('is-active');
+    activeEl = el;
+
+    setProgressTo(el);
+  };
+
+  const pickClosestToCenter = () => {
+    if (!visible.size) return null;
+
+    const center = window.innerHeight * 0.5; // centro del viewport
+    let best: HTMLElement | null = null;
+    let bestDist = Infinity;
+
+    for (const el of visible) {
+      const y = getMarkerCenterY(el);
+      const dist = Math.abs(y - center);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = el;
+      }
+    }
+    return best;
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const el = entry.target as HTMLElement;
+
+        if (entry.isIntersecting) {
+          visible.add(el);
+          el.classList.add('is-visible'); // queda revelado para siempre
+        } else {
+          visible.delete(el);
+        }
+      }
+
+      const candidate = pickClosestToCenter();
+      if (candidate) setActive(candidate);
+    },
+    {
+      threshold: 0.01,
+      rootMargin: "-40% 0px -45% 0px", // franja central: mejora el “stepper”
+    }
+  );
+
+  items.forEach((item) => observer.observe(item));
+  });
+</script>
+
+
+

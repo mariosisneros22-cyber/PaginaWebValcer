@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/ui/button.astro';
 
+import Timeline from '../components/sections/nosotros/timeline.astro'
 import Pilar from '../components/sections/nosotros/pilar.astro'
 import nosotrosHero from '../assets/images/nosotros/nosotrosHero.jpg';
 
@@ -56,23 +57,8 @@ import {valPilar} from '../utils/valores.ts';
   </section>
 
   <!--Equipo y experiencia-->
-  <section class="section-2">
-    <div class="container">
-      <h2>Historia y trayectoria</h2>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-        </p>
-
-        <ul class="list">
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-          <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</li>
-        </ul>
-    </div>
-  </section>
+  
+  <Timeline />
 
   <!--Mision vision y valores-->
   <section class="section">

@@ -1,0 +1,229 @@
+---
+import type { TimelineItemData } from '../../utils/timeline';
+
+import Dot from './Dot.astro'
+
+
+
+type Props = TimelineItemData & { side: 'left' | 'right' };
+
+const { 
+  date, 
+  title, 
+  description,
+  side,
+} = Astro.props as Props;
+
+---
+<article class={`timeline-item ${side}`}>
+  <div class="timeline-marker">
+     <Dot />
+    <time class="timeline-date" datetime={date}>{date}</time>
+  </div>
+
+  <div class="timeline-content">
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+</article>
+
+<style>
+  .timeline-item {
+    position: relative;
+    width: 50%;
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 1fr;
+    grid-template-areas: "marker content";
+
+    box-sizing: border-box;
+    --branch: 3rem;
+    gap: 2rem;
+    align-items: start; /* hace que marker y content queden arriba */
+  
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+
+  .timeline-marker { grid-area: marker; }
+  .timeline-content { grid-area: content; }
+
+  .timeline-item.left{
+    grid-template-columns: 1fr minmax(110px, auto);
+    grid-template-areas: "content marker";
+    text-align: right;
+  }
+  .timeline-item.left {
+    align-self: flex-start;
+    padding-right: 3rem;
+    text-align: right;
+
+  }
+
+  .timeline-item.right {
+    align-self: flex-end;
+    padding-left: 3rem;
+    text-align: left;
+  }
+
+  .timeline-marker {
+    align-self: start;
+    position: relative;
+    min-width: 110px;          /* ajusta a gusto (80 era poco para dot+fecha) */
+    display: flex;
+    align-items: center;       /* mismo nivel vertical */
+    justify-content: flex-end; /* en desktop-left se alinea hacia la línea */
+    gap: 0.75rem;              /* separación dot-fecha */
+  }
+
+  /* Rama horizontal desde la línea central hacia el dot */
+  .timeline-marker::before{
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    width: var(--branch);       /* 3rem */
+    background: #e5e5e5;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+
+  /* RIGHT: la línea central está a la izquierda del item */
+  .timeline-item.right .timeline-marker::before{
+    left: calc(-1 * var(--branch));
+  }
+
+  /* LEFT: la línea central está a la derecha del item */
+  .timeline-item.left .timeline-marker::before{
+    right: calc(-1 * var(--branch));
+  }
+
+  /* Mostrar rama cuando el item aparece */
+  .timeline-item.is-visible .timeline-marker::before{
+    opacity: 1;
+  }
+
+  /* Rama más fuerte en el activo */
+  .timeline-item.is-active .timeline-marker::before{
+    background: #333;
+    opacity: 1;
+  }
+
+  .timeline-item.left .timeline-marker {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  .timeline-date {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+    
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transition-delay: calc(var(--delay, 0ms) + 80ms);
+  }
+
+
+  .timeline-item.is-visible .timeline-date {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .timeline-content h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+
+  .timeline-content p {
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+
+
+  /* estado visible */
+  .timeline-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .timeline-item.is-active .timeline-content{
+    opacity: 1;
+  }
+
+  .timeline-item.is-active .timeline-dot{
+    transform: scale(1.25);
+  }
+  .timeline-item.is-visible:not(.is-active) .timeline-content{
+    opacity: 0.85;
+  }
+
+  .timeline-dot, .timeline-date{
+    transition: opacity .2s ease, transform .2s ease;
+  }
+
+  /* estado base (visible pero no activo) */
+  .timeline-item.is-visible:not(.is-active) .timeline-dot,
+  .timeline-item.is-visible:not(.is-active) .timeline-date{
+    opacity: 0.6;
+  }
+
+  /* activo */
+  .timeline-item.is-active .timeline-dot,
+  .timeline-item.is-active .timeline-date{
+    opacity: 1;
+  }
+
+  /* pequeño énfasis visual en el dot activo */
+  .timeline-item.is-active .timeline-dot{
+    transform: scale(1.2);
+  }
+  .timeline-item.is-active .timeline-content h3{
+    font-weight: 700;
+
+    
+  }
+
+  @media (max-width: 768px) {
+  .timeline-item {
+    width: 100%;
+    padding: 0;
+    text-align: left;
+  }
+
+  .timeline-item.left,
+  .timeline-item.right {
+    align-self: stretch;
+    padding: 0;
+
+    transform: translateY(30px);
+  }
+
+  .timeline-marker {
+    justify-content: flex-start;
+    min-width: auto;         /* en mobile no necesitas ancho fijo */
+    gap: 0.75rem;
+  }
+  .timeline-marker::before{
+    display: none;
+  }
+
+  .timeline-content {
+    padding-left: 1rem;
+  }
+
+
+  .timeline-item.is-visible {
+    transform: translateY(0);
+  }
+
+  .timeline-item,
+  .timeline-dot,
+  .timeline-date{
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+</style>
