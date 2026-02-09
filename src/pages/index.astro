@@ -1,11 +1,386 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { Image } from 'astro:assets';
+
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Slider from '../components/sections/infoSlider.astro';
+import Tab from '../components/sections/infoTab.astro';
+import SliderHero from '../components/sections/hero/sliderHero.astro';
+import Button from '../components/ui/button.astro';
+import Card from '../components/sections/infoCards.astro';
+import Carrusel from '../components/sections/carrusel.astro';
+
+import {serviceTabs} from '../utils/exportContent.ts'
+import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
+import { infoCard } from '../utils/projectInfo.ts';
+import { clients } from "../utils/clients";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Valcer - Inicio">
+  <SliderHero 
+    images={heroImages}
+    title="Bienvenido a Valcer"
+    subtitle="Tu empresa de confianza"
+  />
+  <section class = "section">
+    <div class = "container">
+      <!--About us -->
+      <div class ="about-us">
+        <div class="about-us-content">
+          <h2>Sobre Nosotros</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <Button href="/nosotros">Leer más</Button>
+        </div>
+        <div class = "about-us-image"> 
+          <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
+        </div>
+      </div>
+
+      <Slider slider={infoSliders} />
+    </div>
+  </section>
+
+  <!-- Servicios Interactivos -->
+  <section class="section-2">
+    <div class="container">
+       <Tab tabs={serviceTabs}      />
+    </div>
+  </section>
+
+  <!-- Valor Diferencial -->
+  <section class="section section-video">
+    <video
+      class="section-video-bg"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="/images/logo-video.jpg"
+    >
+      <source
+        src="/videos/fondo-video.mp4"
+        type="video/mp4"
+      />
+      <source
+        src="/videos/fondo-video.webm"
+        type="video/webm"
+      />
+    </video>
+
+    <div class="section-overlay"></div>
+
+    <div class="container section-content">
+      <h2 class="valor-titulo">Por qué elegir Valcer</h2>
+
+      <div class="valor-grid">
+        <div class="valor-item">
+          <div class="valor-numero">01</div>
+          <h3>Experiencia Industrial</h3>
+          <p>Más de 15 años trabajando en proyectos de alta complejidad en el sector industrial.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">02</div>
+          <h3>Estándares de Calidad</h3>
+          <p>Cumplimos con las certificaciones internacionales más exigentes.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">03</div>
+          <h3>Equipo Especializado</h3>
+          <p>Profesionales altamente capacitados.</p>
+        </div>
+
+        <div class="valor-item">
+          <div class="valor-numero">04</div>
+          <h3>Compromiso y Seguridad</h3>
+          <p>Seguridad laboral como prioridad.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proyectos Destacados -->
+  <section class="section-2">
+    <div class="container">
+      <div class="proyectos-ht">
+        <h2 class="proyectos-titulo">Proyectos Destacados</h2>
+        <Button href="/proyectos">Ver todos los proyectos</Button>
+        <Card cards={infoCard} />
+      </div>
+    
+    </div>
+  </section>
+
+  <!-- Nuestros Clientes -->
+  <section class="section">
+    <div class="container">
+      <h2 class="clientes-titulo">Nuestros Clientes</h2>
+      <Carrusel clients={clients} />
+    </div>
+  </section>
 </Layout>
+
+<style>
+  /* about us */
+  .about-us {
+    display: flex;
+    align-items: stretch;
+    gap: var(--spacing-lg);
+  }
+
+  .about-us-content{
+    flex: 3;
+    min-width: 0;
+  }
+
+  .about-us-image{
+    flex:2;
+    min-width: 0;
+  }
+
+  .about-us-content h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .about-us-content p {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .about-us-image {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+  }
+
+  .about-us-image :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border: 1px solid var(--color-border);
+  }
+
+
+  @media (max-width: 768px) {
+    .about-us {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .about-us-content,
+    .about-us-image {
+      flex: 1;
+      width: 100%;
+    }
+
+    .about-us-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  /* valor diferencial */
+
+  .section-video {
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  .video-poster {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #272c60 0%, #1a1e45 100%);
+    z-index: 0;
+  }
+
+  .section-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+  }
+
+  .section-video-bg[data-loaded="true"] {
+    opacity: 1;
+  }
+
+  .section-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(39, 44, 96, 0.65);
+    z-index: 1;
+  }
+
+  .section-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-video h2,
+  .section-video h3,
+  .section-video p {
+    color: #fff;
+  }
+
+  .valor-titulo {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .valor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .valor-item {
+    text-align: center;
+    padding: var(--spacing-md);
+    transition: transform 0.3s ease;
+  }
+
+  .valor-item:hover {
+    transform: translateY(-8px);
+  }
+
+  .valor-numero {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .valor-item h3 {
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+  }
+
+  .valor-item p {
+    font-size: var(--text-sm);
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .valor-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+    }
+
+    .section-video {
+      min-height: 600px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .valor-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* proyectos destacados */
+  .proyectos-ht {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .proyectos-titulo {
+    margin: 0;
+  }
+
+  /* Clientes */
+  .clientes-titulo {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-video-bg,
+    .valor-item {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Lazy load video optimizado
+  function initVideoLazyLoad() {
+    const video = document.querySelector<HTMLVideoElement>('.section-video-bg');
+    if (!video) return;
+
+    // Detectar si el usuario prefiere datos reducidos
+    const prefersReducedData = 
+      'connection' in navigator && 
+      (navigator as any).connection?.saveData === true;
+
+    // No cargar video en conexiones lentas o con ahorro de datos
+    if (prefersReducedData) {
+      console.log('Video no cargado: ahorro de datos activado');
+      return;
+    }
+
+    // Usar Intersection Observer para cargar solo cuando sea visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Cargar video solo cuando esté cerca del viewport
+            const sources = video.querySelectorAll('source');
+            sources.forEach(source => {
+              const src = source.getAttribute('src');
+              if (src && !source.hasAttribute('data-loaded')) {
+                source.setAttribute('data-loaded', 'true');
+              }
+            });
+
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+              video.setAttribute('data-loaded', 'true');
+            }, { once: true });
+
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '200px' // Comenzar a cargar 200px antes
+      }
+    );
+
+    observer.observe(video);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVideoLazyLoad);
+  } else {
+    initVideoLazyLoad();
+  }
+
+  document.addEventListener('astro:page-load', initVideoLazyLoad);
+</script>

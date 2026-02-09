@@ -1,0 +1,318 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: any[];
+  title: string;
+  subtitle?: string;
+}
+
+const { images, title, subtitle } = Astro.props;
+---
+
+<section class="hero" aria-label="Hero carousel">
+  <div class="hero-slider" data-hero-slider>
+    {images.map((image, index) => (
+      <div class={`slide ${index === 0 ? 'active' : ''}`}>
+        <Image 
+          src={image} 
+          alt={`Slide ${index + 1}`} 
+          loading={index === 0 ? 'eager' : 'lazy'}
+        />
+      </div>
+    ))}
+    
+    <div class="hero-content">
+      <div class="hero-container">
+        <h1>{title}</h1>
+        {subtitle && <p>{subtitle}</p>}
+      </div>
+    </div>
+    
+    <button 
+      class="slide-btn prev" 
+      data-slide-prev
+      aria-label="Previous slide"
+    >‹</button>
+    
+    <button 
+      class="slide-btn next" 
+      data-slide-next
+      aria-label="Next slide"
+    >›</button>
+    
+    <div class="slide-indicators" role="tablist">
+      {images.map((_, index) => (
+        <button
+          class={`indicator ${index === 0 ? 'active' : ''}`}
+          data-slide-to={index}
+          role="tab"
+          aria-label={`Go to slide ${index + 1}`}
+          aria-selected={index === 0}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: min(95vh, 900px);
+    overflow: hidden;
+  }
+
+  .hero-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-slider::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.40);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+  }
+  
+  .hero-container {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .hero-content h1 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: var(--text-3xl);
+  }
+
+  .hero-content p {
+    color: white;
+    font-size: var(--text-2xl);
+  }
+
+  .slide-btn {
+    color: white;
+    transition: background 0.3s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(70, 70, 70, 0.5);
+    border: none;
+    font-size: 3rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .slide-btn:hover {
+    background: rgba(70, 70, 70, 0.8);
+  }
+
+  .slide-btn:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+  
+  .slide-btn.prev {
+    left: 20px;
+  }
+
+  .slide-btn.next {
+    right: 20px;
+  }
+
+  .slide-indicators {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .indicator:hover {
+    background: rgba(255, 255, 255, 0.7);
+  }
+  
+  .indicator.active {
+    background: white;
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      height: 60vh;
+    }
+    
+    .hero-container {
+      padding: 0 1rem;
+    }
+
+    .hero-content h1 {
+      font-size: var(--text-2xl);
+    }
+
+    .hero-content p {
+      font-size: var(--text-xl);
+    }
+    
+    .slide-btn {
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+    }
+    
+    .slide-indicators {
+      bottom: 1rem;
+    }
+    
+    .indicator {
+      width: 8px;
+      height: 8px;
+    }
+  }
+</style>
+
+<script>
+  function initSlider() {
+    const slider = document.querySelector('[data-hero-slider]');
+    if (!slider) return;
+
+    let currentSlide = 0;
+    const slides = slider.querySelectorAll('.slide');
+    const indicators = slider.querySelectorAll('.indicator');
+    const totalSlides = slides.length;
+    
+    if (totalSlides === 0) return;
+    
+    let autoSlide: ReturnType<typeof setInterval> | null = null;
+
+    function showSlide(index: number) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      indicators.forEach(ind => {
+        ind.classList.remove('active');
+        ind.setAttribute('aria-selected', 'false');
+      });
+      
+      slides[index].classList.add('active');
+      indicators[index]?.classList.add('active');
+      indicators[index]?.setAttribute('aria-selected', 'true');
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(currentSlide);
+    }
+
+    function startAutoSlide() {
+      if (autoSlide) clearInterval(autoSlide);
+      autoSlide = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoSlide() {
+      if (autoSlide) {
+        clearInterval(autoSlide);
+        autoSlide = null;
+      }
+    }
+
+    // Event listeners para botones
+    slider.querySelector('[data-slide-prev]')?.addEventListener('click', () => {
+      prevSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+
+    slider.querySelector('[data-slide-next]')?.addEventListener('click', () => {
+      nextSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+
+    // Event listeners para indicadores
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        currentSlide = index;
+        showSlide(currentSlide);
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    });
+
+    // Pausar en hover
+    slider.addEventListener('mouseenter', stopAutoSlide);
+    slider.addEventListener('mouseleave', startAutoSlide);
+
+    // Pausar cuando tab está inactivo
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoSlide();
+      } else {
+        startAutoSlide();
+      }
+    });
+
+    startAutoSlide();
+
+    // Cleanup function
+    return () => stopAutoSlide();
+  }
+
+  // Ejecutar y guardar cleanup
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup?.();
+    cleanup = initSlider();
+  });
+
+  document.addEventListener('astro:before-preparation', () => {
+    cleanup?.();
+  });
+</script>

@@ -1,0 +1,100 @@
+---
+// src/components/Footer.astro
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Valcer</h3>
+        <p>Tu empresa de confianza</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Enlaces</h4>
+        <ul class="footer-links">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/proyectos">Proyectos</a></li>
+          <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/contacto">Contacto</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <p>Email: info@valcer.com</p>
+        <p>Tel: +51 123 456 789</p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 Valcer. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #2d3748;
+    color: white;
+    padding: var(--spacing-lg) 0 var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .footer-section h3,
+  .footer-section h4 {
+    color: white;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .footer-section p {
+    color: #a0aec0;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .footer-links a {
+    color: #a0aec0;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-links a:hover {
+    color: white;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #4a5568;
+    color: #718096;
+  }
+
+  /* RESPONSIVE - Tablet y móvil */
+  @media (max-width: 768px) {
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+      text-align: center;
+    }
+
+    .footer {
+      padding: var(--spacing-md) 0 var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props{
+    title: string;
+    image: ImageMetadata;  
+}
+
+const { title, image} = Astro.props;
+---
+<section class="page-hero">
+    <Image src={image} alt={title} />
+    <div class="page-hero-content">
+      <div class="container">
+        <h1>{title}</h1>
+      </div>
+    </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+  }
+
+  .page-hero :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,.6),
+      rgba(0,0,0,.3)
+    );
+    z-index: 1;
+  }
+
+  .page-hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    padding-top: clamp(20rem, 12vh, 10rem);
+    z-index: 2; /* ← clave */
+  }
+
+  .page-hero-content h1 {
+    color: rgb(255, 255, 255);
+    font-size: var(--text-3xl);
+    margin: 0;
+    text-align: left;
+    text-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+
+
+  @media (max-width: 768px) {
+    .page-hero {
+      min-height: 50vh;
+      height: auto;
+      padding-block: clamp(6rem, 12vh, 10rem);
+    }
+
+    .page-hero-content h1 {
+      font-size: var(--text-2xl);
+    }
+  }
+
+</style>

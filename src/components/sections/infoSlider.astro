@@ -1,0 +1,327 @@
+---
+interface Slider {
+  title: string;
+  content: string;
+  metric?: string;
+  icon?: string;
+}
+
+interface Props {
+  slider: Slider[];
+  autoplayInterval?: number;
+}
+
+const { slider, autoplayInterval = 5000 } = Astro.props;
+const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class="about-slider-fade" data-slider={sliderId}>
+  <div class="cards-container">
+    {slider.map((slide, index) => (
+      <div 
+        class={`about-card ${index === 0 ? 'active' : ''}`}
+        data-slide={index}
+      >
+        <div class="slider-layout">
+          <div class="slider-content">
+            {slide.metric && <span class="slider-metric">{slide.metric}</span>}
+            <h3>{slide.title}</h3>
+            <p>{slide.content}</p>
+          </div>
+          {slide.icon && (
+            <div class="slider-icon">
+              <img 
+                src={slide.icon} 
+                alt="" 
+                aria-hidden="true"
+                width="96"
+                height="96"
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <div class="slider-controls">
+    <div class="slider-indicators" role="tablist" aria-label="Slider navigation">
+      {slider.map((_, index) => (
+        <button 
+          class={`indicator ${index === 0 ? 'active' : ''}`}
+          data-index={index}
+          role="tab"
+          aria-selected={index === 0}
+          aria-label={`Slide ${index + 1} de ${slider.length}`}
+        ></button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .about-slider-fade {
+    width: 100%;
+  }
+
+  .cards-container {
+    position: relative;
+    min-height: 250px;
+    contain: layout style paint;
+  }
+
+  .about-card {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-in-out, visibility 0s 0.6s;
+    background: #ffffff;
+    padding: 2.5rem;
+    box-shadow: 0px 10px 5px -5px rgba(0,0,0,0.05);
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  .about-card.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s ease-in-out, visibility 0s 0s;
+    pointer-events: auto;
+  }
+
+  .slider-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .slider-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .slider-metric {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .slider-content h3 {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .slider-content p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .slider-icon {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+  }
+
+  .slider-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .slider-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-md);
+  }
+
+  .slider-indicators {
+    display: flex;
+    gap: 12px;
+  }
+
+  .indicator {
+    width: 40px;
+    height: 4px;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+
+  .indicator.active {
+    background: var(--color-primary);
+  }
+
+  .indicator:hover:not(.active) {
+    background: #bdbdbd;
+    transform: scaleY(1.5);
+  }
+
+  .indicator:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .about-card {
+      padding: 1.5rem;
+    }
+
+    .slider-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .slider-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto;
+    }
+
+    .slider-content {
+      text-align: center;
+      align-items: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-card {
+      transition: none;
+    }
+
+    .indicator {
+      transition: none;
+    }
+  }
+</style>
+
+<script define:vars={{ autoplayInterval, sliderId }}>
+  // Objeto global para trackear instancias activas
+  window.__sliderInstances = window.__sliderInstances || {};
+
+  function initAboutSlider() {
+    const slider = document.querySelector(`[data-slider="${sliderId}"]`);
+    if (!slider) return;
+
+    // Cleanup de instancia anterior si existe
+    if (window.__sliderInstances[sliderId]) {
+      window.__sliderInstances[sliderId].cleanup();
+    }
+
+    let currentCard = 0;
+    let autoplayTimer = null;
+    const cards = slider.querySelectorAll('.about-card');
+    const indicators = slider.querySelectorAll('.indicator');
+    const totalCards = cards.length;
+
+    if (totalCards === 0) return;
+
+    function showCard(index) {
+      // Validar índice
+      if (index < 0 || index >= totalCards) return;
+
+      cards.forEach(card => card.classList.remove('active'));
+      indicators.forEach(ind => {
+        ind.classList.remove('active');
+        ind.setAttribute('aria-selected', 'false');
+      });
+      
+      cards[index].classList.add('active');
+      indicators[index].classList.add('active');
+      indicators[index].setAttribute('aria-selected', 'true');
+      currentCard = index;
+    }
+
+    function nextCard() {
+      const nextIndex = (currentCard + 1) % totalCards;
+      showCard(nextIndex);
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(nextCard, autoplayInterval);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer !== null) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Event listeners
+    const clickHandlers = [];
+    indicators.forEach((indicator, index) => {
+      const handler = () => {
+        showCard(index);
+        startAutoplay();
+      };
+      indicator.addEventListener('click', handler);
+      clickHandlers.push({ element: indicator, handler });
+    });
+
+    const mouseEnterHandler = () => stopAutoplay();
+    const mouseLeaveHandler = () => startAutoplay();
+    
+    slider.addEventListener('mouseenter', mouseEnterHandler);
+    slider.addEventListener('mouseleave', mouseLeaveHandler);
+
+    const visibilityHandler = () => {
+      if (document.hidden) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityHandler);
+
+    // Cleanup function
+    const cleanup = () => {
+      stopAutoplay();
+      
+      // Remover event listeners
+      clickHandlers.forEach(({ element, handler }) => {
+        element.removeEventListener('click', handler);
+      });
+      slider.removeEventListener('mouseenter', mouseEnterHandler);
+      slider.removeEventListener('mouseleave', mouseLeaveHandler);
+      document.removeEventListener('visibilitychange', visibilityHandler);
+      
+      // Remover del registro global
+      delete window.__sliderInstances[sliderId];
+    };
+
+    // Registrar instancia
+    window.__sliderInstances[sliderId] = { cleanup };
+
+    // Iniciar autoplay
+    startAutoplay();
+  }
+
+  // Ejecutar inmediatamente si el DOM está listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAboutSlider);
+  } else {
+    initAboutSlider();
+  }
+  
+  // Re-inicializar en navegación de Astro
+  document.addEventListener('astro:page-load', initAboutSlider);
+
+  // Cleanup antes de navegación
+  document.addEventListener('astro:before-preparation', () => {
+    if (window.__sliderInstances[sliderId]) {
+      window.__sliderInstances[sliderId].cleanup();
+    }
+  });
+</script>
