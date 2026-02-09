@@ -6,26 +6,56 @@ const {
   text,
   color = '#000',
   direction = 'right',
+  align = 'left',
+  offsetx ='0',
 } = Astro.props as PilarData;
 
 --- 
 
 
-<div class ={`pillar from-${direction}`} style={`--pillar-color: ${color};`} >
+<div class ={`pillar from-${direction} align-${align}`} style={`--pillar-color: ${color}; --pillar-offsetx: ${offsetx}%`} >
   <h3>{title}</h3>
   <p>{text}</p>
 </div>
 
 <style>
   .pillar{
+    position: relative;
+    background-color: var(--pillar-color);  
+  /*  outline: 2px dashed red;*/
+    --overlap-step: 30px;
+    left: var(--pillar-offsetx);
+
     padding: 2rem;
-    border-left:4px solid var(--pillar-color);
+
     opacity: 0;
     transition: 
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
+      opacity 1s ease-out,
+      transform 1s ease-out;
   }
 
+  .pillar:nth-child(1) {
+    margin-top: 0;
+  }
+
+  .pillar:nth-child(2),.pillar:nth-child(3),  .pillar:nth-child(4) {
+    margin-top: calc(var(--overlap-step) * -2);
+  }
+
+  /*Superposición vertical*/ 
+  
+
+
+  /* alineación final */
+  .align-left {
+    border-left: 4px solid black;
+    text-align: left;
+  }
+
+  .align-right {
+    border-right: 4px solid black;
+    text-align: right;
+  }
 
   /*estados inicales según dirección*/
   .from-right { transform: translateX(60px);}
@@ -42,11 +72,6 @@ const {
   .pillar h3{
     margin-bottom: 0.75rem;
     font-size: 1.25rem;
-  }
-
-  .pillar p{
-    line-height: 1.6;
-    max-width: 60ch;
   }
 
 </style>
