@@ -28,202 +28,162 @@ const {
 </article>
 
 <style>
-  .timeline-item {
-    position: relative;
-    width: 50%;
-    display: grid;
-    grid-template-columns: minmax(110px, auto) 1fr;
-    grid-template-areas: "marker content";
+  .timeline-item{
+  position: relative;
+  width: 50%;
+  box-sizing: border-box;
 
-    box-sizing: border-box;
-    --branch: 3rem;
-    gap: 2rem;
-    align-items: start; /* hace que marker y content queden arriba */
-  
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity .35s ease, transform .35s ease;
-  }
+  display: grid;
+  grid-template-columns: minmax(110px, auto) 1fr;
+  grid-template-areas: "marker content";
+  gap: 2rem;
+  align-items: start;
 
-  .timeline-marker { grid-area: marker; }
-  .timeline-content { grid-area: content; }
+  --branch: 3rem;
 
-  .timeline-item.left{
-    grid-template-columns: 1fr minmax(110px, auto);
-    grid-template-areas: "content marker";
-    text-align: right;
-  }
-  .timeline-item.left {
-    align-self: flex-start;
-    padding-right: 3rem;
-    text-align: right;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .35s ease, transform .35s ease;
+}
 
-  }
+.timeline-marker{ grid-area: marker; }
+.timeline-content{ grid-area: content; }
 
-  .timeline-item.right {
-    align-self: flex-end;
-    padding-left: 3rem;
-    text-align: left;
-  }
+/* Left / Right layout */
+.timeline-item.left{
+  grid-template-columns: 1fr minmax(110px, auto);
+  grid-template-areas: "content marker";
+  align-self: flex-start;
+  padding-right: 3rem;
+  text-align: right;
+}
 
-  .timeline-marker {
-    align-self: start;
-    position: relative;
-    min-width: 110px;          /* ajusta a gusto (80 era poco para dot+fecha) */
-    display: flex;
-    align-items: center;       /* mismo nivel vertical */
-    justify-content: flex-end; /* en desktop-left se alinea hacia la línea */
-    gap: 0.75rem;              /* separación dot-fecha */
-  }
+.timeline-item.right{
+  align-self: flex-end;
+  padding-left: 3rem;
+  text-align: left;
+}
 
-  /* Rama horizontal desde la línea central hacia el dot */
-  .timeline-marker::before{
-    content: "";
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 2px;
-    width: var(--branch);       /* 3rem */
-    background: #e5e5e5;
-    opacity: 0;
-    transition: opacity .2s ease;
-  }
+/* Marker (dot + date) */
+.timeline-marker{
+  align-self: start;
+  position: relative;
+  min-width: 110px;
 
-  /* RIGHT: la línea central está a la izquierda del item */
-  .timeline-item.right .timeline-marker::before{
-    left: calc(-1 * var(--branch));
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 
-  /* LEFT: la línea central está a la derecha del item */
-  .timeline-item.left .timeline-marker::before{
-    right: calc(-1 * var(--branch));
-  }
+.timeline-item.left .timeline-marker{
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
 
-  /* Mostrar rama cuando el item aparece */
-  .timeline-item.is-visible .timeline-marker::before{
-    opacity: 1;
-  }
+/* Branch from center line to dot */
+.timeline-marker::before{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  width: var(--branch);
+  background: #e5e5e5;
+  opacity: 0;
+  transition: opacity .2s ease, background-color .2s ease;
+}
 
-  /* Rama más fuerte en el activo */
-  .timeline-item.is-active .timeline-marker::before{
-    background: #333;
-    opacity: 1;
-  }
+.timeline-item.right .timeline-marker::before{ left: calc(-1 * var(--branch)); }
+.timeline-item.left  .timeline-marker::before{ right: calc(-1 * var(--branch)); }
 
-  .timeline-item.left .timeline-marker {
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-  }
+.timeline-item.is-visible .timeline-marker::before{ opacity: 1; }
+.timeline-item.is-active  .timeline-marker::before{ background: #333; }
 
-  .timeline-date {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #555;
-    
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-    transition-delay: calc(var(--delay, 0ms) + 80ms);
-  }
+/* Date */
+.timeline-date{
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
 
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .4s ease-out, transform .4s ease-out;
+  transition-delay: calc(var(--delay, 0ms) + 80ms);
+}
 
-  .timeline-item.is-visible .timeline-date {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .timeline-content h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-  }
+.timeline-item.is-visible .timeline-date{
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  .timeline-content p {
-    line-height: 1.6;
-    max-width: 65ch;
-  }
+/* Content */
+.timeline-content h3{
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
 
+.timeline-content p{
+  line-height: 1.6;
+  max-width: 65ch;
+}
 
-  /* estado visible */
-  .timeline-item.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Visible */
+.timeline-item.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  .timeline-item.is-active .timeline-content{
-    opacity: 1;
-  }
+/* Active vs inactive */
+.timeline-item.is-visible:not(.is-active) .timeline-content{ opacity: 0.85; }
+.timeline-item.is-active .timeline-content h3{ font-weight: 700; }
 
-  .timeline-item.is-active .timeline-dot{
-    transform: scale(1.25);
-  }
-  .timeline-item.is-visible:not(.is-active) .timeline-content{
-    opacity: 0.85;
-  }
+/* Dot + date emphasis */
+.timeline-dot,
+.timeline-date{
+  transition: opacity .2s ease, transform .2s ease;
+}
 
-  .timeline-dot, .timeline-date{
-    transition: opacity .2s ease, transform .2s ease;
-  }
+.timeline-item.is-visible:not(.is-active) .timeline-dot,
+.timeline-item.is-visible:not(.is-active) .timeline-date{
+  opacity: 0.6;
+}
 
-  /* estado base (visible pero no activo) */
-  .timeline-item.is-visible:not(.is-active) .timeline-dot,
-  .timeline-item.is-visible:not(.is-active) .timeline-date{
-    opacity: 0.6;
-  }
+.timeline-item.is-active .timeline-dot,
+.timeline-item.is-active .timeline-date{
+  opacity: 1;
+}
 
-  /* activo */
-  .timeline-item.is-active .timeline-dot,
-  .timeline-item.is-active .timeline-date{
-    opacity: 1;
-  }
+.timeline-item.is-active .timeline-dot{
+  transform: scale(1.2);
+}
 
-  /* pequeño énfasis visual en el dot activo */
-  .timeline-item.is-active .timeline-dot{
-    transform: scale(1.2);
-  }
-  .timeline-item.is-active .timeline-content h3{
-    font-weight: 700;
-
-    
-  }
-
-  @media (max-width: 768px) {
-  .timeline-item {
+/* Mobile */
+@media (max-width: 768px){
+  .timeline-item{
     width: 100%;
     padding: 0;
     text-align: left;
+
+    transition: none !important;
+    transform: none !important;
   }
 
-  .timeline-item.left,
-  .timeline-item.right {
-    align-self: stretch;
-    padding: 0;
-
-    transform: translateY(30px);
-  }
-
-  .timeline-marker {
+  .timeline-marker{
     justify-content: flex-start;
-    min-width: auto;         /* en mobile no necesitas ancho fijo */
-    gap: 0.75rem;
-  }
-  .timeline-marker::before{
-    display: none;
+    min-width: auto;
   }
 
-  .timeline-content {
-    padding-left: 1rem;
-  }
+  .timeline-marker::before{ display: none; }
 
+  .timeline-content{ padding-left: 1rem; }
 
-  .timeline-item.is-visible {
-    transform: translateY(0);
-  }
-
-  .timeline-item,
   .timeline-dot,
   .timeline-date{
     transition: none !important;
     transform: none !important;
   }
 }
+
 
 </style>

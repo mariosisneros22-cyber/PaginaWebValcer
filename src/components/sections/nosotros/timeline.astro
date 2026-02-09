@@ -69,86 +69,81 @@ import { timelineData } from '../../../utils/timeline';
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const items = Array.from(
-      document.querySelectorAll<HTMLElement>('.timeline-item')
-    );
+    const items = document.querySelectorAll<HTMLElement>('.timeline-item');
     if (!items.length) return;
 
-    let activeEl: HTMLElement | null = null;
-
     const timeline = document.querySelector<HTMLElement>('.timeline');
-    const setProgressTo = (el: HTMLElement) => {
-      if (!timeline) return;
-      const tlRect = timeline.getBoundingClientRect();
-      const marker = el.querySelector<HTMLElement>('.timeline-marker');
-      const mRect = (marker ?? el).getBoundingClientRect();
-      const y = (mRect.top + mRect.height / 2) - tlRect.top;
+    if (!timeline) return;
+
+    let activeEl: HTMLElement | null = null;
+    const visible = new Set<HTMLElement>();
+
+    const getMarkerCenter = (el: HTMLElement) => {
+      const marker = el.querySelector<HTMLElement>('.timeline-marker') ?? el;
+      const r = marker.getBoundingClientRect();
+      return r.top + r.height / 2;
+    };
+
+    const setActive = (el: HTMLElement) => {
+      if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
+      el.classList.add('is-active');
+      activeEl = el;
+
+      // Progreso: usa el centro del marker (1 sola medida)
+      const tlTop = timeline.getBoundingClientRect().top;
+      const y = getMarkerCenter(el) - tlTop;
       timeline.style.setProperty('--line-progress', `${Math.max(0, y)}px`);
     };
 
-    const visible = new Set<HTMLElement>();
+    const pickClosestToCenter = () => {
+      if (!visible.size) return null;
 
-  const getMarkerCenterY = (el: HTMLElement) => {
-    const marker = el.querySelector<HTMLElement>('.timeline-marker') ?? el;
-    const r = marker.getBoundingClientRect();
-    return r.top + r.height / 2;
-  };
+      const center = window.innerHeight * 0.5;
+      let best: HTMLElement | null = null;
+      let bestDist = Infinity;
 
-  const setActive = (el: HTMLElement) => {
-    // reveal permanente
-    el.classList.add('is-visible');
-
-    // activo (solo uno)
-    if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
-    el.classList.add('is-active');
-    activeEl = el;
-
-    setProgressTo(el);
-  };
-
-  const pickClosestToCenter = () => {
-    if (!visible.size) return null;
-
-    const center = window.innerHeight * 0.5; // centro del viewport
-    let best: HTMLElement | null = null;
-    let bestDist = Infinity;
-
-    for (const el of visible) {
-      const y = getMarkerCenterY(el);
-      const dist = Math.abs(y - center);
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = el;
-      }
-    }
-    return best;
-  };
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const el = entry.target as HTMLElement;
-
-        if (entry.isIntersecting) {
-          visible.add(el);
-          el.classList.add('is-visible'); // queda revelado para siempre
-        } else {
-          visible.delete(el);
+      for (const el of visible) {
+        const dist = Math.abs(getMarkerCenter(el) - center);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = el;
         }
       }
+      return best;
+    };
 
-      const candidate = pickClosestToCenter();
-      if (candidate) setActive(candidate);
-    },
-    {
-      threshold: 0.01,
-      rootMargin: "-40% 0px -45% 0px", // franja central: mejora el “stepper”
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+
+          if (entry.isIntersecting) {
+            visible.add(el);
+            el.classList.add('is-visible'); // reveal permanente
+          } else {
+            visible.delete(el);
+          }
+        }
+
+        const candidate = pickClosestToCenter();
+        if (candidate) setActive(candidate);
+      },
+      {
+        threshold: 0.01,
+        rootMargin: '-40% 0px -45% 0px', // deja simétrico (si no lo calibraste a propósito)
+      }
+    );
+
+    items.forEach((el) => observer.observe(el));
+
+    window.addEventListener('resize', () => {
+    if (activeEl) {
+      const tlTop = timeline.getBoundingClientRect().top;
+      const y = getMarkerCenter(activeEl) - tlTop;
+      timeline.style.setProperty('--line-progress', `${Math.max(0, y)}px`);
     }
-  );
+  });
 
-  items.forEach((item) => observer.observe(item));
   });
 </script>
-
-
 
