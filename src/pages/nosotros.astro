@@ -1,7 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import nosotrosHero from '../assets/images/nosotros/nosotrosHero.jpg';
 import Button from '../components/ui/button.astro';
+
+import Pilar from '../components/sections/nosotros/pilar.astro'
+import nosotrosHero from '../assets/images/nosotros/nosotrosHero.jpg';
+
+
+import {valPilar} from '../utils/valores.ts';
 ---
 
 <Layout title="Valcer - Nosotros"
@@ -43,31 +48,9 @@ import Button from '../components/ui/button.astro';
   <section class="section">
     <div class="container">
       <h2>Nuestros pilares</h2>
-
-        <div class="grid pillars-grid">
-          <div class="pillar">
-            <h3>Seguridad</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-
-          <div class="pillar">
-            <h3>Calidad</h3>
-            <p>
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-          </div>
-
-          <div class="pillar">
-            <h3>Cumplimiento</h3>
-            <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit
-              esse cillum dolore eu fugiat nulla pariatur.
-            </p>
-          </div>
+        <div class="pillars-grid">
+          {valPilar.map((pillar) => (<Pilar {...pillar} />
+          ))}
         </div>
     </div>
   </section>
