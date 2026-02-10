@@ -24,13 +24,13 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   <div class="scene-marker">
     <div class="scene-year">
       {layout === "split" ? (
-        <span class="year-vertical">
-          {year.split("").map((digit) => (
-            <span class="year-digit">{digit}</span>
-          ))}
+        <span class="year year-vertical" data-text={year.split("").join("\n")}>
+          {year.split("").join("\n")}
         </span>
       ) : (
-        <span class="year-horizontal">{year}</span>
+        <span class="year year-horizontal" data-text={year}>
+          {year}
+        </span>
       )}
     </div>
     <div class="scene-dot" aria-hidden="true"></div>
@@ -73,8 +73,12 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     display: grid;
   }
 
-  .scene.is-active{ display:grid; }
-
+  .scene-content{
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+  }
+  
   /* Marker en columna central, centrado vertical */
   .scene-marker{
     grid-column: 2;
@@ -182,21 +186,67 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   /* AÑO */
   .scene-year{
     line-height: 1;
+    padding: 0.15em 0.25em;   /* placa */
+    background: white;
+    border-radius: 12px;
   }
 
-  .year-horizontal,
-  .year-digit{
+
+  /* tipografía común */
+  .year{
     font-weight: 700;
     font-size: clamp(5rem, 6vw, 6rem);
     line-height: 1;
+
+    position: relative;
+    display: inline-block;
+
+    /* ✅ base visible */
+    color: #999;
   }
 
-  /* Vertical por dígitos */
+  /* vertical apilado */
   .year-vertical{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    white-space: pre-line;
+    text-align: center;
   }
+
+  /* overlay: el “relleno” */
+  .year::after{
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    white-space: inherit;
+    text-align: inherit;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    background-image: linear-gradient(#111, #111);
+    background-repeat: no-repeat;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    pointer-events: none;
+  }
+
+  /* relleno horizontal (izq→der) */
+  .year-horizontal::after{
+    background-size: calc(var(--fill, 0) * 100%) 100%;
+    background-position: 0 0;
+  }
+
+  /* relleno vertical (abajo→arriba) */
+  .year-vertical::after{
+    background-size: 100% calc(var(--fill, 0) * 100%);
+    background-position: 0 100%;
+  }
+
+
+
+
 
   /*OUTRO */
   /* OUTRO: bloque centrado, lema debajo del dot */
@@ -216,7 +266,7 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     grid-row: 2;
     justify-self: center;
     text-align: center;
-    max-width: 80;
+    max-width: 70ch;
 
     font-size: xx-large;
   }
@@ -246,6 +296,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     -webkit-mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
     mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
   }
+
+  
   /* Mobile fallback (lista normal) */
   @media (max-width:768px){
     .scene{

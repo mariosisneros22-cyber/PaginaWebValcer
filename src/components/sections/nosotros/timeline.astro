@@ -16,7 +16,7 @@ const outro = {
 const scenes = [...timelineData, outro];
 ---
 
-<section class="timeline-section" data-timeline style={`--n:${scenes.length};`}>
+<section class="timeline-section" data-timeline style={`--n:${scenes.length}; --tail:0.6;`}>
   <div class="container">
     <header class="timeline-header">
       <h2>Historia y trayectoria</h2>
@@ -46,7 +46,9 @@ const scenes = [...timelineData, outro];
 </section>
 
 <style>
-  .timeline-track{ height: calc(var(--n) * 100vh); }
+  .timeline-track{ 
+    height: calc((var(--n) + var(--tail,0)) * 100vh); 
+  }
 
   .timeline-stage{
     position: sticky;
@@ -109,11 +111,16 @@ const scenes = [...timelineData, outro];
         scenes[idx]?.classList.add("is-active");
         activeIndex = idx;
       }
-
+    
       const n = scenes.length;
       const progress01 = (idx + t) / Math.max(1, n - 1);
       const usable = stage.getBoundingClientRect().height * 0.76;
       root.style.setProperty("--line-progress", `${progress01 * usable}px`);
+
+      for (let i = 0; i <scenes.length; i++){
+        const v = i < idx ? 1 : i === idx ? t : 0;
+        scenes[i].style.setProperty("--fill", `${v}`);
+      }
     };
 
     const update = () => {
@@ -125,10 +132,16 @@ const scenes = [...timelineData, outro];
       const scrolled = clamp(-trackRect.top, 0, trackRect.height - vh);
       const raw = scrolled / vh;
 
-      const idx = clamp(Math.floor(raw), 0, scenes.length - 1);
-      const t = raw - Math.floor(raw);
+      const last = scenes.length - 1;
 
-      setActive(idx, t);
+      const idxUnclamped = Math.floor(raw);
+      const rawClamped = clamp(raw, 0, last);
+
+      const idx = Math.floor(rawClamped);
+      const t = rawClamped - idx;
+
+      const tFinal = idxUnclamped >= last ? 1 : t;
+      setActive(idx, tFinal);
     };
 
     const schedule = () => {
