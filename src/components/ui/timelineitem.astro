@@ -45,8 +45,9 @@ const {
 
     --branch: 3rem;
 
-    min-height: 120vh;
-    padding-block: 10vh;
+    min-height: 100vh;
+    padding-block: 0;
+    padding-inline: 0; 
 
     /* reveal / slide */
     --x: 0px;
@@ -93,8 +94,6 @@ const {
   .timeline-marker{
     grid-area: marker;
     position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
     z-index: 2;
   }
 
@@ -102,11 +101,17 @@ const {
     grid-area: content;
   }
 
+  .timeline-marker{
+    top: 50vh;
+    transform: translateY(-50%);
+  }
+
+
   .timeline-content-inner{
     position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
     z-index: 1;
+    top: 50vh;
+    transform: translateY(-0.5rem);
   }
 
   /* marker layout */
@@ -231,7 +236,8 @@ const {
     .timeline-content{ padding-left: 1rem; }
 
     .timeline-dot,
-    .timeline-date{
+    .timeline-date,
+    .timeline-marker-inner::before{
       transition: none !important;
       transform: none !important;
     }

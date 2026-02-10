@@ -5,7 +5,10 @@ import { timelineData } from '../../../utils/timeline';
 
 <section class="timeline-section">
   <div class="container">
-    <h2>Historia y trayectoria</h2>
+    <header class="timeline-header">
+      <h2>Historia y trayectoria</h2>
+    </header>
+    
 
     <div class="timeline">
       {timelineData.map((item, index) => (
@@ -16,9 +19,7 @@ import { timelineData } from '../../../utils/timeline';
 </section>
 
 <style>
-  .timeline-section h2 {
-    margin-bottom: 3rem;
-  }
+  
 
   .timeline {
     position: relative;
@@ -28,6 +29,24 @@ import { timelineData } from '../../../utils/timeline';
     padding-left: 0;
   }
 
+  .timeline-section{
+    position: relative;
+  }
+
+  .timeline-header{
+    position:sticky;
+    top: 0;
+    z-index:5;
+
+    background: white;
+
+    padding-top: 5rem;
+  
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .timeline-section h2 {
+    margin-bottom: 3rem;
+  }
   /* Línea vertical */
   .timeline::before {
     content: '';
@@ -62,6 +81,12 @@ import { timelineData } from '../../../utils/timeline';
       left: 1rem;
       transform: none;
     }
+
+    .timeline-header{
+      position:static;
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
   }
 
     
@@ -77,37 +102,44 @@ import { timelineData } from '../../../utils/timeline';
 
     let activeEl: HTMLElement | null = null;
     const visible = new Set<HTMLElement>();
+    let rafPending = false;
 
-    // 1) Centro EN VIEWPORT (para decidir el "active")
+    // 1) Centro del marker en viewport (para decidir escena activa)
     const getMarkerCenterViewport = (el: HTMLElement): number => {
       const marker = el.querySelector<HTMLElement>('.timeline-marker') ?? el;
       const r = marker.getBoundingClientRect();
       return r.top + r.height / 2;
     };
 
-    // 2) Centro DENTRO del timeline (para la línea de progreso)
+    // 2) Centro del marker dentro del timeline (para la línea de progreso)
     const getMarkerCenterInTimeline = (el: HTMLElement): number => {
-      const inner =
+      const marker =
         el.querySelector<HTMLElement>('.timeline-marker-inner') ??
         el.querySelector<HTMLElement>('.timeline-marker') ??
         el;
 
-      const itemTop = el.offsetTop;
-      const innerTop = (inner as HTMLElement).offsetTop;
-      const innerCenter = innerTop + (inner as HTMLElement).offsetHeight / 2;
+      const markerRect = marker.getBoundingClientRect();
+      const timelineRect = timeline.getBoundingClientRect();
 
-      return itemTop + innerCenter;
+      const center =
+        (markerRect.top + markerRect.height / 2) - timelineRect.top;
+
+      return Math.max(0, Math.min(center, timeline.scrollHeight));
     };
 
+    // 3) Activa una escena y actualiza progreso
     const setActive = (el: HTMLElement): void => {
-      if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
+      if (activeEl === el) return;
+
+      if (activeEl) activeEl.classList.remove('is-active');
       el.classList.add('is-active');
       activeEl = el;
 
       const y = getMarkerCenterInTimeline(el);
-      timeline.style.setProperty('--line-progress', `${Math.max(0, y)}px`);
+      timeline.style.setProperty('--line-progress', `${y}px`);
     };
 
+    // 4) Elige el item visible más cercano al centro del viewport
     const pickClosestToCenter = (): HTMLElement | null => {
       if (!visible.size) return null;
 
@@ -122,9 +154,23 @@ import { timelineData } from '../../../utils/timeline';
           best = el;
         }
       }
+
       return best;
     };
 
+    // 5) Scheduler (anti-jitter)
+    const scheduleUpdate = (): void => {
+      if (rafPending) return;
+      rafPending = true;
+
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const candidate = pickClosestToCenter();
+        if (candidate) setActive(candidate);
+      });
+    };
+
+    // 6) IntersectionObserver: solo gestiona visibilidad
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -137,9 +183,7 @@ import { timelineData } from '../../../utils/timeline';
             visible.delete(el);
           }
         }
-
-        const candidate = pickClosestToCenter();
-        if (candidate) setActive(candidate);
+        scheduleUpdate();
       },
       {
         threshold: 0.01,
@@ -149,8 +193,22 @@ import { timelineData } from '../../../utils/timeline';
 
     items.forEach((el) => observer.observe(el));
 
-    window.addEventListener('resize', () => {
-      if (activeEl) setActive(activeEl);
-    });
+    // 7) Mantener escena/progreso sincronizados
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate, { passive: true });
+
+    // 8) Init
+    scheduleUpdate();
+
+    // 9) Cleanup opcional en navegación Astro
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        observer.disconnect();
+        window.removeEventListener('scroll', scheduleUpdate);
+        window.removeEventListener('resize', scheduleUpdate);
+      },
+      { once: true }
+    );
   });
 </script>
