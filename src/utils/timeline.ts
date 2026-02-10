@@ -1,7 +1,7 @@
-import imagetest from '../assets/images/nosotros/nosotrosHero.jpg'
+import imagetest from '../assets/images/nosotros/timeline/imagetest.jpg'
 import type { ImageMetadata } from 'astro';
 
-export type TimelineLayout = "intro" | "right";
+export type TimelineLayout = "intro" | "split" | "outro";
 export interface TimelineItemData{
   id: number;
   year: string;
@@ -11,7 +11,7 @@ export interface TimelineItemData{
   image?: ImageMetadata;
   imageAlt?: string;
   layout?: string;
-
+  tagline?: string; //lema para outro
 }
 
 export const timelineData: TimelineItemData[] =[
@@ -112,7 +112,7 @@ export const timelineData: TimelineItemData[] =[
     image: imagetest,
     imageAlt: 'Fundación de la empresa',
   },
-
+  
 ]
 
 export const timelineDataSorted = [...timelineData].sort((a, b) => {

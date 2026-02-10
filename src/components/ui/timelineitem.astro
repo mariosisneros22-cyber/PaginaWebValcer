@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import type { TimelineItemData } from "../../utils/timeline.ts";
 
 type Side = "A" | "B";
-type Layout = "intro" | "split";
+type Layout = "intro" | "split" | "outro";
 
 type Props = TimelineItemData & {
   index: number;
@@ -23,22 +23,28 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
 >
   <div class="scene-marker">
     <div class="scene-year">
-      {layout === "intro" ? (
-        <span class="year-horizontal">{year}</span>
-      ) : (
+      {layout === "split" ? (
         <span class="year-vertical">
           {year.split("").map((digit) => (
             <span class="year-digit">{digit}</span>
           ))}
         </span>
+      ) : (
+        <span class="year-horizontal">{year}</span>
       )}
     </div>
     <div class="scene-dot" aria-hidden="true"></div>
   </div>
 
   <div class="scene-content">
-    <h3>{title}</h3>
-    <p>{description}</p>
+    {layout === "outro" ? (
+      <p class="scene-tagline">{Astro.props.tagline ?? ""}</p>
+    ) : (
+      <>
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </>
+    )}
   </div>
 
   {image ? (
@@ -66,7 +72,6 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .scene.is-active{
     display: grid;
   }
-
 
   .scene.is-active{ display:grid; }
 
@@ -102,6 +107,7 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .scene[data-layout="intro"] .scene-marker{
     grid-column: 2;
     grid-row: 1;
+
   }
 
   .scene[data-layout="intro"] .scene-content{
@@ -111,6 +117,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     justify-self: center;
     text-align: center;
     min-width: 50ch;
+
+    font-size: x-large;
   }
 
   .scene[data-layout="intro"] .scene-media{ display:none; }
@@ -127,21 +135,23 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   }
   /* Para manejar textos largos sin romper */
   .scene-content{
-    max-width: 65ch;
+    max-width: 60ch;
   }
 
   .scene-media{
-    max-width: 520px;
-    width: 100%;
+    max-width: min(48vw, 900px);
   }
 
   .scene-media :global(img){
     width: 100%;
     height: auto;
-    display:block;
-    border-radius: 12px;
+    min-height: 75vh;
+    object-fit: cover;
   }
 
+  .scene[data-layout="split"]{
+    font-size: large;
+  }
   /* A: imagen izquierda / texto derecha */
   .scene[data-layout="split"][data-side="A"] .scene-media{
     grid-column: 1;
@@ -173,7 +183,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .year-horizontal,
   .year-digit{
     font-weight: 700;
-    font-size: clamp(5rem, 4vw, 3.5rem);
+    font-size: clamp(5rem, 6vw, 6rem);
+    line-height: 1;
   }
 
   /* Vertical por dígitos */
@@ -183,7 +194,42 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     align-items: center;
   }
 
+  /*OUTRO */
+  /* OUTRO: bloque centrado, lema debajo del dot */
+  .scene[data-layout="outro"]{
+    grid-template-rows: auto auto;
+    align-content: center;
+    row-gap: 14px;
+  }
 
+  .scene[data-layout="outro"] .scene-marker{
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .scene[data-layout="outro"] .scene-content{
+    grid-column: 1 / 4;
+    grid-row: 2;
+    justify-self: center;
+    text-align: center;
+    max-width: 80;
+
+    font-size: xx-large;
+  }
+
+  .scene-tagline{
+    margin: 0;
+  }
+  .scene[data-layout="outro"] .scene-media{ display:none; }
+
+
+  /*degradado imagen*/
+  .scene-marker{ z-index: 3; }
+  .scene-content{ z-index: 2; }
+  .scene-media{ z-index: 1; position: relative; }
+  
+
+  
   /* Mobile fallback (lista normal) */
   @media (max-width:768px){
     .scene{

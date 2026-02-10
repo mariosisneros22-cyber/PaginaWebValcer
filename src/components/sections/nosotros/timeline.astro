@@ -1,9 +1,22 @@
 ---
 import TimelineItem from "../../ui/timelineitem.astro";
 import { timelineDataSorted as timelineData } from "../../../utils/timeline";
+
+const currentYear = new Date().getFullYear().toString();
+
+const outro = {
+    id: 999,
+    year: currentYear,
+    title: "",
+    description: "",
+    layout:"outro",
+    tagline: "Construyendo hoy, proyectando el mañana",
+  };
+
+const scenes = [...timelineData, outro];
 ---
 
-<section class="timeline-section" data-timeline style={`--n:${timelineData.length};`}>
+<section class="timeline-section" data-timeline style={`--n:${scenes.length};`}>
   <div class="container">
     <header class="timeline-header">
       <h2>Historia y trayectoria</h2>
@@ -17,8 +30,8 @@ import { timelineDataSorted as timelineData } from "../../../utils/timeline";
         </div>
 
         <div class="timeline-scenes">
-          {timelineData.map((item, index) => {
-            const layout = (item.layout ?? (index === 0 ? "intro" : "split")) as "intro" | "split";
+          {scenes.map((item, index) => {
+            const layout = (item.layout ?? (index === 0 ? "intro" : "split")) as "intro" | "split" | "outro";
             const side =
               layout === "split"
                 ? ((index - 1) % 2 === 0 ? "A" : "B")
