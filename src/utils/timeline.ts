@@ -1,31 +1,32 @@
 import imagetest from '../assets/images/nosotros/nosotrosHero.jpg'
+import type { ImageMetadata } from 'astro';
 
-
-
-
+export type TimelineLayout = "intro" | "right";
 export interface TimelineItemData{
   id: number;
-  date: string;
+  year: string;
+  datetime?: string;
   title: string;
   description: string;
   image?: ImageMetadata;
   imageAlt?: string;
+  layout?: string;
 
 }
 
 export const timelineData: TimelineItemData[] =[
   {
     id: 1,
-    date: '2007',
+    year: '2000',
     title: 'Fundación de la empresa',
     description: 'Iniciamos con el objetivo de brnidar  soluciones industriales seguras y eficientes',
     image: imagetest,
     imageAlt: 'Fundación de la empresa',
-
+    layout: "intro",
   },
   {
     id: 2,
-    date: '2010',
+    year: '2010',
     title: 'Primer gran proyecto',
     description: 'Ejecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidad.',
     image: imagetest,
@@ -33,7 +34,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 3,
-    date: '2023',
+    year: '2023',
     title: 'Expansión regional',
     description: 'Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.',
     image: imagetest,
@@ -41,7 +42,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 4,
-    date: '2007',
+    year: '2007',
     title: 'Fundación de la empresa',
     description: 'Iniciamos con el objetivo de brnidar  soluciones industriales seguras y eficientes',
     image: imagetest,
@@ -49,7 +50,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 5,
-    date: '2010',
+    year: '2010',
     title: 'Primer gran proyecto',
     description: 'Ejecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidad.Ejecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidadEjecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidadEjecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidadEjecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidad',
     image: imagetest,
@@ -57,7 +58,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 6,
-    date: '2023',
+    year: '2023',
     title: 'Expansión regional',
     description: 'Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento. Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.',
     image: imagetest,
@@ -65,7 +66,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 7,
-    date: '2007',
+    year: '2007',
     title: 'Fundación de la empresa',
     description: 'Iniciamos con el objetivo de brnidar  soluciones industriales seguras y eficientes',
     image: imagetest,
@@ -73,7 +74,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 8,
-    date: '2010',
+    year: '2010',
     title: 'Primer gran proyecto',
     description: 'Ejecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidad.',
     image: imagetest,
@@ -81,7 +82,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 9,
-    date: '2023',
+    year: '2023',
     title: 'Expansión regional',
     description: 'Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.',
     image: imagetest,
@@ -89,7 +90,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 10,
-    date: '2007',
+    year: '2007',
     title: 'Fundación de la empresa',
     description: 'Iniciamos con el objetivo de brnidar  soluciones industriales seguras y eficientes',
     image: imagetest,
@@ -97,7 +98,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 11,
-    date: '2010',
+    year: '2010',
     title: 'Primer gran proyecto',
     description: 'Ejecutamos nuestro primer proyecto de gran escala cumpliendo altos estándares de calidad.',
     image: imagetest,
@@ -105,7 +106,7 @@ export const timelineData: TimelineItemData[] =[
   },
   {
     id: 12,
-    date: '2023',
+    year: '2023',
     title: 'Expansión regional',
     description: 'Ampliamos nuestras operaciones a nuevas regiones, consolidando nuestro crecimiento.',
     image: imagetest,
@@ -113,3 +114,9 @@ export const timelineData: TimelineItemData[] =[
   },
 
 ]
+
+export const timelineDataSorted = [...timelineData].sort((a, b) => {
+  const dy = Number(a.year) - Number(b.year);
+  if (dy !== 0) return dy;
+  return a.id - b.id; 
+});

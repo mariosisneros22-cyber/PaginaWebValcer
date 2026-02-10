@@ -1,275 +1,206 @@
 ---
-import { Image } from 'astro:assets';
-import type { TimelineItemData } from '../../utils/timeline';
-import Dot from './Dot.astro';
+import { Image } from "astro:assets";
+import type { TimelineItemData } from "../../utils/timeline.ts";
 
-type Props = TimelineItemData & { side: 'left' | 'right' };
+type Side = "A" | "B";
+type Layout = "intro" | "split";
 
-const {
-  date,
-  title,
-  description,
-  side,
-  image,
-  imageAlt,
-} = Astro.props as Props;
+type Props = TimelineItemData & {
+  index: number;
+  layout: Layout;
+  side?: Side;
+};
+
+const { index, year, title, description, image, imageAlt, layout, side } = Astro.props as Props;
 ---
 
-<article class={`timeline-item ${side}`}>
-  <!-- Columna izquierda -->
-  <div class="timeline-col timeline-col-left">
-    {side === 'left' ? (
-      <div class="timeline-content-inner">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    ) : (
-      image ? (
-        <div class="timeline-media-inner">
-          <Image src={image} alt={imageAlt ?? ''} class="timeline-image" loading="lazy" />
-        </div>
-      ) : null
-    )}
-  </div>
-
-  <!-- Centro -->
-  <div class="timeline-marker">
-    <div class="timeline-marker-inner">
-      <Dot />
-      <time class="timeline-date" datetime={date}>{date}</time>
+<article
+  class="scene"
+  data-scene
+  data-index={index}
+  data-layout={layout}
+  data-side={side ?? undefined}
+>
+  <div class="scene-marker">
+    <div class="scene-year">
+      {layout === "intro" ? (
+        <span class="year-horizontal">{year}</span>
+      ) : (
+        <span class="year-vertical">
+          {year.split("").map((digit) => (
+            <span class="year-digit">{digit}</span>
+          ))}
+        </span>
+      )}
     </div>
+    <div class="scene-dot" aria-hidden="true"></div>
   </div>
 
-  <!-- Columna derecha -->
-  <div class="timeline-col timeline-col-right">
-    {side === 'right' ? (
-      <div class="timeline-content-inner">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    ) : (
-      image ? (
-        <div class="timeline-media-inner">
-          <Image src={image} alt={imageAlt ?? ''} class="timeline-image" loading="lazy" />
-        </div>
-      ) : null
-    )}
+  <div class="scene-content">
+    <h3>{title}</h3>
+    <p>{description}</p>
   </div>
+
+  {image ? (
+    <div class="scene-media">
+      <Image src={image} alt={imageAlt ?? ""} loading="lazy" />
+    </div>
+  ) : null}
 </article>
 
 <style>
-  .timeline-item{
-    width: 100%;
-    box-sizing: border-box;
+  .scene{
+    position: absolute;
+    inset: 0;
+    display: none;
 
-    display: grid;
-    grid-template-columns: 1fr minmax(110px, auto) 1fr;
-    grid-template-areas: "left marker right";
-    gap: 2rem;
-    align-items: start;
-
-    --branch: 3rem;
-
-    min-height: 100vh;
-    padding-block: 0;
-
-    /* reveal */
-    --x: 0px;
-    --y: 24px;
-    transform: translate(var(--x), var(--y));
-    opacity: 0;
-    transition: opacity .35s ease, transform .35s ease;
-  }
-
-  .timeline-item.is-visible{
-    opacity: 1;
-    --x: 0px;
-    --y: 0px;
-  }
-
-  /* columnas */
-  .timeline-col-left{ grid-area: left; }
-  .timeline-col-right{ grid-area: right; }
-
-  /* reveal X por lado (solo animación, NO cambies grid aquí) */
-  .timeline-item.left{ --x: -32px; }
-  .timeline-item.right{ --x: 32px; }
-
-  /* =========================
-     Sticky (escena)
-     ========================= */
-
-  .timeline-marker{
-    grid-area: marker;
-    position: sticky;
-    top: 45vh;
-    transform: translateY(-50%);
-    z-index: 2;
-  }
-
-  .timeline-content-inner,
-  .timeline-media-inner{
-    position: sticky;
-    top: 45vh;
-    transform: translateY(-0.5rem);
-    z-index: 1;
-  }
-
-  /* alineación del contenido según lado */
-  .timeline-item.left .timeline-content-inner{
-    text-align: right;
-    margin-left: auto;
-  }
-  .timeline-item.right .timeline-content-inner{
-    text-align: left;
-    margin-right: auto;
-  }
-
-  /* =========================
-     Marker layout + branch
-     ========================= */
-
-  .timeline-marker-inner{
-    position: relative;
-    min-width: 110px;
-    display: flex;
+    /* GRID base */
+    grid-template-columns: 1fr minmax(120px, 160px) 1fr;
+    grid-template-rows: 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+
+    padding: 12vh clamp(16px, 4vw, 48px);
+    column-gap: clamp(16px, 4vw, 48px);
   }
 
-    /* LEFT: reverse para que la fecha quede hacia afuera (izq) y el dot quede más cerca del eje */
-  .timeline-item.left .timeline-marker-inner{
-    flex-direction: row-reverse;
+  .scene.is-active{
+    display: grid;
   }
 
-  /* RIGHT: normal */
-  .timeline-item.right .timeline-marker-inner{
-    flex-direction: row;
+
+  .scene.is-active{ display:grid; }
+
+  /* Marker en columna central, centrado vertical */
+  .scene-marker{
+    grid-column: 2;
+    justify-self: center;
+    align-self: center;
+
+    display:flex;
+    flex-direction: column;   /* año arriba, dot abajo */
+    align-items:center;
+    gap: 10px;
+
+    pointer-events:none;
   }
 
-  .timeline-item{ --dot-shift: 10px; }
-
-  /* left: desplaza el dot hacia la izquierda del eje */
-  .timeline-item.left .timeline-dot{
-    margin-left: calc(-1 * var(--dot-shift));
+  /* Dot */
+  .scene-dot{
+    width:10px;
+    height:10px;
+    border-radius:999px;
+    background:#333;
   }
 
-  /* right: desplaza el dot hacia la derecha del eje */
-  .timeline-item.right .timeline-dot{
-    margin-left: var(--dot-shift);
-  }
-  .timeline-dot{
-    transform: translateX(var(--dot-shift));
-  }
-
-  /* =========================
-     Date + Dot states
-     ========================= */
-
-  .timeline-date{
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #555;
-    line-height: 1;
-    display: inline-block;
-
-    opacity: 0;
-    --ty: 6px;
-    transform: translateY(var(--ty));
-    transition: opacity .4s ease-out, transform .4s ease-out;
-    transition-delay: calc(var(--delay, 0ms) + 80ms);
+  /* INTRO: contenido abajo centrado, sin media */
+  .scene[data-layout="intro"]{
+    grid-template-rows: auto auto;   /* marker arriba, contenido abajo */
+    align-content: center;           /* centra el bloque (marker+content) en la pantalla */
+    row-gap: 14px;                   /* separación entre dot y contenido */
   }
 
-  .timeline-item.is-visible .timeline-date{
-    opacity: 1;
-    --ty: 0px;
+  .scene[data-layout="intro"] .scene-marker{
+    grid-column: 2;
+    grid-row: 1;
   }
 
-  .timeline-dot{
-    transition: transform .2s ease, opacity .2s ease;
+  .scene[data-layout="intro"] .scene-content{
+    grid-column: 2;
+    grid-row: 2;
+
+    justify-self: center;
+    text-align: center;
+    min-width: 50ch;
   }
 
-  .timeline-item.is-visible:not(.is-active) .timeline-dot,
-  .timeline-item.is-visible:not(.is-active) .timeline-date{
-    opacity: 0.6;
+  .scene[data-layout="intro"] .scene-media{ display:none; }
+
+  /* SPLIT: texto e imagen en columnas opuestas */
+  .scene[data-layout="split"]{
+    align-items: center;     /* ya lo tienes en .scene, lo reafirmamos aquí */
   }
 
-  .timeline-item.is-active .timeline-dot{ transform: scale(1.2); }
-  .timeline-item.is-active .timeline-dot,
-  .timeline-item.is-active .timeline-date{ opacity: 1; }
-
-
-  .timeline-item.right .timeline-col-left .timeline-media-inner{ margin-left: auto; }
-  .timeline-item.left  .timeline-col-right .timeline-media-inner{ margin-right: auto; }
-  /* =========================
-     Content typography (FIX)
-     ========================= */
-
-  .timeline-content-inner h3{
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
+  .scene[data-layout="split"] .scene-content,
+  .scene[data-layout="split"] .scene-media{
+    grid-row: 1;
+    align-self: center;
   }
-
-  .timeline-content-inner p{
-    line-height: 1.6;
+  /* Para manejar textos largos sin romper */
+  .scene-content{
     max-width: 65ch;
   }
 
-  /* media */
-  .timeline-image{
-    display: block;
-    width: 100%;
+  .scene-media{
     max-width: 520px;
+    width: 100%;
+  }
+
+  .scene-media :global(img){
+    width: 100%;
     height: auto;
-    border-radius: 16px;
+    display:block;
+    border-radius: 12px;
   }
 
-  /* =========================
-     Mobile
-     ========================= */
+  /* A: imagen izquierda / texto derecha */
+  .scene[data-layout="split"][data-side="A"] .scene-media{
+    grid-column: 1;
+    place-self: center start;
+  }
 
-  @media (max-width: 768px){
-    .timeline-item{
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        "marker"
-        "left"
-        "right";
-      min-height: auto;
-      opacity: 1;
-      transform: none;
-      transition: none !important;
-    }
+  .scene[data-layout="split"][data-side="A"] .scene-content{
+    grid-column: 3;
+    place-self: center end;
+  }
 
-    .timeline-marker{
-      position: relative;
-      top: auto;
-      transform: none;
-    }
+  /* B: texto izquierda / imagen derecha */
+  .scene[data-layout="split"][data-side="B"] .scene-content{
+    grid-column: 1;
+    place-self: center start;
+  }
 
-    .timeline-content-inner,
-    .timeline-media-inner{
+  .scene[data-layout="split"][data-side="B"] .scene-media{
+    grid-column: 3;
+    place-self: center end;
+  }
+
+
+  /* AÑO */
+  .scene-year{
+    line-height: 1;
+  }
+
+  .year-horizontal,
+  .year-digit{
+    font-weight: 700;
+    font-size: clamp(5rem, 4vw, 3.5rem);
+  }
+
+  /* Vertical por dígitos */
+  .year-vertical{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  /* Mobile fallback (lista normal) */
+  @media (max-width:768px){
+    .scene{
       position: static;
-      transform: none;
+      display:block;
+      padding: 1.5rem 0;
     }
 
-    .timeline-marker-inner{
-      justify-content: flex-start;
-      min-width: auto;
+    .scene.is-active{ display:block; }
+
+    .scene-marker{
+      margin-bottom: .5rem;
     }
 
-    .timeline-marker-inner::before{ display: none; }
-
-    .timeline-dot,
-    .timeline-date{
-      transition: none !important;
-      transform: none !important;
-    }
-
-    .timeline-item.left .timeline-content-inner{
-      text-align: left;
-      margin: 0;
+    .scene-content, .scene-media{
+      max-width: none;
     }
   }
+
 </style>

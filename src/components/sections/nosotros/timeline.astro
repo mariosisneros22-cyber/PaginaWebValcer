@@ -1,216 +1,136 @@
 ---
-import TimelineItem from '../../ui/timelineitem.astro';
-import { timelineData } from '../../../utils/timeline';
-
-
+import TimelineItem from "../../ui/timelineitem.astro";
+import { timelineDataSorted as timelineData } from "../../../utils/timeline";
 ---
 
-<section class="timeline-section">
+<section class="timeline-section" data-timeline style={`--n:${timelineData.length};`}>
   <div class="container">
     <header class="timeline-header">
       <h2>Historia y trayectoria</h2>
     </header>
-    
 
-    <div class="timeline">
-      {timelineData.map((item, index) => (
-        <TimelineItem {...item} side={index % 2 === 0 ? 'left' : 'right'} />
-      ))}
+    <div class="timeline-track" data-track>
+      <div class="timeline-stage" data-stage>
+        <div class="timeline-axis" aria-hidden="true">
+          <div class="axis-line"></div>
+          <div class="axis-progress"></div>
+        </div>
+
+        <div class="timeline-scenes">
+          {timelineData.map((item, index) => {
+            const layout = (item.layout ?? (index === 0 ? "intro" : "split")) as "intro" | "split";
+            const side =
+              layout === "split"
+                ? ((index - 1) % 2 === 0 ? "A" : "B")
+                : undefined;
+
+            return <TimelineItem {...item} index={index} layout={layout} side={side} />;
+          })}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  
+  .timeline-track{ height: calc(var(--n) * 100vh); }
 
-  .timeline {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding-left: 0;
-  }
-
-  .timeline-section{
-    position: relative;
-  }
-
-  .timeline-header{
-    position:sticky;
+  .timeline-stage{
+    position: sticky;
     top: 0;
-    z-index:5;
-
-    background: white;
-
-    padding-top: 5rem;
-  
-    border-bottom: 1px solid #e5e5e5;
+    height: 100vh;
+    overflow: hidden;
   }
-  .timeline-section h2 {
-    margin-bottom: 3rem;
+
+  .timeline-axis{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index: 1;
   }
-  /* Línea vertical */
-  .timeline::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 100%;
-    background-color: #e5e5e5;
+
+  .axis-line, .axis-progress{
+    position:absolute;
+    left:50%;
+    top:12vh;
+    width:2px;
+    height:76vh;
     transform: translateX(-50%);
   }
 
-  /* Línea progreso (animada) */
-  .timeline::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: var(--line-progress, 0px); /* 👈 clave */
-    background-color: #333;
-    transform: translateX(-50%);
-    transition: height 0.25s ease-out;
+  .axis-line{ background:#e5e5e5; }
+  .axis-progress{ background:#333; height: var(--line-progress, 0px); }
+
+  .timeline-scenes{ 
+    position:absolute; 
+    inset:0;
+    z-index: 2;
   }
 
-  @media (max-width: 768px) {
-    .timeline {
-      padding-left: 2rem;
-    }
-
-    .timeline::before, .timeline::after {
-      left: 1rem;
-      transform: none;
-    }
-
-    .timeline-header{
-      position:static;
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
+  @media (max-width:768px){
+    .timeline-track{ height:auto; }
+    .timeline-stage{ position:static; height:auto; overflow:visible; }
+    .timeline-axis{ display:none; }
+    .timeline-scenes{ position:static; }
   }
-
-    
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const items = document.querySelectorAll<HTMLElement>('.timeline-item');
-    if (!items.length) return;
+  document.addEventListener("astro:page-load", () => {
+    const root = document.querySelector<HTMLElement>("[data-timeline]");
+    if (!root) return;
 
-    const timeline = document.querySelector<HTMLElement>('.timeline');
-    if (!timeline) return;
+    const track = root.querySelector<HTMLElement>("[data-track]");
+    const stage = root.querySelector<HTMLElement>("[data-stage]");
+    const scenes = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]"));
+    if (!track || !stage || scenes.length === 0) return;
 
-    let activeEl: HTMLElement | null = null;
-    const visible = new Set<HTMLElement>();
-    let rafPending = false;
+    let raf = 0;
+    let activeIndex = -1;
 
-    // 1) Centro del marker en viewport (para decidir escena activa)
-    const getMarkerCenterViewport = (el: HTMLElement): number => {
-      const marker = el.querySelector<HTMLElement>('.timeline-marker') ?? el;
-      const r = marker.getBoundingClientRect();
-      return r.top + r.height / 2;
-    };
+    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-    // 2) Centro del marker dentro del timeline (para la línea de progreso)
-    const getMarkerCenterInTimeline = (el: HTMLElement): number => {
-      const marker =
-        el.querySelector<HTMLElement>('.timeline-marker-inner') ??
-        el.querySelector<HTMLElement>('.timeline-marker') ??
-        el;
-
-      const markerRect = marker.getBoundingClientRect();
-      const timelineRect = timeline.getBoundingClientRect();
-
-      const center =
-        (markerRect.top + markerRect.height / 2) - timelineRect.top;
-
-      return Math.max(0, Math.min(center, timeline.scrollHeight));
-    };
-
-    // 3) Activa una escena y actualiza progreso
-    const setActive = (el: HTMLElement): void => {
-      if (activeEl === el) return;
-
-      if (activeEl) activeEl.classList.remove('is-active');
-      el.classList.add('is-active');
-      activeEl = el;
-
-      const y = getMarkerCenterInTimeline(el);
-      timeline.style.setProperty('--line-progress', `${y}px`);
-    };
-
-    // 4) Elige el item visible más cercano al centro del viewport
-    const pickClosestToCenter = (): HTMLElement | null => {
-      if (!visible.size) return null;
-
-      const center = window.innerHeight * 0.5;
-      let best: HTMLElement | null = null;
-      let bestDist = Infinity;
-
-      for (const el of visible) {
-        const dist = Math.abs(getMarkerCenterViewport(el) - center);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = el;
-        }
+    const setActive = (idx: number, t: number) => {
+      if (idx !== activeIndex) {
+        if (activeIndex >= 0) scenes[activeIndex]?.classList.remove("is-active");
+        scenes[idx]?.classList.add("is-active");
+        activeIndex = idx;
       }
 
-      return best;
+      const n = scenes.length;
+      const progress01 = (idx + t) / Math.max(1, n - 1);
+      const usable = stage.getBoundingClientRect().height * 0.76;
+      root.style.setProperty("--line-progress", `${progress01 * usable}px`);
     };
 
-    // 5) Scheduler (anti-jitter)
-    const scheduleUpdate = (): void => {
-      if (rafPending) return;
-      rafPending = true;
+    const update = () => {
+      raf = 0;
 
-      requestAnimationFrame(() => {
-        rafPending = false;
-        const candidate = pickClosestToCenter();
-        if (candidate) setActive(candidate);
-      });
+      const trackRect = track.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      const scrolled = clamp(-trackRect.top, 0, trackRect.height - vh);
+      const raw = scrolled / vh;
+
+      const idx = clamp(Math.floor(raw), 0, scenes.length - 1);
+      const t = raw - Math.floor(raw);
+
+      setActive(idx, t);
     };
 
-    // 6) IntersectionObserver: solo gestiona visibilidad
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const el = entry.target as HTMLElement;
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
 
-          if (entry.isIntersecting) {
-            visible.add(el);
-            el.classList.add('is-visible');
-          } else {
-            visible.delete(el);
-          }
-        }
-        scheduleUpdate();
-      },
-      {
-        threshold: 0.01,
-        rootMargin: '-45% 0px -45% 0px',
-      }
-    );
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
 
-    items.forEach((el) => observer.observe(el));
-
-    // 7) Mantener escena/progreso sincronizados
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate, { passive: true });
-
-    // 8) Init
-    scheduleUpdate();
-
-    // 9) Cleanup opcional en navegación Astro
-    document.addEventListener(
-      'astro:before-swap',
-      () => {
-        observer.disconnect();
-        window.removeEventListener('scroll', scheduleUpdate);
-        window.removeEventListener('resize', scheduleUpdate);
-      },
-      { once: true }
-    );
+    document.addEventListener("astro:before-swap", () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) cancelAnimationFrame(raf);
+    }, { once: true });
   });
 </script>
