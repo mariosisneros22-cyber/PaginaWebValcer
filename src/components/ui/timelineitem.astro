@@ -17,173 +17,230 @@ const {
 ---
 <article class={`timeline-item ${side}`}>
   <div class="timeline-marker">
-     <Dot />
-    <time class="timeline-date" datetime={date}>{date}</time>
+    <div class="timeline-marker-inner">
+      <Dot />
+      <time class="timeline-date" datetime={date}>{date}</time>
+    </div>
   </div>
 
   <div class="timeline-content">
-    <h3>{title}</h3>
-    <p>{description}</p>
+    <div class = "timeline-content-inner">
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
   </div>
 </article>
 
 <style>
+
   .timeline-item{
-  position: relative;
-  width: 50%;
-  box-sizing: border-box;
+    width: 50%;
+    box-sizing: border-box;
 
-  display: grid;
-  grid-template-columns: minmax(110px, auto) 1fr;
-  grid-template-areas: "marker content";
-  gap: 2rem;
-  align-items: start;
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 1fr;
+    grid-template-areas: "marker content";
+    gap: 2rem;
+    align-items: center;
 
-  --branch: 3rem;
+    --branch: 3rem;
 
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity .35s ease, transform .35s ease;
-}
+    min-height: 120vh;
+    padding-block: 10vh;
 
-.timeline-marker{ grid-area: marker; }
-.timeline-content{ grid-area: content; }
+    /* reveal / slide */
+    --x: 0px;
+    --y: 24px;
+    transform: translate(var(--x), var(--y));
+    opacity: 0;
+    transition: opacity .35s ease, transform .35s ease;
+  }
 
-/* Left / Right layout */
-.timeline-item.left{
-  grid-template-columns: 1fr minmax(110px, auto);
-  grid-template-areas: "content marker";
-  align-self: flex-start;
-  padding-right: 3rem;
-  text-align: right;
-}
+  /* posición por lado (50% izquierda/derecha) */
+  .timeline-item.left{
+    grid-template-columns: 1fr minmax(110px, auto);
+    grid-template-areas: "content marker";
+    padding-right: 3rem;
+    text-align: right;
 
-.timeline-item.right{
-  align-self: flex-end;
-  padding-left: 3rem;
-  text-align: left;
-}
+    margin-right: auto;
+    margin-left: 0;
 
-/* Marker (dot + date) */
-.timeline-marker{
-  align-self: start;
-  position: relative;
-  min-width: 110px;
+    --x: -32px; /* carácter al entrar */
+  }
 
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.timeline-item.left .timeline-marker{
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-}
-
-/* Branch from center line to dot */
-.timeline-marker::before{
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 2px;
-  width: var(--branch);
-  background: #e5e5e5;
-  opacity: 0;
-  transition: opacity .2s ease, background-color .2s ease;
-}
-
-.timeline-item.right .timeline-marker::before{ left: calc(-1 * var(--branch)); }
-.timeline-item.left  .timeline-marker::before{ right: calc(-1 * var(--branch)); }
-
-.timeline-item.is-visible .timeline-marker::before{ opacity: 1; }
-.timeline-item.is-active  .timeline-marker::before{ background: #333; }
-
-/* Date */
-.timeline-date{
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #555;
-
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .4s ease-out, transform .4s ease-out;
-  transition-delay: calc(var(--delay, 0ms) + 80ms);
-}
-
-.timeline-item.is-visible .timeline-date{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Content */
-.timeline-content h3{
-  margin-bottom: 0.5rem;
-  font-size: 1.25rem;
-}
-
-.timeline-content p{
-  line-height: 1.6;
-  max-width: 65ch;
-}
-
-/* Visible */
-.timeline-item.is-visible{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Active vs inactive */
-.timeline-item.is-visible:not(.is-active) .timeline-content{ opacity: 0.85; }
-.timeline-item.is-active .timeline-content h3{ font-weight: 700; }
-
-/* Dot + date emphasis */
-.timeline-dot,
-.timeline-date{
-  transition: opacity .2s ease, transform .2s ease;
-}
-
-.timeline-item.is-visible:not(.is-active) .timeline-dot,
-.timeline-item.is-visible:not(.is-active) .timeline-date{
-  opacity: 0.6;
-}
-
-.timeline-item.is-active .timeline-dot,
-.timeline-item.is-active .timeline-date{
-  opacity: 1;
-}
-
-.timeline-item.is-active .timeline-dot{
-  transform: scale(1.2);
-}
-
-/* Mobile */
-@media (max-width: 768px){
-  .timeline-item{
-    width: 100%;
-    padding: 0;
+  .timeline-item.right{
+    padding-left: 3rem;
     text-align: left;
 
-    transition: none !important;
-    transform: none !important;
+    margin-left: auto;
+    margin-right: 0;
+
+    --x: 32px; /* carácter al entrar */
   }
+
+  /* estado visible */
+  .timeline-item.is-visible{
+    opacity: 1;
+    --x: 0px;
+    --y: 0px;
+  }
+
+  /* =========================
+    Marker + Content (sticky)
+    ========================= */
 
   .timeline-marker{
-    justify-content: flex-start;
-    min-width: auto;
+    grid-area: marker;
+    position: sticky;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
   }
 
-  .timeline-marker::before{ display: none; }
+  .timeline-content{
+    grid-area: content;
+  }
 
-  .timeline-content{ padding-left: 1rem; }
+  .timeline-content-inner{
+    position: sticky;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
 
-  .timeline-dot,
+  /* marker layout */
+  .timeline-marker-inner{
+    position: relative;
+    min-width: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .timeline-item.left .timeline-marker-inner{
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  /* branch */
+  .timeline-marker-inner::before{
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    width: var(--branch);
+    background: #e5e5e5;
+    opacity: 0;
+    transition: opacity .2s ease, background-color .2s ease;
+  }
+
+  .timeline-item.right .timeline-marker-inner::before{ left: calc(-1 * var(--branch)); }
+  .timeline-item.left  .timeline-marker-inner::before{ right: calc(-1 * var(--branch)); }
+
+  .timeline-item.is-visible .timeline-marker-inner::before{ opacity: 1; }
+  .timeline-item.is-active  .timeline-marker-inner::before{ background: #333; }
+
+  /* =========================
+    Date + Dot states
+    ========================= */
+
   .timeline-date{
-    transition: none !important;
-    transform: none !important;
-  }
-}
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
 
+    line-height: 1;
+    display: inline-block;
+
+    opacity: 0;
+    --ty: 6px;
+    transform: translateY(var(--ty));
+    transition: opacity .4s ease-out, transform .4s ease-out;
+    transition-delay: calc(var(--delay, 0ms) + 80ms);
+  }
+
+  .timeline-item.is-visible .timeline-date{
+    opacity: 1;
+    --ty: 0px;
+  }
+
+  .timeline-dot{
+    transition: transform .2s ease, opacity .2s ease;
+  }
+
+  /* inactivos visibles */
+  .timeline-item.is-visible:not(.is-active) .timeline-dot,
+  .timeline-item.is-visible:not(.is-active) .timeline-date{
+    opacity: 0.6;
+  }
+
+  /* activos */
+  .timeline-item.is-active .timeline-dot{ transform: scale(1.2); }
+  .timeline-item.is-active .timeline-dot,
+  .timeline-item.is-active .timeline-date{ opacity: 1; }
+
+  /* =========================
+    Content typography
+    ========================= */
+
+  .timeline-content h3{
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+
+  .timeline-content p{
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+
+  /* Mobile */
+
+  @media (max-width: 768px){
+    .timeline-item{
+      width: 100%;
+      padding: 0;
+      text-align: left;
+
+      /* en mobile: sin “escena” sticky/reveal */
+      transition: none !important;
+      transform: none !important;
+      opacity: 1; /* opcional: evita flash */
+    }
+
+    .timeline-marker{
+      top: auto;
+      transform: none;
+      position: relative; /* opcional: quita sticky en mobile */
+    }
+
+    .timeline-content-inner{
+      position: static;
+      transform: none;
+    }
+
+    .timeline-marker-inner{
+      min-width: auto;
+      justify-content: flex-start;
+    }
+
+    .timeline-marker-inner::before{ display: none; }
+    .timeline-content{ padding-left: 1rem; }
+
+    .timeline-dot,
+    .timeline-date{
+      transition: none !important;
+      transform: none !important;
+    }
+
+    .timeline-item.left,
+    .timeline-item.right{
+      margin: 0;
+      padding-inline: 0;
+    }
+  }
 
 </style>
