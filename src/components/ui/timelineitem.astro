@@ -78,6 +78,7 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   /* Marker en columna central, centrado vertical */
   .scene-marker{
     grid-column: 2;
+    grid-row: 1;
     justify-self: center;
     align-self: center;
 
@@ -132,6 +133,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .scene[data-layout="split"] .scene-media{
     grid-row: 1;
     align-self: center;
+
+    width: 100%;
   }
   /* Para manejar textos largos sin romper */
   .scene-content{
@@ -144,9 +147,10 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
 
   .scene-media :global(img){
     width: 100%;
-    height: auto;
-    min-height: 75vh;
+    height: 75vh;
     object-fit: cover;
+    display: block;
+    
   }
 
   .scene[data-layout="split"]{
@@ -154,8 +158,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   }
   /* A: imagen izquierda / texto derecha */
   .scene[data-layout="split"][data-side="A"] .scene-media{
-    grid-column: 1;
-    place-self: center start;
+    grid-column: 1 / 2;
+    justify-self: stretch;
   }
 
   .scene[data-layout="split"][data-side="A"] .scene-content{
@@ -170,8 +174,8 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   }
 
   .scene[data-layout="split"][data-side="B"] .scene-media{
-    grid-column: 3;
-    place-self: center end;
+    grid-column: 3 / 4;
+    justify-self: stretch;
   }
 
 
@@ -228,8 +232,20 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .scene-content{ z-index: 2; }
   .scene-media{ z-index: 1; position: relative; }
   
-
+  .scene-media :global(picture){
+    display: block;
+    width: 100%;
+  }
   
+  .scene[data-layout="split"][data-side="A"] .scene-media{
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 72%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 0%, #000 72%, transparent 100%);
+  }
+
+  .scene[data-layout="split"][data-side="B"] .scene-media{
+    -webkit-mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 0%, #000 72%, transparent 100%);
+  }
   /* Mobile fallback (lista normal) */
   @media (max-width:768px){
     .scene{
