@@ -1,19 +1,32 @@
 ---
 import TimelineItem from "../../ui/timelineitem.astro";
 import { timelineDataSorted as timelineData } from "../../../utils/timeline";
+import type { TimelineItemData, TimelineLayout } from "../../../utils/timeline";
+
+type SceneSide = "A" | "B";
+type Scene = TimelineItemData & {
+  layout: TimelineLayout;
+  side?: SceneSide;
+}
 
 const currentYear = new Date().getFullYear().toString();
 
-const outro = {
+const outro: Scene = {
     id: 999,
     year: currentYear,
     title: "",
     description: "",
-    layout:"outro",
+    layout: "outro",
     tagline: "Construyendo hoy, proyectando el mañana",
   };
 
-const scenes = [...timelineData, outro];
+const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
+  const layout: TimelineLayout = item.layout ?? (index === 0 ? "intro" : "split");
+  const side: SceneSide | undefined =
+    layout === "split" ? ((index - 1) % 2 === 0 ? "A" : "B") : undefined;
+
+  return { ...item, layout, side };
+});
 ---
 
 <section class="timeline-section" data-timeline style={`--n:${scenes.length}; --tail:0.6;`}>
@@ -30,15 +43,9 @@ const scenes = [...timelineData, outro];
         </div>
 
         <div class="timeline-scenes">
-          {scenes.map((item, index) => {
-            const layout = (item.layout ?? (index === 0 ? "intro" : "split")) as "intro" | "split" | "outro";
-            const side =
-              layout === "split"
-                ? ((index - 1) % 2 === 0 ? "A" : "B")
-                : undefined;
-
-            return <TimelineItem {...item} index={index} layout={layout} side={side} />;
-          })}
+          {scenes.map((item, index) => (
+            <TimelineItem {...item} index={index} />
+          ))}
         </div>
       </div>
     </div>

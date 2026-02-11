@@ -1,17 +1,16 @@
 ---
 import { Image } from "astro:assets";
-import type { TimelineItemData } from "../../utils/timeline.ts";
+import type { TimelineItemData, TimelineLayout } from "../../utils/timeline.ts";
 
 type Side = "A" | "B";
-type Layout = "intro" | "split" | "outro";
 
 type Props = TimelineItemData & {
   index: number;
-  layout: Layout;
+  layout: TimelineLayout;
   side?: Side;
 };
 
-const { index, year, title, description, image, imageAlt, layout, side } = Astro.props as Props;
+const { index, year, title, description, image, imageAlt, layout, side, tagline } = Astro.props as Props;
 ---
 
 <article
@@ -38,10 +37,10 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
 
   <div class="scene-content">
     {layout === "outro" ? (
-      <p class="scene-tagline">{Astro.props.tagline ?? ""}</p>
+      <p class="scene-tagline">{tagline ?? ""}</p>
     ) : (
       <>
-        <h1>{title}</h1>
+        <h2>{title}</h2>
         <p>{description}</p>
       </>
     )}
@@ -74,6 +73,9 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   }
 
   .scene-content{
+
+    max-width: 60ch;
+
     background: white;
     padding: 0.75rem 1rem;
     border-radius: 12px;
@@ -103,7 +105,7 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   }
 
   /* INTRO: contenido abajo centrado, sin media */
-  .scene[data-layout="intro"]{
+  .scene[data-layout="intro"], .scene[data-layout="outro"]{
     grid-template-rows: auto auto;   /* marker arriba, contenido abajo */
     align-content: center;           /* centra el bloque (marker+content) en la pantalla */
     row-gap: 14px;                   /* separación entre dot y contenido */
@@ -129,9 +131,6 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
   .scene[data-layout="intro"] .scene-media{ display:none; }
 
   /* SPLIT: texto e imagen en columnas opuestas */
-  .scene[data-layout="split"]{
-    align-items: center;     /* ya lo tienes en .scene, lo reafirmamos aquí */
-  }
 
   .scene[data-layout="split"] .scene-content,
   .scene[data-layout="split"] .scene-media{
@@ -141,9 +140,6 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     width: 100%;
   }
   /* Para manejar textos largos sin romper */
-  .scene-content{
-    max-width: 60ch;
-  }
 
   .scene-media{
     max-width: min(48vw, 900px);
@@ -157,7 +153,7 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
     
   }
 
-  .scene[data-layout="split"]{
+  .scene[data-layout="split"] .scene-content{
     font-size: large;
   }
   /* A: imagen izquierda / texto derecha */
@@ -250,12 +246,6 @@ const { index, year, title, description, image, imageAlt, layout, side } = Astro
 
   /*OUTRO */
   /* OUTRO: bloque centrado, lema debajo del dot */
-  .scene[data-layout="outro"]{
-    grid-template-rows: auto auto;
-    align-content: center;
-    row-gap: 14px;
-  }
-
   .scene[data-layout="outro"] .scene-marker{
     grid-column: 2;
     grid-row: 1;

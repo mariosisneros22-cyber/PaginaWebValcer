@@ -10,7 +10,7 @@ export interface TimelineItemData{
   description: string;
   image?: ImageMetadata;
   imageAlt?: string;
-  layout?: string;
+  layout?: TimelineLayout;
   tagline?: string; //lema para outro
 }
 
