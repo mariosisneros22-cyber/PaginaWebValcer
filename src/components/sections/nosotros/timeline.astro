@@ -105,15 +105,14 @@ const scenes = [...timelineData, outro];
 
     const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-    const setActive = (idx: number, t: number) => {
+    const setActive = (idx: number, t: number, progress01: number) => {
       if (idx !== activeIndex) {
         if (activeIndex >= 0) scenes[activeIndex]?.classList.remove("is-active");
         scenes[idx]?.classList.add("is-active");
         activeIndex = idx;
       }
     
-      const n = scenes.length;
-      const progress01 = (idx + t) / Math.max(1, n - 1);
+    
       const usable = stage.getBoundingClientRect().height * 0.76;
       root.style.setProperty("--line-progress", `${progress01 * usable}px`);
 
@@ -141,7 +140,10 @@ const scenes = [...timelineData, outro];
       const t = rawClamped - idx;
 
       const tFinal = idxUnclamped >= last ? 1 : t;
-      setActive(idx, tFinal);
+
+      const progress01 = rawClamped / Math.max(1, last);
+
+      setActive(idx, tFinal, progress01);
     };
 
     const schedule = () => {
