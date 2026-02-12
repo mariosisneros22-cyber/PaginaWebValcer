@@ -4,16 +4,15 @@ import Button from '../../ui/button.astro';
 
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
-// Opcional: si quieres redireccionar a /gracias al enviar correctamente
-const REDIRECT_URL = "/contacto?enviado=1";
 ---
 
 <div class="contact-form">
-  <form action="https://api.web3forms.com/submit" method="POST">
+
+  <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+
   <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
   <input type="hidden" name="subject" value="Nuevo mensaje desde la web" />
   <input type="hidden" name="from_name" value="Valcer Web" />
-  <input type="hidden" name="redirect" value={REDIRECT_URL} />
   <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
 
   <!-- Nombre + Apellidos -->
@@ -52,9 +51,9 @@ const REDIRECT_URL = "/contacto?enviado=1";
     <Button type="submit" class="submit-btn">
       Enviar
     </Button>
-  <slot />
-</button>
   </div>
+
+  <div id="form-message" class="form-message" aria-live="polite"></div>
 </form>
 
 </div>
@@ -82,6 +81,13 @@ const REDIRECT_URL = "/contacto?enviado=1";
     border: 1px solid #dcdcdc;
     font-size: 0.95rem;
     line-height: 1.4;
+    border-radius: 6px;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
 
   textarea {
@@ -108,10 +114,122 @@ const REDIRECT_URL = "/contacto?enviado=1";
     gap: 1rem;
   }
 
+  .form-message {
+    margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.25s ease;
+  }
+
+  .form-message-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .form-message.success .form-message-inner {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+  }
+
+  .form-message.error .form-message-inner {
+    background: #fdecea;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+  }
+
+  .form-message.loading .form-message-inner {
+    background: #f3f3f3;
+    color: #555;
+    border-left: 4px solid #999;
+  }
+
+  .form-message.success,
+  .form-message.error,
+  .form-message.loading {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
   @media (max-width: 768px) {
     .field-row {
       grid-template-columns: 1fr;
     }
+
+    .form-actions {
+      justify-content: stretch;
+    }
+    .submit-btn {
+      width: 100%;
+    }
   }
 
 </style>
+
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#contact-form");
+  const messageEl = document.getElementById("form-message") as HTMLDivElement | null;
+
+  const submitBtn = form?.querySelector<HTMLButtonElement>('button[type="submit"]') ?? null;
+
+  type MessageType = "success" | "error" | "loading";
+
+  const icons: Record<MessageType, string> = {
+    success: `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.5-1.5z"/></svg>`,
+    error: `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V6h2v6z"/></svg>`,
+    loading: `<svg viewBox="0 0 24 24" width="18" height="18" class="spin" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60"/></svg>`,
+  };
+
+  function setMessage(type: MessageType, text: string) {
+    if (!messageEl) return;
+    messageEl.className = `form-message ${type}`;
+    messageEl.innerHTML = `<div class="form-message-inner">${icons[type]}<span>${text}</span></div>`;
+  }
+
+  function setSubmitting(isSubmitting: boolean) {
+    if (!submitBtn) return;
+    submitBtn.disabled = isSubmitting;
+  }
+
+  if (form && messageEl) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      setSubmitting(true);
+      setMessage("loading", "Enviando mensaje...");
+
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: new FormData(form),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setMessage("success", "Mensaje enviado correctamente.");
+          form.reset();
+        } else {
+          setMessage("error", "Hubo un error al enviar el mensaje.");
+        }
+      } catch {
+        setMessage("error", "Error de conexión. Intenta nuevamente.");
+      } finally {
+        setSubmitting(false);
+      }
+    });
+  }
+</script>
