@@ -37,10 +37,10 @@ const {
   <div class="container mvv">
     <h2 class="mvv__title">{title}</h2>
 
-    <div class={`mvv__frame ${mediaSide === "right" ? "mvv__frame--right" : ""}`}>
+    <div class={`mvv__frame ${mediaSide === "right" ? "mvv__frame--right" : ""}`} data-mvv>
       <!-- Top: Imagen + (Misión/Vision) -->
       <div class="mvv__top">
-        <div class="mvv__media" aria-hidden={mediaAlt ? undefined : "true"}>
+        <div class="mvv__media" aria-hidden={mediaAlt ? undefined : "true"} data-reveal style="--d:0ms">
           <img
             class="mvv__mediaImg"
             src={mediaImage.src}
@@ -52,7 +52,7 @@ const {
           />
         </div>
 
-        <div class="mvv__mv" aria-label="Misión y Visión">
+        <div class="mvv__mv" aria-label="Misión y Visión" data-reveal style="--d:0ms">
           <article class="mvv__mvItem" aria-labelledby="mvv-mision-title">
             <h3 class="mvv__mvLabel" id="mvv-mision-title">{mission.title}</h3>
             <p class="mvv__mvText">{mission.body}</p>
@@ -68,13 +68,13 @@ const {
       </div>
 
       <!-- Bottom: Valores full width -->
-      <div class="mvv__values" aria-label={values.title}>
+      <div class="mvv__values" aria-label={values.title} data-reveal style="--d:140ms">
         <h3 class="mvv__mvLabel">{values.title}</h3>
 
         {values.items?.length > 0 && (
           <ul class="mvv__valuesGrid" role="list">
-            {values.items.map((v) => (
-              <li class="mvv__valuesCard">
+            {values.items.map((v, i) => (
+              <li class="mvv__valuesCard" data-reveal-item style={`--d:${220 + i * 150}ms`}>
                 <div class="mvv__valuesText">
                   <h4 class="mvv__valuesLabel">{v.label}</h4>
                   {v.desc ? <p class="mvv__valuesDesc">{v.desc}</p> : null}
@@ -131,6 +131,7 @@ const {
     height: 100%;       
     object-fit: cover;   
   }
+
   /* Right side (Misión/Vision) */
 
   .mvv__mvItem {
@@ -235,49 +236,46 @@ const {
 
   .mvv__mvText { white-space: pre-line; }
 
+
+  .mvv__frame {
+    /* estado final por defecto */
+    opacity: 1;
+    transform: none;
+    will-change: opacity, transform;
+  }
+
+
+  /* Reveal por partes (stagger) */
   @media (prefers-reduced-motion: no-preference) {
-    .mvv__frame {
-      animation: mvvFadeUp 420ms ease-out both;
+    /* Duraciones y easing centralizados */
+    .mvv {
+      --reveal-duration: 1500ms;     /* 👈 aquí aumentas el tiempo */
+      --reveal-ease: cubic-bezier(.22, 1, .36, 1);
+      --reveal-distance: 12px;
     }
 
-     .mvv__valuesCard {
-      position: relative;
-      transition: transform 160ms ease;
-    }
-
-    .mvv__valuesCard::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 0;
-      border-top: var(--mvv-line-width) solid var(--mvv-line-color);
+    /* Estado inicial (oculto) */
+    .mvv__frame [data-reveal],
+    .mvv__frame [data-reveal-item] {
       opacity: 0;
-      transition: opacity 160ms ease;
+      transform: translateY(var(--reveal-distance));
+      will-change: opacity, transform;
+
+      /* La transición vive siempre en el elemento */
+      transition:
+        opacity var(--reveal-duration) var(--reveal-ease),
+        transform var(--reveal-duration) var(--reveal-ease);
+      transition-delay: var(--d, 0ms);
     }
 
-    
-    .mvv__valuesCard:hover {
-      transform: translateY(-2px);
-    }
-
-    .mvv__valuesCard:hover::after{
+    /* Estado visible */
+    .mvv__frame.is-reveal [data-reveal],
+    .mvv__frame.is-reveal [data-reveal-item] {
       opacity: 1;
-    }
-
-    .mvv__valuesCard:hover .mvv__valuesIcon :global(svg) {
-      transform: translateY(-1px);
-      transition: transform 160ms ease;
-    }
-
-    @keyframes mvvFadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+      transform: translateY(0);
     }
   }
 
-    /* ✅ Desktop desde 768px (como indicaste) */
   @media (max-width: 768px) {
     .mvv__top {
       grid-template-columns: 1fr;
@@ -300,3 +298,44 @@ const {
     }
   }
 </style>
+
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const frame = document.querySelector("[data-mvv]");
+    if (!frame) return;
+
+    const prefersReduced =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    if (prefersReduced) {
+      frame.classList.add("is-reveal");
+      return;
+    }
+
+    const img = frame.querySelector(".mvv__mediaImg");
+    const reveal = async () => {
+      try {
+        if (img instanceof HTMLImageElement) {
+          // decode() puede fallar si aún no hay src listo, por eso el try/catch
+          await img.decode();
+        }
+      } catch (_) {}
+
+      requestAnimationFrame(() => frame.classList.add("is-reveal"));
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          obs.disconnect();
+          reveal();
+        }
+      },
+      { threshold: 0.3, rootMargin: "-15% 0px -15% 0px" }
+    );
+
+    obs.observe(frame);
+  });
+</script>
