@@ -1,0 +1,33 @@
+---
+const MAP_SRC = import.meta.env.PUBLIC_MAP_SRC;
+---
+
+<div class="map-block" aria-label="Mapa de ubicación">
+    <iframe
+      class="map-iframe"
+      src={MAP_SRC}
+      loading = "lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen
+      title="Ubicación de la empresa"
+    ></iframe>
+</div>
+
+
+<style>
+  .map-block {
+    width: 100%;
+  }
+
+  .map-iframe {
+    width: 100%;
+    height: 340px;
+    border: 0;
+  }
+
+  @media (max-width: 768px) {
+    .map-iframe {
+      height: 280px;
+    }
+  }
+</style>
