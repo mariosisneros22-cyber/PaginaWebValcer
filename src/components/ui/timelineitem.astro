@@ -1,252 +1,535 @@
 ---
-import type { TimelineItemData } from '../../utils/timeline';
+import { Image } from "astro:assets";
+import type { TimelineItemData, TimelineLayout } from "../../utils/timeline.ts";
 
-import Dot from './Dot.astro'
+type Side = "A" | "B";
 
+type Props = TimelineItemData & {
+  index: number;
+  layout: TimelineLayout;
+  side?: Side;
+};
 
-
-type Props = TimelineItemData & { side: 'left' | 'right' };
-
-const { 
-  date, 
-  title, 
-  description,
-  side,
-} = Astro.props as Props;
-
+const { index, year, title, description, image, imageAlt, layout, side, tagline } = Astro.props as Props;
 ---
-<article class={`timeline-item ${side}`}>
-  <div class="timeline-marker">
-    <div class="timeline-marker-inner">
-      <Dot />
-      <time class="timeline-date" datetime={date}>{date}</time>
+
+<article
+  class="scene"
+  data-scene
+  data-index={index}
+  data-layout={layout}
+  data-side={side ?? undefined}
+  aria-label={`Año ${year}: ${layout === "outro" ? (tagline ?? "") : title}`}
+>
+  <div class="scene-marker">
+    <div class="scene-year">
+      {layout === "split" ? (
+        <span class="year year-vertical" data-text={year.split("").join("\n")}>
+          {year.split("").join("\n")}
+        </span>
+      ) : (
+        <span class="year year-horizontal" data-text={year}>
+          {year}
+        </span>
+      )}
     </div>
+    <div class="scene-dot" aria-hidden="true"></div>
   </div>
 
-  <div class="timeline-content">
-    <div class = "timeline-content-inner">
-      <h3>{title}</h3>
-      <p>{description}</p>
-    </div>
+  <div class="scene-content">
+    {layout === "outro" ? (
+      <p class="scene-tagline">{tagline ?? ""}</p>
+    ) : (
+      <>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </>
+    )}
   </div>
+
+  {image ? (
+    <div class="scene-media">
+      <Image src={image} alt={imageAlt ?? ""} loading="lazy" />
+    </div>
+  ) : null}
 </article>
 
 <style>
+  .scene{
+    position: absolute;
+    inset: 0;
 
-  .timeline-item{
-    width: 50%;
-    box-sizing: border-box;
+    display: grid;            /* siempre montada */
+    opacity: 0;
+    pointer-events: none;
 
-    display: grid;
-    grid-template-columns: minmax(110px, auto) 1fr;
-    grid-template-areas: "marker content";
-    gap: 2rem;
+    transition: opacity 1.0s ease; ;
+    will-change: auto;
+
+    /* GRID base (deja tu mismo grid) */
+    grid-template-columns: 1fr minmax(120px, 160px) 1fr;
+    grid-template-rows: 1fr;
     align-items: center;
 
-    --branch: 3rem;
+    padding: 12vh clamp(16px, 4vw, 48px);
+    column-gap: clamp(16px, 4vw, 48px);
 
-    min-height: 100vh;
-    padding-block: 0;
-    padding-inline: 0; 
-
-    /* reveal / slide */
-    --x: 0px;
-    --y: 24px;
-    transform: translate(var(--x), var(--y));
-    opacity: 0;
-    transition: opacity .35s ease, transform .35s ease;
+    z-index: 0;
   }
 
-  /* posición por lado (50% izquierda/derecha) */
-  .timeline-item.left{
-    grid-template-columns: 1fr minmax(110px, auto);
-    grid-template-areas: "content marker";
-    padding-right: 3rem;
-    text-align: right;
-
-    margin-right: auto;
-    margin-left: 0;
-
-    --x: -32px; /* carácter al entrar */
-  }
-
-  .timeline-item.right{
-    padding-left: 3rem;
-    text-align: left;
-
-    margin-left: auto;
-    margin-right: 0;
-
-    --x: 32px; /* carácter al entrar */
-  }
-
-  /* estado visible */
-  .timeline-item.is-visible{
+  .scene.is-active{
     opacity: 1;
-    --x: 0px;
-    --y: 0px;
-  }
+    pointer-events: auto;
 
-  /* =========================
-    Marker + Content (sticky)
-    ========================= */
-
-  .timeline-marker{
-    grid-area: marker;
-    position: sticky;
     z-index: 2;
   }
 
-  .timeline-content{
-    grid-area: content;
-  }
-
-  .timeline-marker{
-    top: 50vh;
-    transform: translateY(-50%);
-  }
-
-
-  .timeline-content-inner{
-    position: sticky;
+  .scene.is-prev{
     z-index: 1;
-    top: 50vh;
-    transform: translateY(-0.5rem);
+    pointer-events: none;
   }
 
-  /* marker layout */
-  .timeline-marker-inner{
-    position: relative;
-    min-width: 110px;
+  .scene-content{
 
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.75rem;
+    max-width: 60ch;
+
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
   }
+  /* transicion */
 
-  .timeline-item.left .timeline-marker-inner{
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-  }
 
-  /* branch */
-  .timeline-marker-inner::before{
-    content: "";
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 2px;
-    width: var(--branch);
-    background: #e5e5e5;
+  /* ===== Estado base ===== */
+
+  /* Base: ambos usan el mismo transform */
+  .scene-content,
+  .scene-media{
     opacity: 0;
-    transition: opacity .2s ease, background-color .2s ease;
+    transform: translate3d(var(--enter-x, 0px), var(--enter-y, 12px), 0);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+    will-change: auto;
   }
 
-  .timeline-item.right .timeline-marker-inner::before{ left: calc(-1 * var(--branch)); }
-  .timeline-item.left  .timeline-marker-inner::before{ right: calc(-1 * var(--branch)); }
+  /* Activo: siempre vuelve a 0,0 */
+  .scene.is-active .scene-content,
+  .scene.is-active .scene-media{
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    transition-delay: 400ms;
+    will-change: opacity, transform;
+  }
 
-  .timeline-item.is-visible .timeline-marker-inner::before{ opacity: 1; }
-  .timeline-item.is-active  .timeline-marker-inner::before{ background: #333; }
+  /* Intro / Outro: solo vertical */
+  .scene[data-layout="intro"] .scene-content,
+  .scene[data-layout="outro"] .scene-content{
+    --enter-x: 0px;
+  }
 
-  /* =========================
-    Date + Dot states
-    ========================= */
+  /* Split A: imagen izquierda, texto derecha */
+  .scene[data-layout="split"][data-side="A"] .scene-media{ --enter-x: -24px; --enter-y: 0px; }
+  .scene[data-layout="split"][data-side="A"] .scene-content{ --enter-x:  24px; --enter-y: 0px; }
 
-  .timeline-date{
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #555;
+  /* Split B: texto izquierda, imagen derecha */
+  .scene[data-layout="split"][data-side="B"] .scene-content{ --enter-x: -24px; --enter-y: 0px; }
+  .scene[data-layout="split"][data-side="B"] .scene-media{   --enter-x:  24px; --enter-y: 0px; }
 
+
+  /* Marker en columna central, centrado vertical */
+  .scene-marker{
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    align-self: center;
+
+    display:flex;
+    flex-direction: column;   /* año arriba, dot abajo */
+    align-items:center;
+    gap: 10px;
+
+    pointer-events:none;
+  }
+
+  /* Dot */
+  .scene-dot{
+    width:10px;
+    height:10px;
+    border-radius:999px;
+    background:#333;
+  }
+
+  /* INTRO: contenido abajo centrado, sin media */
+  .scene[data-layout="intro"], .scene[data-layout="outro"]{
+    grid-template-rows: auto auto;   /* marker arriba, contenido abajo */
+    align-content: center;           /* centra el bloque (marker+content) en la pantalla */
+    row-gap: 14px;                   /* separación entre dot y contenido */
+  }
+
+  .scene[data-layout="intro"] .scene-marker{
+    grid-column: 2;
+    grid-row: 1;
+
+  }
+
+  .scene[data-layout="intro"] .scene-content{
+    grid-column: 2;
+    grid-row: 2;
+
+    justify-self: center;
+    text-align: center;
+    min-width: 50ch;
+
+    font-size: x-large;
+  }
+
+  .scene[data-layout="intro"] .scene-media{ display:none; }
+
+  /* SPLIT: texto e imagen en columnas opuestas */
+
+  .scene[data-layout="split"] .scene-content,
+  .scene[data-layout="split"] .scene-media{
+    grid-row: 1;
+    align-self: center;
+
+    width: 100%;
+  }
+  /* Para manejar textos largos sin romper */
+
+  .scene-media{
+    max-width: min(56vw, 1100px);
+  }
+
+  .scene-media :global(img){
+    width: 100%;
+    height: 75vh;
+    object-fit: cover;
+    display: block;
+    
+  }
+
+  .scene.is-active,
+  .scene.is-prev{
+    will-change: opacity;
+  }
+  .scene[data-layout="split"] .scene-content{
+    font-size: large;
+  }
+  /* A: imagen izquierda / texto derecha */
+  .scene[data-layout="split"][data-side="A"] .scene-media{
+    grid-column: 1 / 2;
+    justify-self: stretch;
+  }
+
+  .scene[data-layout="split"][data-side="A"] .scene-content{
+    grid-column: 3;
+    place-self: center end;
+  }
+
+  /* B: texto izquierda / imagen derecha */
+  .scene[data-layout="split"][data-side="B"] .scene-content{
+    grid-column: 1;
+    place-self: center start;
+  }
+
+  .scene[data-layout="split"][data-side="B"] .scene-media{
+    grid-column: 3 / 4;
+    justify-self: stretch;
+  }
+
+
+  /* AÑO */
+  .scene-year{
     line-height: 1;
+    padding: 0.15em 0.25em;   /* placa */
+    background: white;
+    border-radius: 12px;
+  }
+
+
+  /* tipografía común */
+  .year{
+    font-weight: 700;
+    font-size: clamp(5rem, 6vw, 6rem);
+    line-height: 1;
+
+    position: relative;
     display: inline-block;
 
-    opacity: 0;
-    --ty: 6px;
-    transform: translateY(var(--ty));
-    transition: opacity .4s ease-out, transform .4s ease-out;
-    transition-delay: calc(var(--delay, 0ms) + 80ms);
+    /* ✅ base visible */
+    color: #999;
   }
 
-  .timeline-item.is-visible .timeline-date{
-    opacity: 1;
-    --ty: 0px;
+  /* vertical apilado */
+  .year-vertical{
+    white-space: pre-line;
+    text-align: center;
   }
 
-  .timeline-dot{
-    transition: transform .2s ease, opacity .2s ease;
+  /* overlay: el “relleno” */
+  .year::after{
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    white-space: inherit;
+    text-align: inherit;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    background-image: linear-gradient(#111, #111);
+    background-repeat: no-repeat;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    pointer-events: none;
   }
 
-  /* inactivos visibles */
-  .timeline-item.is-visible:not(.is-active) .timeline-dot,
-  .timeline-item.is-visible:not(.is-active) .timeline-date{
-    opacity: 0.6;
+  /* relleno horizontal (izq→der) */
+  .year-horizontal::after{
+    background-size: calc(var(--fill, 0) * 100%) 100%;
+    background-position: 0 0;
   }
 
-  /* activos */
-  .timeline-item.is-active .timeline-dot{ transform: scale(1.2); }
-  .timeline-item.is-active .timeline-dot,
-  .timeline-item.is-active .timeline-date{ opacity: 1; }
-
-  /* =========================
-    Content typography
-    ========================= */
-
-  .timeline-content h3{
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
+  /* relleno vertical (abajo→arriba) */
+  .year-vertical::after{
+    background-size: 100% calc(var(--fill, 0) * 100%);
+    background-position: 0 100%;
   }
 
-  .timeline-content p{
-    line-height: 1.6;
-    max-width: 65ch;
+
+
+
+
+  /*OUTRO */
+  /* OUTRO: bloque centrado, lema debajo del dot */
+  .scene[data-layout="outro"] .scene-marker{
+    grid-column: 2;
+    grid-row: 1;
   }
 
-  /* Mobile */
+  .scene[data-layout="outro"] .scene-content{
+    grid-column: 1 / 4;
+    grid-row: 2;
+    justify-self: center;
+    text-align: center;
+    max-width: 70ch;
 
-  @media (max-width: 768px){
-    .timeline-item{
-      width: 100%;
-      padding: 0;
-      text-align: left;
+    font-size: xx-large;
+  }
 
-      /* en mobile: sin “escena” sticky/reveal */
+  .scene-tagline{
+    margin: 0;
+  }
+  .scene[data-layout="outro"] .scene-media{ display:none; }
+
+
+  /*degradado imagen*/
+  .scene-marker{ z-index: 3; }
+  .scene-content{ z-index: 2; }
+  .scene-media{ z-index: 1; position: relative; }
+  
+  .scene-media :global(picture){
+    display: block;
+    width: 100%;
+  }
+  
+  .scene[data-layout="split"][data-side="A"] .scene-media{
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 55%,
+      rgba(0,0,0,.85) 70%,
+      rgba(0,0,0,.35) 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 55%,
+      rgba(0,0,0,.85) 70%,
+      rgba(0,0,0,.35) 85%,
+      transparent 100%
+    );
+  }
+
+  /* B: espejo */
+  .scene[data-layout="split"][data-side="B"] .scene-media{
+    -webkit-mask-image: linear-gradient(
+      to left,
+      #000 0%,
+      #000 55%,
+      rgba(0,0,0,.85) 70%,
+      rgba(0,0,0,.35) 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to left,
+      #000 0%,
+      #000 55%,
+      rgba(0,0,0,.85) 70%,
+      rgba(0,0,0,.35) 85%,
+      transparent 100%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scene,
+    .scene-content,
+    .scene-media{
       transition: none !important;
       transform: none !important;
-      opacity: 1; /* opcional: evita flash */
-    }
-
-    .timeline-marker{
-      top: auto;
-      transform: none;
-      position: relative; /* opcional: quita sticky en mobile */
-    }
-
-    .timeline-content-inner{
-      position: static;
-      transform: none;
-    }
-
-    .timeline-marker-inner{
-      min-width: auto;
-      justify-content: flex-start;
-    }
-
-    .timeline-marker-inner::before{ display: none; }
-    .timeline-content{ padding-left: 1rem; }
-
-    .timeline-dot,
-    .timeline-date,
-    .timeline-marker-inner::before{
-      transition: none !important;
-      transform: none !important;
-    }
-
-    .timeline-item.left,
-    .timeline-item.right{
-      margin: 0;
-      padding-inline: 0;
     }
   }
+
+  
+  @media (max-width:768px){
+
+    /* ===== BASE MÓVIL (por defecto) =====
+      Dejamos 1 columna para que intro/outro funcionen bien
+    */
+    .scene{
+      position: static !important;
+      inset: auto !important;
+
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      grid-template-rows: auto auto !important;
+      row-gap: 10px !important;
+
+      padding: 14px 16px !important;
+      margin: 0 0 14px 0 !important;
+
+      opacity: 0 !important;
+      transform: translateY(8px) !important;
+      transition: opacity 400ms ease, transform 400ms ease !important;
+
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+
+      pointer-events: auto !important;
+    }
+
+    .scene.in-view{
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+
+    /* Marker arriba centrado (intro/outro) */
+    .scene-marker{
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      justify-self: center !important;
+      align-self: start !important;
+      align-items: center !important;
+      pointer-events: none !important;
+    }
+
+    /* Contenido abajo */
+    .scene-content{
+      grid-column: 1 !important;
+      grid-row: 2 !important;
+
+      max-width: 100% !important;
+      width: 100% !important;
+
+      background: transparent !important;
+      border: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+
+      text-align: center !important;
+
+      /* ✅ evita desbordes por palabras largas */
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+    }
+
+    /* IMPORTANTE: esto mata tu min-width desktop en intro */
+    .scene[data-layout="intro"] .scene-content{
+      min-width: 0 !important;
+    }
+
+    /* Año vertical, centrado */
+    .scene-year{
+      background: transparent !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    .year{
+      font-size: 1.6rem !important;
+      line-height: 1 !important;
+      color: #333 !important;
+    }
+
+    .year-vertical,
+    .year-vertical::after{
+      white-space: pre-line !important;
+      text-align: center !important;
+    }
+
+    .scene-dot{ display:none !important; }
+
+    /* Evita que children queden opacity 0 por reglas desktop */
+    .scene-content,
+    .scene-media{
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+
+    /* ===== SPLIT MÓVIL: 2 columnas (año izq / contenido der) ===== */
+    .scene[data-layout="split"]{
+      grid-template-columns: minmax(3ch, max-content) 1fr !important;
+      grid-template-rows: auto auto !important; /* contenido y media pueden caer abajo */
+      column-gap: 14px !important;
+      row-gap: 10px !important;
+    }
+
+    .scene[data-layout="split"] .scene-marker{
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      justify-self: start !important;
+      align-self: start !important;
+    }
+
+    .scene[data-layout="split"] .scene-content{
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      text-align: left !important;
+    }
+
+    /* Ignorar A/B en móvil */
+    .scene[data-layout="split"][data-side="A"] .scene-content,
+    .scene[data-layout="split"][data-side="B"] .scene-content{
+      grid-column: 2 !important;
+      place-self: start stretch !important;
+    }
+
+    /* Media abajo del contenido, alineada con la columna del contenido */
+    .scene[data-layout="split"] .scene-media{
+      grid-column: 2 !important;
+      grid-row: 2 !important;
+      display: block !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    .scene-media :global(img){
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+  }
+
+
 
 </style>
