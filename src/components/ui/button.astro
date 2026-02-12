@@ -3,12 +3,16 @@ interface Props {
   href?: string;
   variant?: 'primary';
   class?: string;
+  type?: 'button' | 'submit' | 'reset'; 
+  disabled?: boolean;                   
 }
 
 const {
   href,
   variant = 'primary',
   class: extraClass = '',
+  type = 'button',
+  disabled = false,
 } = Astro.props;
 ---
 
@@ -21,8 +25,9 @@ const {
   </a>
 ) : (
   <button
-    type="button"
+    type={type}
     class={`btn btn-${variant} ${extraClass}`}
+    disabled={disabled}
   >
     <slot />
   </button>

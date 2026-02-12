@@ -1,0 +1,253 @@
+---
+import TimelineItem from "../../ui/timelineitem.astro";
+import { timelineDataSorted as timelineData } from "../../../utils/timeline";
+import type { TimelineItemData, TimelineLayout } from "../../../utils/timeline";
+
+type SceneSide = "A" | "B";
+type Scene = TimelineItemData & {
+  layout: TimelineLayout;
+  side?: SceneSide;
+}
+
+const currentYear = new Date().getFullYear().toString();
+
+const outro: Scene = {
+    id: 999,
+    year: currentYear,
+    title: "",
+    description: "",
+    layout: "outro",
+    tagline: "Construyendo hoy, proyectando el mañana",
+  };
+
+const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
+  const layout: TimelineLayout = item.layout ?? (index === 0 ? "intro" : "split");
+  const side: SceneSide | undefined =
+    layout === "split" ? ((index - 1) % 2 === 0 ? "A" : "B") : undefined;
+
+  return { ...item, layout, side };
+});
+---
+
+<section class="timeline-section" data-timeline style={`--n:${scenes.length}; --tail:0.6;`}>
+  <div class="container">
+    <header class="timeline-header">
+      <h2>Historia y trayectoria</h2>
+    </header>
+
+    <div class="timeline-track" data-track>
+      <div class="timeline-stage" data-stage>
+        <div class="timeline-axis" aria-hidden="true">
+          <div class="axis-line"></div>
+          <div class="axis-progress"></div>
+        </div>
+
+        <div class="timeline-scenes">
+          {scenes.map((item, index) => (
+            <TimelineItem {...item} index={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline-track{ 
+    height: calc((var(--n) + var(--tail,0)) * 100vh); 
+  }
+
+  .timeline-stage{
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .timeline-axis{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index: 1;
+  }
+
+  .axis-line, .axis-progress{
+    position:absolute;
+    left:50%;
+    top:12vh;
+    width:2px;
+    height:76vh;
+    transform: translateX(-50%);
+  }
+
+  .axis-line{ background:#e5e5e5; }
+  .axis-progress{ background:#333; height: var(--line-progress, 0px); }
+
+  .timeline-scenes{ 
+    position:absolute; 
+    inset:0;
+    z-index: 2;
+  }
+
+  @media (max-width:768px){
+    .timeline-track{ height:auto; }
+    .timeline-stage{ position:static; height:auto; overflow:visible; }
+    .timeline-axis{ display:none; }
+    .timeline-scenes{ position:static; }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const roots = Array.from(document.querySelectorAll<HTMLElement>("[data-timeline]"));
+    if (roots.length === 0) return;
+
+    for (const root of roots) {
+      initTimeline(root);
+    }
+
+    function initTimeline(root: HTMLElement) {
+
+      const isMobile = window.matchMedia("(max-width:768px)").matches;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // =========================
+      // MÓVIL: lista + animación al entrar
+      // =========================
+      if (isMobile) {
+        if (reduceMotion) return;
+
+        const items = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]"));
+        if (items.length === 0) return;
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                (e.target as HTMLElement).classList.add("in-view");
+                io.unobserve(e.target); // perf: solo una vez
+              }
+            }
+          },
+          { rootMargin: "0px 0px -10% 0px", threshold: 0.15 }
+        );
+
+        items.forEach((el) => io.observe(el));
+
+        document.addEventListener(
+          "astro:before-swap",
+          () => {
+            io.disconnect();
+          },
+          { once: true }
+        );
+
+        return; // ✅ MUY IMPORTANTE: no ejecutar desktop
+      }
+
+      // =========================
+      // DESKTOP: sticky + axis + fill
+      // =========================
+      if (reduceMotion) return;
+
+      const track = root.querySelector<HTMLElement>("[data-track]");
+      const stage = root.querySelector<HTMLElement>("[data-stage]");
+      const scenes = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]"));
+      if (!track || !stage || scenes.length === 0) return;
+
+      let raf = 0;
+      let activeIndex = -1;
+      let usable = stage.getBoundingClientRect().height * 0.76;
+      let lastRaw = 0;
+
+      const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+      const recalc = () => {
+        usable = stage.getBoundingClientRect().height * 0.76;
+      };
+
+      const setActive = (idx: number, t: number, progress01: number) => {
+        if (idx !== activeIndex) {
+          const prev = activeIndex;
+
+          if (prev >= 0) {
+            scenes[prev]?.classList.remove("is-active");
+            scenes[prev]?.classList.add("is-prev");
+          }
+
+          scenes[idx]?.classList.add("is-active");
+          scenes[idx]?.classList.remove("is-prev");
+
+          activeIndex = idx;
+        }
+
+        root.style.setProperty("--line-progress", `${progress01 * usable}px`);
+
+        for (let i = 0; i < scenes.length; i++) {
+          // solo actualiza activa + vecinas / prev (perf)
+          if (i !== activeIndex && !scenes[i].classList.contains("is-prev")) continue;
+
+          if (i !== activeIndex && i !== activeIndex - 1 && i !== activeIndex + 1) {
+            scenes[i].classList.remove("is-prev");
+          }
+
+          const v = i < idx ? 1 : i === idx ? t : 0;
+          const next = String(v);
+          if (scenes[i].style.getPropertyValue("--fill") !== next) {
+            scenes[i].style.setProperty("--fill", next);
+          }
+        }
+      };
+
+      const update = () => {
+        raf = 0;
+
+        const trackRect = track.getBoundingClientRect();
+        const vh = window.innerHeight;
+
+        const scrolled = clamp(-trackRect.top, 0, trackRect.height - vh);
+        const raw = scrolled / vh;
+
+        lastRaw = raw;
+
+        const last = scenes.length - 1;
+
+        const idxUnclamped = Math.floor(raw);
+        const rawClamped = clamp(raw, 0, last);
+
+        const idx = Math.floor(rawClamped);
+        const t = rawClamped - idx;
+
+        const tFinal = idxUnclamped >= last ? 1 : t;
+        const progress01 = rawClamped / Math.max(1, last);
+
+        setActive(idx, tFinal, progress01);
+      };
+
+      const schedule = () => {
+        if (raf) return;
+        raf = requestAnimationFrame(update);
+      };
+
+      const onResize = () => {
+        recalc();
+        schedule();
+      };
+
+      schedule();
+      window.addEventListener("scroll", schedule, { passive: true });
+      window.addEventListener("resize", onResize, { passive: true });
+
+      document.addEventListener(
+        "astro:before-swap",
+        () => {
+          window.removeEventListener("scroll", schedule);
+          window.removeEventListener("resize", onResize);
+          if (raf) cancelAnimationFrame(raf);
+        },
+        { once: true }
+      );
+    }
+  });
+
+</script>

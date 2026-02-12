@@ -1,0 +1,40 @@
+---
+interface Props { color?: string; }
+const { color = '#333' } = Astro.props as Props;
+---
+<span class="timeline-dot" style={`--dot-color:${color};`}></span>
+
+<style>
+  .timeline-dot{
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--dot-color);
+    flex-shrink: 0;
+
+    position: relative;
+  }
+
+  /* rama desde el dot */
+  .timeline-dot::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    height:2px;
+    width: var(--branch, 3rem);
+    background:#e5e5e5;
+    opacity:0;
+    transition: opacity .2s ease, background-color .2s ease;
+  }
+
+  /* si contenido está a la izquierda -> rama va a la izquierda */
+  .timeline-item.left .timeline-dot::after{ right: 100%; }
+
+  /* si contenido está a la derecha -> rama va a la derecha */
+  .timeline-item.right .timeline-dot::after{ left: 100%; }
+
+  .timeline-item.is-visible .timeline-dot::after{ opacity:1; }
+  .timeline-item.is-active  .timeline-dot::after{ background:#333; }
+</style>
