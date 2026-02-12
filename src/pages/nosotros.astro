@@ -18,7 +18,7 @@ import { heroImages } from '../utils/indexImage';
   heroImage={nosotrosHero} 
 >
   <!--Quienes somos-->
-  <section class="section-2 section-who">
+  <section class="section section-who">
     <div class="container who-grid">
       <div class="who-content">
         <h2>Quiénes somos</h2>
@@ -49,7 +49,7 @@ import { heroImages } from '../utils/indexImage';
 
 
   <!--Pilares empresa-->
-  <section class="section">
+  <section class="section-2">
     <div class="container">
       <h2>Nuestros pilares</h2>
         <div class="pillars-grid">
@@ -110,16 +110,15 @@ import { heroImages } from '../utils/indexImage';
 
   <!-- Resto del contenido -->
   <section class="section-2">
-    <div class="container">
-      <div class="cta-content">
-            <h2>¿Tienes un proyecto en mente?</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
+    <div class="container cta-content">
+  
+      <h2>¿Tienes un proyecto en mente?</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
 
-            <Button href="/contacto">CONTACTAR</Button>
-            </div>
-      </div>
+      <Button href="/contacto">CONTACTAR</Button>
+
 
     </div>
     
@@ -234,7 +233,7 @@ import { heroImages } from '../utils/indexImage';
 
       el.innerHTML = `
         <iframe
-        
+
           src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0"
           allow="autoplay; encrypted-media"
           allowfullscreen

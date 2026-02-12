@@ -73,7 +73,7 @@ const { title, image, eager = true } = Astro.props;
     align-items: flex-end;
     justify-content: flex-start;
 
-    padding-bottom: clamp(1.5rem, 4vh, 3rem); /* casi tocando el borde */
+    padding-bottom: clamp(5rem, 5vh, 6rem); /* casi tocando el borde */
   }
 
   .page-hero-content .container {
@@ -88,6 +88,28 @@ const { title, image, eager = true } = Astro.props;
     text-shadow: 0 2px 8px rgba(0,0,0,.4);
   }
 
+
+  
+  .page-hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: clamp(80px, 12vh, 180px); /* controla la profundidad del fade */
+
+    background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.7) 60%,
+      #ffffff 100%
+    );
+
+    z-index: 1;
+    pointer-events: none;
+  }
+  
   @media (max-width: 768px) {
     .page-hero {
       min-height: 55vh;
