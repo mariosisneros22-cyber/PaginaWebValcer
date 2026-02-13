@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Projecto, ProjectFilters } from "../../../lib/projects";
 import "./proyecto-explorer.css";
+
 import {
   applyProjectFilters,
   parseFiltersFromUrl,
@@ -15,54 +16,64 @@ import {
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import ProyectoCardView from "./ProyectoCardView";
 
 type ProjectWithCover = Projecto & {
-  coverUrl: string; // viene resuelto desde Astro
+  coverUrl: string;
 };
 
 type Props = {
   projects: ProjectWithCover[];
 };
 
-export default function ProyectoExplorer({ projects }: Props) {
+const DEFAULT_CENTER: [number, number] = [-77.0428, -12.0464];
+const DEFAULT_ZOOM = 10;
 
-  //mapa
-  const mapRef = React.useRef<maplibregl.Map | null>(null);
-  const mapElRef = React.useRef<HTMLDivElement | null>(null);
-  const markersRef = React.useRef<maplibregl.Marker[]>([]);
+export default function ProyectoExplorer({ projects }: Props) {
+  // state
+  const [filters, setFilters] = useState<ProjectFilters>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  // map refs
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapElRef = useRef<HTMLDivElement | null>(null);
+  const markersRef = useRef<maplibregl.Marker[]>([]);
+  const initialViewRef = useRef<{ center: [number, number]; zoom: number } | null>(null);
 
-  const [filters, setFilters] = useState<ProjectFilters>({});
-
-  // Inicializar filtros desde URL
+  // init filters from URL
   useEffect(() => {
     const url = new URL(window.location.href);
     setFilters(parseFiltersFromUrl(url));
   }, []);
 
-  // Opciones
+  // memo: options
   const estados = useMemo(() => getAvailableStates(projects), [projects]);
   const rubros = useMemo(() => getAvailableRubros(projects), [projects]);
   const dptos = useMemo(() => getAvailableDepartamentos(projects), [projects]);
 
-  // Aplicar filtros
-  const filtered = useMemo(
-    () => applyProjectFilters(projects, filters),
-    [projects, filters]
+  // memo: filtered
+  const filtered = useMemo(() => applyProjectFilters(projects, filters), [projects, filters]);
+
+  const filteredWithCoords = useMemo(
+    () =>
+      filtered.filter(
+        (p) => typeof p.ubicacion?.lat === "number" && typeof p.ubicacion?.lng === "number"
+      ),
+    [filtered]
   );
 
-  const filteredWithCoords = useMemo(() => {
-    return filtered.filter(
-      (p) => typeof p.ubicacion?.lat === "number" && typeof p.ubicacion?.lng === "number"
-    );
-  }, [filtered]);
+  const totalVisibles = useMemo(() => applyProjectFilters(projects, {}).length, [projects]);
 
-  const totalVisibles = useMemo(
-    () => applyProjectFilters(projects, {}).length,
-    [projects]
-  );
-  //useEffect ma
+  // memo: querystring
+  const queryString = useMemo(() => buildProjectsQueryString(filters), [filters]);
+
+  // sync URL (no reload)
+  useEffect(() => {
+    const next = `${window.location.pathname}${queryString}`;
+    window.history.replaceState(null, "", next);
+  }, [queryString]);
+
+  // init map once
   useEffect(() => {
     if (!mapElRef.current || mapRef.current) return;
 
@@ -84,12 +95,14 @@ export default function ProyectoExplorer({ projects }: Props) {
         },
         layers: [{ id: "osm", type: "raster", source: "osm" }],
       },
-      center: [-77.0428, -12.0464], // Lima default
-      zoom: 10,
+      center: DEFAULT_CENTER,
+      zoom: DEFAULT_ZOOM,
     });
 
     map.addControl(new maplibregl.NavigationControl(), "top-right");
+
     mapRef.current = map;
+    initialViewRef.current = { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM };
 
     return () => {
       markersRef.current.forEach((m) => m.remove());
@@ -98,61 +111,83 @@ export default function ProyectoExplorer({ projects }: Props) {
       map.remove();
       mapRef.current = null;
     };
-
   }, []);
 
-
-  // Sincronizar URL sin recarga
+  // keep selectedId valid
   useEffect(() => {
-    const qs = buildProjectsQueryString(filters);
-    const next = `${window.location.pathname}${qs}`;
-    window.history.replaceState(null, "", next);
-  }, [filters]);
+    if (!selectedId) return;
+    const stillExists = filteredWithCoords.some((p) => p.id === selectedId);
+    if (!stillExists) setSelectedId(null);
+  }, [filteredWithCoords, selectedId]);
 
-  //otro useefect para mapa (pintar marcadores)
+  // helpers
+  const clearAll = useCallback(() => setFilters({}), []);
+
+  const onChange = useCallback((patch: Partial<ProjectFilters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const resetMapView = useCallback(() => {
+    const map = mapRef.current;
+    const init = initialViewRef.current;
+    if (!map || !init) return;
+
+    setSelectedId(null);
+    map.easeTo({ center: init.center, zoom: init.zoom, duration: 500 });
+  }, []);
+
+  const flyToProject = useCallback((p: ProjectWithCover) => {
+    const map = mapRef.current;
+    const hasCoords =
+      typeof p.ubicacion?.lat === "number" && typeof p.ubicacion?.lng === "number";
+    if (!map || !hasCoords) return;
+
+    setSelectedId(p.id);
+    map.flyTo({
+      center: [p.ubicacion.lng!, p.ubicacion.lat!],
+      zoom: Math.max(map.getZoom(), 13),
+    });
+  }, []);
+
+  // markers + fit bounds
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
     const run = () => {
-      // limpiar marcadores anteriores
+      // clear old
       markersRef.current.forEach((m) => m.remove());
       markersRef.current = [];
 
-      // crear nuevos
-      const markers: maplibregl.Marker[] = [];
-      for (const p of filteredWithCoords) {
+      // create new
+      const markers: maplibregl.Marker[] = filteredWithCoords.map((p) => {
         const el = document.createElement("button");
         el.type = "button";
-        el.className = "marker";
+        el.className = `marker ${p.id === selectedId ? "isActive" : ""}`;
         el.title = p.nombre;
 
-        el.addEventListener("click", () => {
+        el.onclick = () => {
           setSelectedId(p.id);
           map.flyTo({
             center: [p.ubicacion.lng!, p.ubicacion.lat!],
             zoom: Math.max(map.getZoom(), 13),
           });
-        });
+        };
 
-        const m = new maplibregl.Marker({ element: el })
+        return new maplibregl.Marker({ element: el })
           .setLngLat([p.ubicacion.lng!, p.ubicacion.lat!])
           .addTo(map);
-
-        markers.push(m);
-      }
+      });
 
       markersRef.current = markers;
 
-      // encuadrar vista
+      // fit view
       if (filteredWithCoords.length === 1) {
         const p = filteredWithCoords[0];
         map.flyTo({ center: [p.ubicacion.lng!, p.ubicacion.lat!], zoom: 13 });
       } else if (filteredWithCoords.length > 1) {
         const bounds = new maplibregl.LngLatBounds();
-        filteredWithCoords.forEach((p) =>
-          bounds.extend([p.ubicacion.lng!, p.ubicacion.lat!])
-        );
+        filteredWithCoords.forEach((p) => bounds.extend([p.ubicacion.lng!, p.ubicacion.lat!]));
         map.fitBounds(bounds, { padding: 60, maxZoom: 13 });
       }
     };
@@ -163,25 +198,12 @@ export default function ProyectoExplorer({ projects }: Props) {
     }
 
     run();
-  }, [filteredWithCoords]);
-
+  }, [filteredWithCoords, selectedId]);
 
   const selected = useMemo(
     () => filteredWithCoords.find((p) => p.id === selectedId) ?? null,
     [filteredWithCoords, selectedId]
   );
-
-  useEffect(() => {
-    if (selectedId && !filteredWithCoords.some((p) => p.id === selectedId)) {
-      setSelectedId(null);
-    }
-  }, [filteredWithCoords, selectedId]);
-
-  const onChange = (patch: Partial<ProjectFilters>) => {
-    setFilters((prev) => ({ ...prev, ...patch }));
-  };
-
-  const clearAll = () => setFilters({});
 
   const chips = useMemo(() => {
     const list: { key: string; label: string; next: ProjectFilters }[] = [];
@@ -218,16 +240,6 @@ export default function ProyectoExplorer({ projects }: Props) {
     return list;
   }, [filters]);
 
-
-  useEffect(() => {
-    if (!selectedId) return;
-
-    const el = document.querySelector<HTMLElement>(`[data-proj-id="${selectedId}"]`);
-    if (!el) return;
-
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, [selectedId]);
-
   return (
     <section className="container">
       {/* FILTROS */}
@@ -237,9 +249,7 @@ export default function ProyectoExplorer({ projects }: Props) {
             Estado
             <select
               value={filters.estado ?? ""}
-              onChange={(e) =>
-                onChange({ estado: e.target.value || undefined })
-              }
+              onChange={(e) => onChange({ estado: e.target.value || undefined })}
             >
               <option value="">Todos</option>
               {estados.map((e) => (
@@ -254,9 +264,7 @@ export default function ProyectoExplorer({ projects }: Props) {
             Rubro
             <select
               value={filters.rubro ?? ""}
-              onChange={(e) =>
-                onChange({ rubro: e.target.value || undefined })
-              }
+              onChange={(e) => onChange({ rubro: e.target.value || undefined })}
             >
               <option value="">Todos</option>
               {rubros.map((r) => (
@@ -271,9 +279,7 @@ export default function ProyectoExplorer({ projects }: Props) {
             Departamento
             <select
               value={filters.dpto ?? ""}
-              onChange={(e) =>
-                onChange({ dpto: e.target.value || undefined })
-              }
+              onChange={(e) => onChange({ dpto: e.target.value || undefined })}
             >
               <option value="">Todos</option>
               {dptos.map((d) => (
@@ -290,9 +296,7 @@ export default function ProyectoExplorer({ projects }: Props) {
               type="search"
               placeholder="Nombre, cliente, ubicación, rubro…"
               value={filters.q ?? ""}
-              onChange={(e) =>
-                onChange({ q: e.target.value || undefined })
-              }
+              onChange={(e) => onChange({ q: e.target.value || undefined })}
             />
           </label>
 
@@ -307,8 +311,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       {/* RESUMEN */}
       <div className="summary">
         <span>
-          Mostrando <strong>{filtered.length}</strong> de{" "}
-          <strong>{totalVisibles}</strong>
+          Mostrando <strong>{filtered.length}</strong> de <strong>{totalVisibles}</strong>
         </span>
 
         {chips.length > 0 ? (
@@ -328,111 +331,70 @@ export default function ProyectoExplorer({ projects }: Props) {
         ) : null}
       </div>
 
-      {/*MAPA*/}
-      <div className="mapWrap">
-        <div className="map" ref={mapElRef} />
+      {/* SPLIT */}
+      <div className="split">
+        <aside className="splitMap">
+          <div className="mapWrap">
+            <div className="map" ref={mapElRef} />
 
-        {selected ? (
-          <div className="popup">
-            <div className="popupHead">
-              <strong>{selected.nombre}</strong>
-              <button type="button" className="popupClose" onClick={() => setSelectedId(null)}>×</button>
-            </div>
-            <div className="popupBody">
-              <div className="popupMeta">
-                {selected.ubicacion.distrito ? `${selected.ubicacion.distrito}, ` : ""}
-                {formatSimpleLabel(selected.ubicacion.departamento)}
-              </div>
-              <a className="popupLink" href={`/proyectos/${selected.slug}`}>Ver proyecto →</a>
-            </div>
-          </div>
-        ) : null}
+            <button type="button" className="mapReset" onClick={resetMapView} title="Reiniciar vista">
+              Reset
+            </button>
 
-        {filteredWithCoords.length === 0 ? (
-          <div className="mapEmpty">No hay proyectos con coordenadas para estos filtros.</div>
-        ) : null}
-      </div>
-
-
-      {/* GRID */}
-      {filtered.length > 0 ? (
-        <div className="projects-grid">
-          {filtered.map((p) => (
-            <a
-              className={`project-card ${p.id === selectedId ? "isActive" : ""}`}
-              key={p.id}
-              href={`/proyectos/${p.slug}`}
-              data-proj-id={p.id}
-              onClick={(e) => {
-                const map = mapRef.current;
-                const hasCoords =
-                  typeof p.ubicacion?.lat === "number" && typeof p.ubicacion?.lng === "number";
-
-                // Si tiene coords: primero centra + abre popup (y NO navegues)
-                if (map && hasCoords) {
-                  e.preventDefault();
-                  setSelectedId(p.id);
-                  map.flyTo({
-                    center: [p.ubicacion.lng!, p.ubicacion.lat!],
-                    zoom: Math.max(map.getZoom(), 13),
-                  });
-                  return;
-                }
-
-                // Si NO tiene coords: navega normal (no hacemos preventDefault)
-              }}
-            >
-
-              <div className="thumb">
-                {p.coverUrl ? (
-                  <img
-                    src={p.coverUrl}
-                    alt={p.nombre}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="thumbFallback" />
-                )}
-              </div>
-
-              <div className="body">
-                <h3 className="title">{p.nombre}</h3>
-
-                <p className="meta">
-                  {p.ubicacion?.distrito
-                    ? `${p.ubicacion.distrito}, `
-                    : ""}
-                  {formatSimpleLabel(
-                    p.ubicacion?.departamento ?? ""
-                  )}
-                </p>
-
-                <div className="badges">
-                  <span className="badge">
-                    {formatEstadoLabel(p.estado)}
-                  </span>
-                  {(p.rubros ?? []).slice(0, 2).map((r) => (
-                    <span className="tag" key={r}>
-                      {formatSimpleLabel(r)}
-                    </span>
-                  ))}
+            {selected ? (
+              <div className="popup">
+                <div className="popupHead">
+                  <strong>{selected.nombre}</strong>
+                  <button type="button" className="popupClose" onClick={() => setSelectedId(null)}>
+                    ×
+                  </button>
                 </div>
 
-                <p className="desc">{p.resumen}</p>
+                <div className="popupBody">
+                  <div className="popupMeta">
+                    {selected.ubicacion.distrito ? `${selected.ubicacion.distrito}, ` : ""}
+                    {formatSimpleLabel(selected.ubicacion.departamento)}
+                  </div>
+                </div>
               </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <div className="empty">
-          <h3>No se encontraron proyectos</h3>
-          <p>Prueba quitando filtros o cambiando la búsqueda.</p>
-          <button type="button" className="clearBig" onClick={clearAll}>
-            Limpiar filtros
-          </button>
-        </div>
+            ) : null}
 
-      )}
+            {filteredWithCoords.length === 0 ? (
+              <div className="mapEmpty">No hay proyectos con coordenadas para estos filtros.</div>
+            ) : null}
+          </div>
+        </aside>
+
+        <section className="splitList">
+          {filtered.length > 0 ? (
+            <div className="projects-grid">
+              {filtered.map((p) => (
+                <ProyectoCardView
+                  key={p.id}
+                  project={p}
+                  className={p.id === selectedId ? "isActive" : ""}
+                >
+                  <button type="button" className="seeOnMap" onClick={() => flyToProject(p)}>
+                    Ver en mapa
+                  </button>
+
+                  <a className="seeProject" href={`/proyectos/${p.slug}${queryString}`}>
+                    Ver proyecto
+                  </a>
+                </ProyectoCardView>
+              ))}
+            </div>
+          ) : (
+            <div className="empty">
+              <h3>No se encontraron proyectos</h3>
+              <p>Prueba quitando filtros o cambiando la búsqueda.</p>
+              <button type="button" className="clearBig" onClick={clearAll}>
+                Limpiar filtros
+              </button>
+            </div>
+          )}
+        </section>
+      </div>
     </section>
   );
 }
