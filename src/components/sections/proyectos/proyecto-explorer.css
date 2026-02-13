@@ -105,6 +105,64 @@ select, input {
   width: fit-content;
 }
 
+
+.mapWrap{
+  position: relative;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,.03);
+  margin: 10px 0 18px;
+}
+.map{ height: 360px; }
+
+.marker{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid white;
+  background: black;
+  cursor: pointer;
+}
+
+.popup{
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  width: min(320px, calc(100% - 24px));
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.95);
+  padding: 12px;
+}
+.popupHead{
+  display:flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.popupClose{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.popupMeta{ opacity: .75; margin-top: 6px; }
+.popupLink{ display:inline-block; margin-top: 10px; text-decoration:none; color: inherit; }
+
+.mapEmpty{
+  position:absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.95);
+  opacity: .9;
+}
+
+
 @media (max-width: 900px) {
   .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .search { grid-column: span 2; }

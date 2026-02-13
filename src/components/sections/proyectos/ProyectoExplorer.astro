@@ -9,6 +9,9 @@ assertValidProjects(proyectos);
 
 type ImgModule = { default: ImageMetadata };
 
+
+
+
 const imgs = import.meta.glob<ImgModule>(
   "../../../assets/images/proyecto/**/*.{png,jpg,jpeg,webp,avif}",
   { eager: true }
