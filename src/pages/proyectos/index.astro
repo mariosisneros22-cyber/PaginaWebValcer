@@ -1,0 +1,288 @@
+---
+export const prerender = false; // ✅ debe ir primero
+
+import Layout from "../../layouts/Layout.astro";
+import proyectoHero from "../../assets/images/proyecto/proyectoHero.jpg";
+import type { ImageMetadata } from "astro";
+
+import proyectos from "../../data/proyectos.json";
+import {
+  getAvailableStates,
+  getAvailableRubros,
+  getAvailableDepartamentos,
+  parseFiltersFromUrl,
+  applyProjectFilters,
+  formatEstadoLabel,
+  formatSimpleLabel,
+  buildProjectsQueryString,
+} from "../../lib/projects";
+
+import ProyectoCard from "../../components/sections/proyectos/ProyectoCard.astro";
+
+// URL -> filtros
+const url = new URL(Astro.request.url);
+const filters = parseFiltersFromUrl(url);
+
+// opciones (solo visibles)
+const estados = getAvailableStates(proyectos);
+const rubros = getAvailableRubros(proyectos);
+const dptos = getAvailableDepartamentos(proyectos);
+
+// aplicar filtros
+const filtered = applyProjectFilters(proyectos, filters);
+const totalVisibles = applyProjectFilters(proyectos, {}).length;
+
+// imágenes (glob)
+type ImgModule = { default: ImageMetadata };
+const imgs = import.meta.glob<ImgModule>(
+  "../../assets/images/proyecto/**/*.{png,jpg,jpeg,webp,avif}",
+  { eager: true }
+);
+
+function resolveImg(relPath: string): ImageMetadata {
+  const key = `../../assets/images/proyecto/${relPath}`;
+  const mod = imgs[key];
+  if (!mod) throw new Error(`Imagen no encontrada: ${key}`);
+  return mod.default;
+}
+
+// cards (ya vienen visibles desde applyProjectFilters)
+const cards = filtered.map((p) => ({
+  p,
+  cover: resolveImg(p.portada),
+}));
+
+// chips activos
+const chips: { key: string; label: string; href: string }[] = [];
+
+if (filters.estado) {
+  chips.push({
+    key: "estado",
+    label: `Estado: ${formatEstadoLabel(filters.estado)}`,
+    href: "/proyectos" + buildProjectsQueryString({ ...filters, estado: undefined }),
+  });
+}
+if (filters.rubro) {
+  chips.push({
+    key: "rubro",
+    label: `Rubro: ${formatSimpleLabel(filters.rubro)}`,
+    href: "/proyectos" + buildProjectsQueryString({ ...filters, rubro: undefined }),
+  });
+}
+if (filters.dpto) {
+  chips.push({
+    key: "dpto",
+    label: `Dpto: ${formatSimpleLabel(filters.dpto)}`,
+    href: "/proyectos" + buildProjectsQueryString({ ...filters, dpto: undefined }),
+  });
+}
+if (filters.q) {
+  chips.push({
+    key: "q",
+    label: `Búsqueda: "${filters.q}"`,
+    href: "/proyectos" + buildProjectsQueryString({ ...filters, q: undefined }),
+  });
+}
+---
+
+<Layout title="Valcer - Proyectos" heroTitle="Proyectos" heroImage={proyectoHero}>
+  <section class="container">
+    <form class="filters" method="get" action="/proyectos">
+      <div class="row">
+        <label>
+          Estado
+          <select name="estado">
+            <option value="">Todos</option>
+            {estados.map((e) => (
+              <option value={e} selected={filters.estado === e}>
+                {formatEstadoLabel(e)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Rubro
+          <select name="rubro">
+            <option value="">Todos</option>
+            {rubros.map((r) => (
+              <option value={r} selected={filters.rubro === r}>
+                {formatSimpleLabel(r)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Departamento
+          <select name="dpto">
+            <option value="">Todos</option>
+            {dptos.map((d) => (
+              <option value={d} selected={filters.dpto === d}>
+                {formatSimpleLabel(d)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="search">
+          Buscar
+          <input
+            type="search"
+            name="q"
+            placeholder="Nombre, ubicación, rubro..."
+            value={filters.q ?? ""}
+          />
+        </label>
+
+        <div class="actions">
+          <button type="submit">Aplicar</button>
+          <a class="clear" href="/proyectos">Limpiar</a>
+        </div>
+      </div>
+    </form>
+
+    <div class="summary">
+      <span>
+        Mostrando <strong>{cards.length}</strong> de <strong>{totalVisibles}</strong>
+      </span>
+
+      {chips.length > 0 ? (
+        <div class="chips">
+          {chips.map((c) => (
+            <a class="chip" href={c.href} title="Quitar filtro">
+              {c.label} <span aria-hidden="true">×</span>
+            </a>
+          ))}
+        </div>
+      ) : null}
+    </div>
+
+    {cards.length > 0 ? (
+      <div class="projects-grid">
+        {cards.map(({ p, cover }) => (
+          <ProyectoCard project={p} cover={cover} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty">
+        <h3>No se encontraron proyectos</h3>
+        <p>Prueba quitando filtros o cambiando la búsqueda.</p>
+        <a class="clearBig" href="/proyectos">Limpiar filtros</a>
+      </div>
+    )}
+  </section>
+
+  <style>
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+    .filters {
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,.6);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    label { display: grid; gap: 6px; font-size: .92rem; }
+    select, input {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      padding: 10px 10px;
+      font-size: .95rem;
+      background: white;
+    }
+
+    .search { grid-column: span 2; }
+
+    .actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    button {
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .clear {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: inherit;
+      background: transparent;
+    }
+
+    .summary{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin: 10px 2px 14px;
+      opacity: .9;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.12);
+      text-decoration:none;
+      color:inherit;
+      background: rgba(255,255,255,.7);
+      font-size:.85rem;
+    }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+    .empty {
+      border: 1px dashed rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 18px;
+      opacity: .9;
+    }
+
+    .clearBig{
+      display:inline-flex;
+      margin-top:10px;
+      border:1px solid rgba(0,0,0,.12);
+      padding:10px 14px;
+      border-radius:10px;
+      text-decoration:none;
+      color:inherit;
+      width: fit-content;
+    }
+
+    @media (max-width: 900px) {
+      .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .search { grid-column: span 2; }
+      .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .row { grid-template-columns: 1fr; }
+      .search { grid-column: auto; }
+      .actions { justify-content: stretch; }
+      .actions > * { flex: 1; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</Layout>

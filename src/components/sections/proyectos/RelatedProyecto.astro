@@ -1,0 +1,84 @@
+---
+import type { ImageMetadata } from "astro";
+import proyectos from "../../../data/proyectos.json";
+import { isVisibleProject } from "../../../lib/projects";
+import ProyectoCard from "./ProyectoCard.astro";
+
+type Proyecto = (typeof proyectos)[number];
+
+type Props = {
+  currentSlug: string;
+  limit?: number;
+  resolveImg: (relPath: string) => ImageMetadata;
+};
+
+const props = Astro.props as Props;
+
+const currentSlug = props.currentSlug;
+const limit = props.limit ?? 3;
+const resolveImg = props.resolveImg;
+
+const current = proyectos.find((p) => p.slug === currentSlug);
+
+if (!current || !isVisibleProject(current)) {
+  // no render
+}
+
+const base = proyectos
+  .filter(isVisibleProject)
+  .filter((p) => p.slug !== currentSlug);
+
+const currentRubros = new Set((current?.rubros ?? []).map((r) => String(r).toLowerCase()));
+const currentDpto = current?.ubicacion?.departamento?.toLowerCase?.() ?? "";
+
+const relatedByRubro = base
+  .filter((p) => (p.rubros ?? []).some((r) => currentRubros.has(String(r).toLowerCase())))
+  .slice(0, limit);
+
+let related: Proyecto[] = relatedByRubro;
+
+if (related.length < limit && currentDpto) {
+  const remaining = limit - related.length;
+  const used = new Set(related.map((p) => p.slug));
+
+  const byDpto = base
+    .filter((p) => !used.has(p.slug))
+    .filter((p) => (p.ubicacion?.departamento?.toLowerCase?.() ?? "") === currentDpto)
+    .slice(0, remaining);
+
+  related = [...related, ...byDpto];
+}
+
+const cards = related.map((p) => ({
+  p,
+  cover: resolveImg(p.portada),
+}));
+
+const subtitle =
+  relatedByRubro.length > 0 ? "Relacionados por rubro." : "Relacionados por departamento.";
+---
+
+{cards.length > 0 ? (
+  <section class="related">
+    <div class="head">
+      <h2>Proyectos relacionados</h2>
+      <p>{subtitle}</p>
+    </div>
+
+    <div class="grid">
+      {cards.map(({ p, cover }) => (
+        <ProyectoCard project={p} cover={cover} />
+      ))}
+    </div>
+  </section>
+) : null}
+
+<style>
+  .related { margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,.10); }
+  .head { margin-bottom: 14px; }
+  .head h2 { margin: 0 0 6px; }
+  .head p { margin: 0; opacity: .75; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,138 @@
+[
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "estado": "en_ejecucion",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "estado": "finalizado",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "estado": "arbitraje",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "estado": "en_ejecucion",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "estado": "finalizado",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "estado": "arbitraje",
+    "rubros": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  }
+]
