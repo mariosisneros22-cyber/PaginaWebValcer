@@ -2,6 +2,7 @@ export type Projecto = {
   id: string;
   slug: string;
   nombre: string;
+  cliente: string;
   estado: string;
   rubros?: string[];
   ubicacion: {
@@ -19,11 +20,10 @@ export type Projecto = {
   visible?: boolean;
 };
 
-export const isVisibleProject = (p: Projecto) => {
-  // default: visible si no está definido
+
+export const isVisibleProject = <T extends Projecto>(p: T) => {
   const visible = p.visible ?? true;
 
-  // hard block por estado (por si se olvidan el flag)
   const estado = (p.estado || "").toLowerCase().trim();
   const blockedByEstado =
     estado === "arbitraje" ||
@@ -36,9 +36,10 @@ export const isVisibleProject = (p: Projecto) => {
 
 const normalize = (s: string) => (s ?? "").toString().trim().toLowerCase();
 
-export function getVisibleProjects(projects: Projecto[]): Projecto[] {
+export function getVisibleProjects<T extends Projecto>(projects: T[]): T[] {
   return projects.filter(isVisibleProject);
 }
+
 
 export function getAvailableStates(projects: Projecto[]): string[] {
   const set = new Set<string>();
@@ -100,7 +101,10 @@ export function parseFiltersFromUrl(url: URL): ProjectFilters {
   };
 }
 
-export function applyProjectFilters(projects: Projecto[], filters: ProjectFilters): Projecto[] {
+export function applyProjectFilters<T extends Projecto>(
+  projects: T[],
+  filters: ProjectFilters
+): T[] {
   const base = getVisibleProjects(projects);
 
   const estado = filters.estado ? norm(filters.estado) : "";
@@ -109,25 +113,22 @@ export function applyProjectFilters(projects: Projecto[], filters: ProjectFilter
   const q = filters.q ? norm(filters.q) : "";
 
   return base.filter((p) => {
-    // estado
     if (estado && norm(p.estado) !== estado) return false;
 
-    // rubro
     if (rubro) {
       const has = (p.rubros ?? []).some((r) => norm(r) === rubro);
       if (!has) return false;
     }
 
-    // departamento
     if (dpto) {
       const pd = norm(p.ubicacion?.departamento ?? "");
       if (pd !== dpto) return false;
     }
 
-    // búsqueda libre (nombre, resumen, ubicación)
     if (q) {
       const haystack = [
         p.nombre,
+        p.cliente, // ✅ si ya lo agregaste en el type como obligatorio
         p.resumen,
         p.ubicacion?.departamento,
         p.ubicacion?.provincia,
@@ -174,4 +175,18 @@ export function formatEstadoLabel(estado: string): string {
 export function formatSimpleLabel(v: string): string {
   // Para rubros/departamentos normalizados (lima -> Lima)
   return titleCase((v ?? "").toString().trim().toLowerCase());
+}
+
+export function assertValidProjects(projects: Projecto[]): void {
+  const errors: string[] = [];
+
+  for (const p of projects) {
+    if (!p.cliente || !p.cliente.trim()) errors.push(`${p.slug}: falta cliente`);
+    if (!p.nombre || !p.nombre.trim()) errors.push(`${p.slug}: falta nombre`);
+    if (!p.slug || !p.slug.trim()) errors.push(`${p.id}: falta slug`);
+  }
+
+  if (errors.length) {
+    throw new Error(`Datos inválidos en proyectos.json:\n- ${errors.join("\n- ")}`);
+  }
 }

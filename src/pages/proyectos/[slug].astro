@@ -1,16 +1,19 @@
 ---
+export const prerender = true;
+
 import Layout from "../../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
 import proyectos from "../../data/proyectos.json";
-import { isVisibleProject } from "../../lib/projects";
+import { isVisibleProject,assertValidProjects } from "../../lib/projects";
 
 import RelatedProyecto from "../../components/sections/proyectos/RelatedProyecto.astro";
 
 export function getStaticPaths() {
   return proyectos.filter(isVisibleProject).map((p) => ({ params: { slug: p.slug } }));
 }
+assertValidProjects(proyectos);
 
 const { slug } = Astro.params;
 const proyecto = proyectos.find((p) => p.slug === slug);
@@ -45,6 +48,18 @@ const title = `Valcer - ${proyecto.nombre}`;
 
 <Layout title={title} heroTitle={proyecto.nombre} heroImage={portada}>
   <section class="container">
+
+     <section class="tech">
+      <h2>Ficha técnica</h2>
+      <ul>
+        <li><strong>Cliente:</strong> {proyecto.cliente}</li>
+        <li><strong>Estado:</strong> {proyecto.estado}</li>
+        <li><strong>Ubicación:</strong> {proyecto.ubicacion.distrito}, {proyecto.ubicacion.departamento}</li>
+        <li><strong>Inicio:</strong> {proyecto.fecha_inicio}</li>
+        <li><strong>Fin:</strong> {proyecto.fecha_fin ?? "En ejecución"}</li>
+      </ul>
+    </section>
+
     <section class="gallery">
       <h2>Galería</h2>
       <div class="grid">
@@ -58,3 +73,12 @@ const title = `Valcer - ${proyecto.nombre}`;
     <RelatedProyecto currentSlug={proyecto.slug} limit={3} resolveImg={resolveImg} />
   </section>
 </Layout>
+
+
+<style>
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px 44px; }
+
+  .tech { margin-bottom: 24px; padding: 16px; border: 1px solid rgba(0,0,0,.08); border-radius: 14px; background: rgba(255,255,255,.6); }
+  .tech h2 { margin: 0 0 10px; }
+  .tech ul { margin: 0; padding-left: 18px; }
+</style>

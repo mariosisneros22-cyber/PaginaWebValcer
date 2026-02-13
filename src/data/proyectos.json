@@ -3,6 +3,7 @@
     "id": "proj_001",
     "slug": "proyecto-piloto",
     "nombre": "Proyecto Piloto",
+    "cliente": "Cliente XYZ",
     "estado": "en_ejecucion",
     "rubros": ["infraestructura"],
     "ubicacion": {
@@ -26,6 +27,7 @@
     "id": "proj_002",
     "slug": "proyecto-piloto-2",
     "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
     "estado": "finalizado",
     "rubros": ["infraestructura"],
     "ubicacion": {
@@ -49,6 +51,7 @@
     "id": "proj_003",
     "slug": "proyecto-piloto-3",
     "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
     "estado": "arbitraje",
     "rubros": ["infraestructura"],
     "ubicacion": {
@@ -71,6 +74,7 @@
     "id": "proj_004",
     "slug": "proyecto-piloto-4",
     "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
     "estado": "en_ejecucion",
     "rubros": ["infraestructura"],
     "ubicacion": {
@@ -94,6 +98,7 @@
     "id": "proj_005",
     "slug": "proyecto-piloto-5",
     "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
     "estado": "finalizado",
     "rubros": ["infraestructura"],
     "ubicacion": {
@@ -117,6 +122,7 @@
     "id": "proj_006",
     "slug": "proyecto-piloto-6",
     "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
     "estado": "arbitraje",
     "rubros": ["infraestructura"],
     "ubicacion": {

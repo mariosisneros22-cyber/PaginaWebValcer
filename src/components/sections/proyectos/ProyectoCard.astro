@@ -12,6 +12,7 @@ type Proyecto = {
   id: string;
   slug: string;
   nombre: string;
+  cliente:string;
   estado: string;
   rubros?: string[];
   ubicacion: Ubicacion;
@@ -36,7 +37,9 @@ const { project, cover } = Astro.props as {
       {project.ubicacion.distrito ? `${project.ubicacion.distrito}, ` : ""}
       {project.ubicacion.departamento}
     </p>
-
+    <p class="meta">
+      {project.cliente}
+    </p>
     <div class="badges">
       <span class="badge">{project.estado}</span>
       {project.rubros?.slice(0, 2).map((r) => <span class="tag">{r}</span>)}
