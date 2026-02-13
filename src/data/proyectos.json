@@ -91,7 +91,7 @@
     "galeria": [
       { "src": "proj_004/01.webp", "alt": "Avance de obra" }
     ],
-    "visible": false
+    "visible": true
   },
 
   {

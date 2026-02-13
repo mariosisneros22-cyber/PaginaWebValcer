@@ -162,6 +162,11 @@ select, input {
   opacity: .9;
 }
 
+.project-card.isActive{
+  outline: 2px solid rgba(0,0,0,.35);
+  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+  transform: translateY(-1px);
+}
 
 @media (max-width: 900px) {
   .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }

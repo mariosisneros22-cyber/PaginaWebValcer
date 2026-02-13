@@ -218,6 +218,16 @@ export default function ProyectoExplorer({ projects }: Props) {
     return list;
   }, [filters]);
 
+
+  useEffect(() => {
+    if (!selectedId) return;
+
+    const el = document.querySelector<HTMLElement>(`[data-proj-id="${selectedId}"]`);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [selectedId]);
+
   return (
     <section className="container">
       {/* FILTROS */}
@@ -349,10 +359,30 @@ export default function ProyectoExplorer({ projects }: Props) {
         <div className="projects-grid">
           {filtered.map((p) => (
             <a
-              className="project-card"
+              className={`project-card ${p.id === selectedId ? "isActive" : ""}`}
               key={p.id}
               href={`/proyectos/${p.slug}`}
+              data-proj-id={p.id}
+              onClick={(e) => {
+                const map = mapRef.current;
+                const hasCoords =
+                  typeof p.ubicacion?.lat === "number" && typeof p.ubicacion?.lng === "number";
+
+                // Si tiene coords: primero centra + abre popup (y NO navegues)
+                if (map && hasCoords) {
+                  e.preventDefault();
+                  setSelectedId(p.id);
+                  map.flyTo({
+                    center: [p.ubicacion.lng!, p.ubicacion.lat!],
+                    zoom: Math.max(map.getZoom(), 13),
+                  });
+                  return;
+                }
+
+                // Si NO tiene coords: navega normal (no hacemos preventDefault)
+              }}
             >
+
               <div className="thumb">
                 {p.coverUrl ? (
                   <img
