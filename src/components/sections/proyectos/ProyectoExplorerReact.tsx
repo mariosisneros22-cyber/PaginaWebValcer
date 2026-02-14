@@ -40,9 +40,11 @@ export default function ProyectoExplorer({ projects }: Props) {
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const initialViewRef = useRef<{ center: [number, number]; zoom: number } | null>(null);
 
+  const lastUrlRef = useRef<string>("");
   // init filters from URL
   useEffect(() => {
     const url = new URL(window.location.href);
+    lastUrlRef.current = `${url.pathname}${url.search}`;
     setFilters(parseFiltersFromUrl(url));
   }, []);
 
@@ -69,9 +71,22 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   // sync URL (no reload)
   useEffect(() => {
+    const isIndex =
+      window.location.pathname === "/proyectos" ||
+      window.location.pathname === "/proyectos/";
+
+    if (!isIndex) return;
+
     const next = `${window.location.pathname}${queryString}`;
-    window.history.replaceState(null, "", next);
-  }, [queryString]);
+    if (lastUrlRef.current === next) return;
+
+    lastUrlRef.current = next;
+
+    // ✅ guardo filtros en history.state (clave para back/forward sin “cosas raras”)
+    window.history.replaceState({ filters }, "", next);
+  }, [queryString, filters]);
+
+
 
   // init map once
   useEffect(() => {
@@ -147,6 +162,21 @@ export default function ProyectoExplorer({ projects }: Props) {
       center: [p.ubicacion.lng!, p.ubicacion.lat!],
       zoom: Math.max(map.getZoom(), 13),
     });
+  }, []);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const url = new URL(window.location.href);
+
+      // sincroniza el guard para que no re-escriba inmediatamente
+      lastUrlRef.current = `${url.pathname}${url.search}`;
+
+      setFilters(parseFiltersFromUrl(url));
+      setSelectedId(null); // opcional: al volver, cierras selección
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
   // markers + fit bounds
@@ -240,6 +270,7 @@ export default function ProyectoExplorer({ projects }: Props) {
     return list;
   }, [filters]);
 
+  
   return (
     <section className="container">
       {/* FILTROS */}
@@ -378,7 +409,7 @@ export default function ProyectoExplorer({ projects }: Props) {
                     Ver en mapa
                   </button>
 
-                  <a className="seeProject" href={`/proyectos/${p.slug}${queryString}`}>
+                  <a className="seeProject" href={`/proyectos/${p.slug}${queryString}`} >
                     Ver proyecto
                   </a>
                 </ProyectoCardView>

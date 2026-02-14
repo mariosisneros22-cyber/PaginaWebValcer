@@ -243,6 +243,16 @@ select, input {
   height: 100%;
 }
 
+
+.related { margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,.10); }
+.related .head { margin-bottom: 14px; }
+.related .head h2 { margin: 0 0 6px; }
+.related .head p { margin: 0; opacity: .75; }
+
+.relatedGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 900px) { .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .relatedGrid { grid-template-columns: 1fr; } }
+
 @media (max-width: 980px){
   .split{
     grid-template-columns: 1fr;
