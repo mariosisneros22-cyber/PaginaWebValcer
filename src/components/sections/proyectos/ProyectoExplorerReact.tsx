@@ -7,7 +7,7 @@ import {
   parseFiltersFromUrl,
   buildProjectsQueryString,
   getAvailableStates,
-  getAvailableRubros,
+  getAvailableServicios,
   getAvailableDepartamentos,
   formatEstadoLabel,
   formatSimpleLabel,
@@ -101,7 +101,7 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   // memo: options
   const estados = useMemo(() => getAvailableStates(projects), [projects]);
-  const rubros = useMemo(() => getAvailableRubros(projects), [projects]);
+  const servicios = useMemo(() => getAvailableServicios(projects), [projects]);
   const dptos = useMemo(() => getAvailableDepartamentos(projects), [projects]);
 
   // memo: filtered
@@ -433,11 +433,11 @@ export default function ProyectoExplorer({ projects }: Props) {
         next: { ...filters, estado: undefined },
       });
     }
-    if (filters.rubro) {
+    if (filters.servicio) {
       list.push({
-        key: "rubro",
-        label: `Rubro: ${formatSimpleLabel(filters.rubro)}`,
-        next: { ...filters, rubro: undefined },
+        key: "servicio",
+        label: `Servicio: ${formatSimpleLabel(filters.servicio)}`,
+        next: { ...filters, servicio: undefined },
       });
     }
     if (filters.dpto) {
@@ -503,13 +503,13 @@ export default function ProyectoExplorer({ projects }: Props) {
           </label>
 
           <label>
-            Rubro
+            Servicio
             <select
-              value={filters.rubro ?? ""}
-              onChange={(e) => onChange({ rubro: e.target.value || undefined })}
+              value={filters.servicio ?? ""}
+              onChange={(e) => onChange({ servicio: e.target.value || undefined })}
             >
               <option value="">Todos</option>
-              {rubros.map((r) => (
+              {servicios.map((r) => (
                 <option key={r} value={r}>
                   {formatSimpleLabel(r)}
                 </option>
@@ -536,7 +536,7 @@ export default function ProyectoExplorer({ projects }: Props) {
             Buscar
             <input
               type="search"
-              placeholder="Nombre, cliente, ubicación, rubro…"
+              placeholder="Nombre, cliente, ubicación, servicio…"
               value={filters.q ?? ""}
               onChange={(e) => onChange({ q: e.target.value || undefined })}
             />

@@ -41,21 +41,21 @@ if (current && isVisibleProject(current)) {
     .filter(isVisibleProject)
     .filter((p) => p.slug !== currentSlug);
 
-  const currentRubros = new Set(
-    (current.rubros ?? []).map((r) => String(r).toLowerCase())
+  const currentServicios = new Set(
+    (current.servicios ?? []).map((r) => String(r).toLowerCase())
   );
   const currentDpto = current.ubicacion?.departamento?.toLowerCase?.() ?? "";
 
-  const relatedByRubro = base
+  const relatedByServicio = base
     .filter((p) =>
-      (p.rubros ?? []).some((r) => currentRubros.has(String(r).toLowerCase()))
+      (p.servicios ?? []).some((r) => currentServicios.has(String(r).toLowerCase()))
     )
     .slice(0, limit);
 
-  related = relatedByRubro;
+  related = relatedByServicio;
   subtitle =
-    relatedByRubro.length > 0
-      ? "Relacionados por rubro."
+    relatedByServicio.length > 0
+      ? "Relacionados por servicio."
       : "Relacionados por departamento.";
 
   if (related.length < limit && currentDpto) {

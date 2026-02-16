@@ -4,7 +4,7 @@ export type Projecto = {
   nombre: string;
   cliente: string;
   estado: string;
-  rubros?: string[];
+  servicios?: string[];
   ubicacion: {
     departamento: string;
     provincia?: string;
@@ -55,10 +55,10 @@ export function getAvailableStates(projects: Projecto[]): string[] {
   ];
 }
 
-export function getAvailableRubros(projects: Projecto[]): string[] {
+export function getAvailableServicios(projects: Projecto[]): string[] {
   const set = new Set<string>();
   for (const p of getVisibleProjects(projects)) {
-    for (const r of p.rubros ?? []) {
+    for (const r of p.servicios ?? []) {
       const v = normalize(r);
       if (v) set.add(v);
     }
@@ -76,7 +76,7 @@ export function getAvailableDepartamentos(projects: Projecto[]): string[] {
 }
 export type ProjectFilters = {
   estado?: string; // en_ejecucion | finalizado
-  rubro?: string;  // ej: infraestructura
+  servicio?: string;  // ej: infraestructura
   dpto?: string;   // ej: lima
   q?: string;      // búsqueda libre
 };
@@ -89,13 +89,13 @@ export function parseFiltersFromUrl(url: URL): ProjectFilters {
   const sp = url.searchParams;
 
   const estado = norm(sp.get("estado") ?? "");
-  const rubro = norm(sp.get("rubro") ?? "");
+  const servicio = norm(sp.get("servicio") ?? "");
   const dpto = norm(sp.get("dpto") ?? "");
   const q = (sp.get("q") ?? "").toString().trim();
 
   return {
     estado: allowedEstados.has(estado) ? estado : undefined,
-    rubro: rubro || undefined,
+    servicio: servicio || undefined,
     dpto: dpto || undefined,
     q: q || undefined,
   };
@@ -108,15 +108,15 @@ export function applyProjectFilters<T extends Projecto>(
   const base = getVisibleProjects(projects);
 
   const estado = filters.estado ? norm(filters.estado) : "";
-  const rubro = filters.rubro ? norm(filters.rubro) : "";
+  const servicio = filters.servicio ? norm(filters.servicio) : "";
   const dpto = filters.dpto ? norm(filters.dpto) : "";
   const q = filters.q ? norm(filters.q) : "";
 
   return base.filter((p) => {
     if (estado && norm(p.estado) !== estado) return false;
 
-    if (rubro) {
-      const has = (p.rubros ?? []).some((r) => norm(r) === rubro);
+    if (servicio) {
+      const has = (p.servicios ?? []).some((r) => norm(r) === servicio);
       if (!has) return false;
     }
 
@@ -133,7 +133,7 @@ export function applyProjectFilters<T extends Projecto>(
         p.ubicacion?.departamento,
         p.ubicacion?.provincia,
         p.ubicacion?.distrito,
-        ...(p.rubros ?? []),
+        ...(p.servicios ?? []),
         p.estado,
       ]
         .filter(Boolean)
@@ -151,7 +151,7 @@ export function buildProjectsQueryString(filters: ProjectFilters): string {
   const sp = new URLSearchParams();
 
   if (filters.estado) sp.set("estado", norm(filters.estado));
-  if (filters.rubro) sp.set("rubro", norm(filters.rubro));
+  if (filters.servicio) sp.set("servicio", norm(filters.servicio));
   if (filters.dpto) sp.set("dpto", norm(filters.dpto));
   if (filters.q) sp.set("q", filters.q.trim());
 
@@ -173,7 +173,7 @@ export function formatEstadoLabel(estado: string): string {
 }
 
 export function formatSimpleLabel(v: string): string {
-  // Para rubros/departamentos normalizados (lima -> Lima)
+  // Para servicios/departamentos normalizados (lima -> Lima)
   return titleCase((v ?? "").toString().trim().toLowerCase());
 }
 

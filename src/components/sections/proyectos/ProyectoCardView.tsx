@@ -39,7 +39,7 @@ export default function ProyectoCardView({ project, href, className, children }:
             {formatEstadoLabel(estadoKey)}
           </span>
 
-          {(project.rubros ?? []).slice(0, 2).map((r) => (
+          {(project.servicios ?? []).slice(0, 2).map((r) => (
             <span className="tag" key={r}>
               {r}
             </span>
