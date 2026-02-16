@@ -26,8 +26,13 @@ type Props = {
   projects: ProjectWithCover[];
 };
 
-const DEFAULT_CENTER: [number, number] = [-77.0428, -12.0464];
-const DEFAULT_ZOOM = 10;
+
+const PERU_BOUNDS: [[number, number], [number, number]] = [
+  [-81.35, -18.35], // SW (lng, lat)
+  [-68.65,  0.20],  // NE
+];
+const DEFAULT_CENTER: [number, number] = [-74.5, -9.2];
+const DEFAULT_ZOOM = 4;
 const SOURCE_ID = "projects";
 const LAYER_CLUSTERS = "clusters";
 const LAYER_CLUSTER_COUNT = "cluster-count";
@@ -51,7 +56,7 @@ function toGeoJSON(projects: ProjectWithCover[]) {
     seen.set(key, idx + 1);
 
     // jitter: 0 para el primero, luego un pequeño offset en círculo
-    const jitterMeters = idx === 0 ? 0 : Math.min(25, 8 * idx); // cap 25m
+    const jitterMeters = idx === 0 ? 0 : Math.min(50, 15 * idx); // cap 25m
     const angle = idx * 0.9; // radian-ish
     const dLng = jitterMeters === 0 ? 0 : (jitterMeters * Math.cos(angle)) / 111320; // aprox
     const dLat = jitterMeters === 0 ? 0 : (jitterMeters * Math.sin(angle)) / 110540;
@@ -142,6 +147,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       container: mapElRef.current,
       style: {
         version: 8,
+        glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
         sources: {
           osm: {
             type: "raster",
@@ -168,18 +174,18 @@ export default function ProyectoExplorer({ projects }: Props) {
     map.on("load", () => {
 
 
-      // 1) Source cluster
+            // 1) Source cluster
       if (!map.getSource(SOURCE_ID)) {
         map.addSource(SOURCE_ID, {
           type: "geojson",
           data: { type: "FeatureCollection", features: [] },
           cluster: true,
-          clusterRadius: 50,   // ajusta densidad
-          clusterMaxZoom: 13,  // hasta qué zoom agrupa
+          clusterRadius: 40,
+          clusterMaxZoom: 16,
         });
       }
 
-      // 2) Layers cluster circles
+      // 2) Cluster circles
       if (!map.getLayer(LAYER_CLUSTERS)) {
         map.addLayer({
           id: LAYER_CLUSTERS,
@@ -187,14 +193,7 @@ export default function ProyectoExplorer({ projects }: Props) {
           source: SOURCE_ID,
           filter: ["has", "point_count"],
           paint: {
-            "circle-radius": [
-              "step",
-              ["get", "point_count"],
-              16, 10,
-              20, 25,
-              26, 50,
-              32,
-            ],
+            "circle-radius": ["step", ["get", "point_count"], 16, 10, 20, 25, 26, 50, 32],
             "circle-stroke-width": 2,
             "circle-stroke-color": "#fff",
             "circle-color": "#111",
@@ -211,12 +210,9 @@ export default function ProyectoExplorer({ projects }: Props) {
           filter: ["has", "point_count"],
           layout: {
             "text-field": "{point_count_abbreviated}",
-            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
             "text-size": 12,
           },
-          paint: {
-            "text-color": "#fff",
-          },
+          paint: { "text-color": "#fff" },
         });
       }
 
@@ -236,49 +232,108 @@ export default function ProyectoExplorer({ projects }: Props) {
         });
       }
 
-      // Interacción: click cluster -> zoom expand
-      map.on("click", LAYER_CLUSTERS, (e) => {
-        const feature = e.features?.[0];
+      // --------- Helpers robustos ---------
+
+      const getClickedClusterFeature = (e: maplibregl.MapMouseEvent) => {
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT],
+        });
+        return features.find((f) => (f.properties as any)?.cluster_id != null) ?? null;
+      };
+
+      const expandCluster = async (e: any) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        // 1) intenta por e.features (evento por layer)
+        let feature = e?.features?.[0];
+
+        // 2) fallback: queryRenderedFeatures en el punto clickeado
+        if (!feature && e?.point) {
+          const feats = map.queryRenderedFeatures(e.point, {
+            layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT],
+          });
+          feature = feats.find((f) => (f.properties as any)?.cluster_id != null);
+        }
+
         if (!feature) return;
 
-        const clusterId = Number(feature.properties?.cluster_id);
+        const clusterId = Number((feature.properties as any)?.cluster_id);
+        const pointCount = (feature.properties as any)?.point_count;
+        
         if (!Number.isFinite(clusterId)) return;
-        const source = map.getSource(SOURCE_ID) as maplibregl.GeoJSONSource & {
-          getClusterExpansionZoom: (clusterId: number, cb: (err: any, zoom: number) => void) => void;
-        };
 
-        source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return;
-          const coords = (feature.geometry as any).coordinates as [number, number];
-          map.easeTo({ center: coords, zoom, duration: 450 });
+        const coords = (feature.geometry as any).coordinates as [number, number];
+        const currentZoom = map.getZoom();
+
+        const src: any = map.getSource(SOURCE_ID);
+        
+        // ESTRATEGIA ALTERNATIVA: en lugar de confiar en getClusterExpansionZoom,
+        // hacemos zoom progresivo hasta que el cluster se rompa
+        
+        // Si el cluster tiene pocos puntos (2-5), zoom más agresivo
+        let zoomIncrement = 3;
+        if (pointCount > 10) {
+          zoomIncrement = 2;
+        } else if (pointCount > 50) {
+          zoomIncrement = 1.5;
+        }
+
+        const nextZoom = Math.min(currentZoom + zoomIncrement, 18);
+
+        console.log('Expanding cluster:', { 
+          clusterId, 
+          pointCount, 
+          currentZoom: currentZoom.toFixed(2), 
+          nextZoom: nextZoom.toFixed(2),
+          increment: zoomIncrement 
         });
-      });
 
-      // Interacción: click punto -> seleccionar
+        map.easeTo({ 
+          center: coords, 
+          zoom: nextZoom, 
+          duration: 450 
+        });
+      };
+
+      // Click en cluster (círculo) y en número
+      map.on("click", LAYER_CLUSTERS, expandCluster);
+      map.on("click", LAYER_CLUSTER_COUNT, expandCluster);
+
+      // ✅ Click en punto (esto lo habías perdido)
       map.on("click", LAYER_POINTS, (e) => {
-        const f = e.features?.[0] as any;
-        const id = f?.properties?.id as string | undefined;
+        const feats = map.queryRenderedFeatures(e.point, { layers: [LAYER_POINTS] });
+        const f = feats[0];
+        if (!f) return;
+
+        const id = (f.properties as any)?.id as string | undefined;
         if (!id) return;
 
         setSelectedId(id);
 
-        const coords = f.geometry.coordinates as [number, number];
-        map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 13) });
+        const coords = (f.geometry as any).coordinates as [number, number];
+        map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 16) });
       });
 
-      // Cursor pointer
+      // Cursor
       map.on("mouseenter", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = "pointer"));
       map.on("mouseleave", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = ""));
+      map.on("mouseenter", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = ""));
       map.on("mouseenter", LAYER_POINTS, () => (map.getCanvas().style.cursor = "pointer"));
       map.on("mouseleave", LAYER_POINTS, () => (map.getCanvas().style.cursor = ""));
+      map.on("click", LAYER_CLUSTERS, (e) => { console.log("cluster click", e.features?.[0]); });
 
-      // click fondo -> cerrar selección (opcional)
+      // Fondo: cerrar selección si no clickeaste nada del source
       map.on("click", (e) => {
-        const features = map.queryRenderedFeatures(e.point, { layers: [LAYER_CLUSTERS, LAYER_POINTS] });
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT, LAYER_POINTS],
+        });
         if (!features.length) setSelectedId(null);
       });
 
       setMapReady(true);
+
 
     });
 
@@ -357,7 +412,7 @@ export default function ProyectoExplorer({ projects }: Props) {
     } else if (filteredWithCoords.length > 1) {
       const bounds = new maplibregl.LngLatBounds();
       geojson.features.forEach((f) => bounds.extend(f.geometry.coordinates));
-      map.fitBounds(bounds, { padding: 60, maxZoom: 13 });
+      map.fitBounds(PERU_BOUNDS, { padding: 60, maxZoom: 16 });
     }
   }, [filteredWithCoords, mapReady]);
 
