@@ -1,7 +1,7 @@
 import React from "react";
 import type { Projecto } from "../../../lib/projects";
 import "./proyecto-explorer.css";
-
+import { estadoToKey,formatEstadoLabel } from "../../../lib/projects";
 type ProjectWithCover = Projecto & { coverUrl: string };
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 
 export default function ProyectoCardView({ project, href, className, children }: Props) {
   const cls = `project-card${className ? ` ${className}` : ""}`;
-
+  const estadoKey = estadoToKey(project.estado);  
   const Inner = (
     <>
       <div className="thumb">
@@ -35,7 +35,10 @@ export default function ProyectoCardView({ project, href, className, children }:
         <p className="meta">{project.cliente}</p>
 
         <div className="badges">
-          <span className="badge">{project.estado}</span>
+          <span className={`tech-badge estado-${estadoKey}`}>
+            {formatEstadoLabel(estadoKey)}
+          </span>
+
           {(project.rubros ?? []).slice(0, 2).map((r) => (
             <span className="tag" key={r}>
               {r}

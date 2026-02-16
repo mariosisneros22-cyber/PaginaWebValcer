@@ -7,10 +7,11 @@ import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
 import proyectos from "../../data/proyectos.json";
-import { isVisibleProject, assertValidProjects } from "../../lib/projects";
+import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel } from "../../lib/projects";
 
 import RelatedProyecto from "../../components/sections/proyectos/RelatedProyecto.astro";
-import { lazy } from "astro:schema";
+
+
 
 export function getStaticPaths() {
   return proyectos.filter(isVisibleProject).map((p) => ({ params: { slug: p.slug } }));
@@ -23,6 +24,9 @@ const proyecto = proyectos.find((p) => p.slug === slug);
 if (!proyecto || !isVisibleProject(proyecto)) {
   return Astro.redirect("/proyectos");
 }
+
+
+const estadoKey = estadoToKey(proyecto.estado);
 
 type ImgModule = { default: ImageMetadata };
 
@@ -69,8 +73,8 @@ const title = `Valcer - ${proyecto.nombre}`;
 
           <div class="tech-item">
             <span class="tech-label">Estado</span>
-            <span class={`tech-badge estado-${proyecto.estado}`}>
-              {proyecto.estado}
+            <span class={`tech-badge estado-${estadoKey}`}>
+              {formatEstadoLabel(estadoKey)}
             </span>
           </div>
 
@@ -175,32 +179,6 @@ const title = `Valcer - ${proyecto.nombre}`;
     font-size: 15px;
     font-weight: 500;
   }
-
-  .tech-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    width: fit-content;
-  }
-
-  /* estados ejemplo */
-  .estado-en_ejecucion {
-    background: rgba(0, 120, 255, .1);
-    color: rgb(0, 90, 200);
-  }
-
-  .estado-finalizado {
-    background: rgba(0, 150, 80, .12);
-    color: rgb(0, 110, 60);
-  }
-
-  .estado-proyectado {
-    background: rgba(200, 140, 0, .15);
-    color: rgb(160, 110, 0);
-  }
-
 
 
 

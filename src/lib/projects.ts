@@ -190,3 +190,13 @@ export function assertValidProjects(projects: Projecto[]): void {
     throw new Error(`Datos inválidos en proyectos.json:\n- ${errors.join("\n- ")}`);
   }
 }
+
+export function estadoToKey(estado: string): string {
+  return (estado ?? "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "_");
+}

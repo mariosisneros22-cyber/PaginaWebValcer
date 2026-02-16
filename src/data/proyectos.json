@@ -38,7 +38,7 @@
       "lng": -76.25309
     },
     "fecha_inicio": 2024,
-    "fecha_fin": null,
+    "fecha_fin": 2025,
     "resumen": "Resumen corto del proyecto.",
     "portada": "proj_002/cover.webp",
     "galeria": [
@@ -109,7 +109,7 @@
       "lng": -71.96701
     },
     "fecha_inicio": 2024,
-    "fecha_fin": null,
+    "fecha_fin": 2024,
     "resumen": "Resumen corto del proyecto.",
     "portada": "proj_005/cover.webp",
     "galeria": [
