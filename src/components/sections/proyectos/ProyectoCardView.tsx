@@ -1,7 +1,7 @@
 import React from "react";
 import type { Projecto } from "../../../lib/projects";
 import "./proyecto-explorer.css";
-import { estadoToKey,formatEstadoLabel } from "../../../lib/projects";
+import { estadoToKey,formatEstadoLabel, formatSimpleLabel } from "../../../lib/projects";
 type ProjectWithCover = Projecto & { coverUrl: string };
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 export default function ProyectoCardView({ project, href, className, children }: Props) {
   const cls = `project-card${className ? ` ${className}` : ""}`;
   const estadoKey = estadoToKey(project.estado);  
+  const extra = (project.servicios?.length ?? 0) -2;
   const Inner = (
     <>
       <div className="thumb">
@@ -39,15 +40,13 @@ export default function ProyectoCardView({ project, href, className, children }:
             {formatEstadoLabel(estadoKey)}
           </span>
 
-          {(project.servicios ?? []).slice(0, 2).map((r) => (
-            <span className="tag" key={r}>
-              {r}
-            </span>
+          {(project.servicios ?? []).slice(0, 2).map((s) => (
+          <span className="tech-badge" key={s}>
+            {formatSimpleLabel(s)},
+          </span>
           ))}
+          {extra > 0 ? <span className="tag">+{extra}</span> : null}
         </div>
-
-        {project.resumen ? <p className="desc">{project.resumen}</p> : null}
-
         {children ? <div className="cardActions">{children}</div> : null}
       </div>
     </>

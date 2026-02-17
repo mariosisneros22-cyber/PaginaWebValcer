@@ -273,9 +273,9 @@ export default function ProyectoExplorer({ projects }: Props) {
         
         // Si el cluster tiene pocos puntos (2-5), zoom más agresivo
         let zoomIncrement = 3;
-        if (pointCount > 10) {
-          zoomIncrement = 2;
-        } else if (pointCount > 50) {
+        if (pointCount > 50) {
+          zoomIncrement = 1.5;
+        } else if (pointCount > 10) {
           zoomIncrement = 1.5;
         }
 

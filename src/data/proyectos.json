@@ -5,7 +5,10 @@
     "nombre": "Proyecto Piloto",
     "cliente": "Cliente XYZ",
     "estado": "en_ejecucion",
-    "servicios": ["infraestructura"],
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
@@ -15,10 +18,18 @@
     },
     "fecha_inicio": 2024,
     "fecha_fin": null,
-    "resumen": "Resumen corto del proyecto.",
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "portada": "proj_001/cover.webp",
     "galeria": [
-      { "src": "proj_001/01.webp", "alt": "Avance de obra" }
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
     ],
     "visible": true
   },
@@ -53,7 +64,7 @@
     "nombre": "Proyecto Piloto 3",
     "cliente": "Cliente XYZ",
     "estado": "arbitraje",
-    "rubros": ["infraestructura"],
+    "servicios": ["infraestructura"],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
@@ -76,7 +87,7 @@
     "nombre": "Proyecto Piloto 4",
     "cliente": "Cliente XYZ",
     "estado": "en_ejecucion",
-    "rubros": ["infraestructura"],
+    "servicios": ["infraestructura"],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
@@ -100,7 +111,7 @@
     "nombre": "Proyecto Piloto 5",
     "cliente": "Cliente ABC",
     "estado": "finalizado",
-    "rubros": ["infraestructura"],
+    "servicios": ["infraestructura"],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
@@ -124,7 +135,7 @@
     "nombre": "Proyecto Piloto 6",
     "cliente": "Cliente ABC",
     "estado": "arbitraje",
-    "rubros": ["infraestructura"],
+    "servicios": ["infraestructura"],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
