@@ -185,6 +185,7 @@
     gap: 10px;
     padding: 8px 2px;
 
+    scroll-behavior: smooth;
     /* si quieres ocultar scrollbar también en mobile */
     scrollbar-width: none;
   }

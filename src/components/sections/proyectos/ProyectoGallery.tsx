@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import "./proyecto-gallery.css";
 
 export type GalleryImage = {
@@ -23,6 +23,8 @@ type Props = {
 
 export default function ProyectoGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
+
+  const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
 
   const maxVisible = 6;
   const visible = images.slice(0, Math.min(maxVisible, images.length));
@@ -102,20 +104,81 @@ export default function ProyectoGallery({ images }: Props) {
     };
   }, [active, close, next, prev]);
 
-  // ✅ Preload next/prev para que al cambiar no “parpadee”
+  // ✅ Preload inteligente: cache + ventana alrededor (sin repetir cargas)
+  const preloadedRef = useRef<Set<string>>(new Set());
+
+  const preloadSrc = useCallback((src: string) => {
+    if (!src) return;
+    if (preloadedRef.current.has(src)) return;
+
+    preloadedRef.current.add(src);
+    const img = new window.Image();
+    img.decoding = "async";
+    img.src = src;
+  }, []);
+
+  const preloadAround = useCallback(
+    (index: number, radius = 2) => {
+      if (!images.length) return;
+
+      for (let offset = -radius; offset <= radius; offset++) {
+        if (offset === 0) continue;
+
+        const i = (index + offset + images.length) % images.length;
+        preloadSrc(images[i].modalSrc);
+      }
+    },
+    [images, preloadSrc]
+  );
+
+  // ✅ al abrir/cambiar imagen: precarga a los lados (2 adelante/2 atrás)
   useEffect(() => {
     if (active === null) return;
     if (images.length <= 1) return;
 
-    const nextIdx = (active + 1) % images.length;
-    const prevIdx = (active - 1 + images.length) % images.length;
+    preloadAround(active, 2);
+  }, [active, images.length, preloadAround]);
 
-    const imgNext = new window.Image();
-    imgNext.src = images[nextIdx].modalSrc;
 
-    const imgPrev = new window.Image();
-    imgPrev.src = images[prevIdx].modalSrc;
-  }, [active, images]);
+    // ✅ (opcional) precarga baja prioridad del resto cuando el modal está abierto
+  useEffect(() => {
+    if (active === null) return;
+    if (images.length <= 3) return;
+
+    const run = () => {
+      // precarga suave: solo modalSrc, no srcset completo
+      for (let i = 0; i < images.length; i++) {
+        if (i === active) continue;
+        preloadSrc(images[i].modalSrc);
+      }
+    };
+
+    // requestIdleCallback si existe
+    const ric = (window as any).requestIdleCallback as undefined | ((cb: () => void) => number);
+    const cancelRic = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
+
+    if (ric) {
+      const id = ric(run);
+      return () => cancelRic?.(id);
+    } else {
+      const id = window.setTimeout(run, 350);
+      return () => window.clearTimeout(id);
+    }
+  }, [active, images, preloadSrc]);
+
+  useEffect(() => {
+    if (active === null) return;
+
+    const btn = thumbBtnRefs.current.get(active);
+    if (!btn) return;
+
+    // Mantener la miniatura activa visible dentro del rail
+    btn.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",  // vertical
+      inline: "nearest", // horizontal
+    });
+  }, [active]);
 
   // índice “oculto” (cuando hay +N)
   const hiddenStartIndex = maxVisible;
@@ -203,6 +266,10 @@ export default function ProyectoGallery({ images }: Props) {
                   <button
                     key={realIndex}
                     type="button"
+                    ref={(el) => {
+                      if (!el) thumbBtnRefs.current.delete(realIndex);
+                      else thumbBtnRefs.current.set(realIndex, el);
+                    }}
                     className={`thumb-btn${realIndex === active ? " active" : ""}`}
                     onClick={() => openAt(realIndex)}
                     aria-label={`Ir a foto ${realIndex + 1}`}
