@@ -1,18 +1,17 @@
 
 :root { --sbw: 0px; }
-
-html.modal-open{
+html.modal-open,
+body.modal-open{
   overflow: hidden;
-  padding-right: var(--sbw);
 }
 
 body.modal-open{
-  overflow: hidden;
   position: fixed;
   left: 0;
   right: 0;
-  width: 100%;
+  width: calc(100% - var(--sbw, 0px));
 }
+
 /* src/styles/global.css */
 
 * {

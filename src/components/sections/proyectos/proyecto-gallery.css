@@ -5,6 +5,9 @@
 }
 
 .gallery-item {
+
+  appearance: none;
+  padding: 0;
   position: relative;
   cursor: pointer;
   border-radius: 14px;
@@ -12,7 +15,8 @@
   border: 1px solid rgba(0,0,0,.08);
 
   aspect-ratio: 4 / 3;  /* o 16/10 si prefieres */
-  background: rgba(0,0,0,.04);
+  background:transparent;
+  text-align: left;
 }
 
 .gallery-item img {
@@ -32,6 +36,7 @@
   justify-content: center;
   font-size: 28px;
   font-weight: 600;
+  pointer-events: none; 
 }
 
 /* Modal */
@@ -80,16 +85,23 @@
 }
 .gallery-modal-inner{
   position: relative;    /* ancla los botones absolute */
-  max-height: 90vh;      /* evita que crezca con imágenes raras */
+  max-height: min(90vh, 760px);      /* evita que crezca con imágenes raras */
   overflow: hidden;      /* todo el scroll será solo en thumbs */
   align-items: stretch;  /* evita cambios por “centrado” */
 }
 
 .gallery-main{
-  min-width: 0;          /* importante en CSS grid */
+  min-width: 0;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.gallery-main img{
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .gallery-thumbs img {
@@ -99,12 +111,6 @@
   border-radius: 8px;
   border: 2px solid transparent;
 }
-
-.gallery-thumbs img.active {
-  opacity: 1;
-  border-color: white;
-}
-
 .gallery-close{
   position: absolute;
   top: 24px;
@@ -136,6 +142,29 @@
 .gallery-nav.left { left: 30px; }
 .gallery-nav.right { right: 30px; }
 
+.thumb-btn{
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.thumb-btn img{
+  width: 100%;
+  display:block;
+  opacity: .55;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.thumb-btn.active img{
+  opacity: 1;
+  border-color: scale(1.02);
+}
+
 @media (max-width: 900px) {
   .gallery-grid {
     grid-template-columns: 1fr;
@@ -143,15 +172,36 @@
 
   .gallery-modal-inner {
     grid-template-columns: 1fr;
+    width: min(94vw, 720px);
+    gap: 14px;
   }
 
+  /* main arriba, thumbs abajo */
   .gallery-thumbs {
     flex-direction: row;
     max-height: none;
     overflow-x: auto;
+    overflow-y: hidden;
+    gap: 10px;
+    padding: 8px 2px;
+
+    /* si quieres ocultar scrollbar también en mobile */
+    scrollbar-width: none;
+  }
+  .gallery-thumbs::-webkit-scrollbar {
+    display: none;
   }
 
-  .gallery-thumbs img {
-    width: 80px;
+  /* en mobile: thumbs con tamaño fijo consistente */
+  .thumb-btn {
+    flex: 0 0 auto;
+    width: 84px;
+    height: 64px;
+  }
+
+  .thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }

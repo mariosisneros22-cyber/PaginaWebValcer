@@ -3,7 +3,7 @@
     "id": "proj_001",
     "slug": "proyecto-piloto",
     "nombre": "Proyecto Piloto",
-    "cliente": "Cliente XYZ",
+    "cliente": "Municipalidad distrital de simon bolivar",
     "estado": "en_ejecucion",
     "servicios": ["infraestructura",
                   "transporte",

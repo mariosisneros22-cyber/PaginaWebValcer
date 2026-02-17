@@ -46,37 +46,52 @@ function resolveImg(relPath: string): ImageMetadata {
 const portada = resolveImg(proyecto.portada);
 
 const galeria = await Promise.all(
-  (proyecto.galeria ?? []).map(async (g) =>{
+  (proyecto.galeria ?? []).map(async (g) => {
     const srcMeta = resolveImg(g.src);
     const alt = g.alt ?? proyecto.nombre;
 
+    // Thumb real para la columna de miniaturas
     const thumb = await getImage({
+      src: srcMeta,
+      width: 140,
+      format: "webp",
+      quality: 60,
+    });
+
+    // Grid (3 columnas)
+    const grid = await getImage({
       src: srcMeta,
       width: 520,
       format: "webp",
       quality: 70,
     });
 
-    const full = await getImage({
+    // Modal (pantalla grande, pero no exagerado)
+    const modal = await getImage({
       src: srcMeta,
-      width: 1600,
+      width: 1200,
       format: "webp",
       quality: 80,
     });
 
-    return{
+    return {
       alt,
 
       thumbSrc: thumb.src,
       thumbSrcset: thumb.srcSet.attribute,
-      thumbSizes: "(max-width: 900x) 100vw, 33vw",
+      thumbSizes: "140px",
 
-      fullSrc: full.src,
-      fullSrcset: full.srcSet.attribute,
-      fullSizes: "(max-width: 900px) 100vw, 70vw"
+      gridSrc: grid.src,
+      gridSrcset: grid.srcSet.attribute,
+      gridSizes: "(max-width: 900px) 100vw, 33vw",
+
+      modalSrc: modal.src,
+      modalSrcset: modal.srcSet.attribute,
+      modalSizes: "(max-width: 900px) 100vw, 70vw",
     };
   })
 );
+
 
 const title = `Valcer - ${proyecto.nombre}`;
 ---
