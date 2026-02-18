@@ -93,7 +93,7 @@
 .gallery-main{
   min-width: 0;
   height: 100%;
-  display: flex;
+  display: flex;  
   align-items: center;
   justify-content: center;
 
@@ -177,14 +177,17 @@
 }
 
 .gallery-main img{
-  transition: opacity 180ms ease;
+  transition: none;
   opacity: 1;
 }
 
-.gallery-main.is-loading img, 
-.gallery-main.is-fading img {
+.gallery-main.is-loading .slide-img.base{
   opacity: .25;
 }
+
+.gallery-main .slide-img.base { z-index: 1; }
+.gallery-main .slide-img.incoming { z-index: 2; }
+
 
 .gallery-loader{
   position:absolute;
@@ -208,6 +211,51 @@
   background: rgba(255,255,255,.9);
   animation: pulse 1s ease-in-out infinite;
 }
+
+/*Efecto Transicion*/
+.gallery-main{
+  position: relative;
+  overflow: hidden; /* importante para que no “salga” la escala */
+}
+
+/* las 2 capas ocupan el mismo lugar */
+.gallery-main .slide-img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* capa base estable */
+.gallery-main .slide-img.base{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* capa que entra */
+.gallery-main .slide-img.incoming{
+  opacity: 0;
+  transform: scale(0.88); /* arranca “más chica” */
+}
+
+.gallery-main .slide-img.base,
+.gallery-main .slide-img.incoming{
+  transition: transform 650ms ease-in-out, opacity 650ms ease-in-out;
+}
+
+/* cuando animamos */
+.gallery-main.is-zooming .slide-img.incoming{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* opcional: la base baja un poquito mientras entra la nueva */
+.gallery-main.is-zooming .slide-img.base{
+  opacity: 0.35;
+  transform: scale(1.03); /* micro zoom-out inverso */
+}
+
 
 @keyframes pulse{
   0%,100%{ transform: scale(1); opacity: .5; }

@@ -25,7 +25,15 @@ export default function ProyectoGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [displayed, setDisplayed] = useState<number | null>(null);
-  const [isFading, setIsFading] = useState(false);
+  const [isZooming, setIsZooming] = useState(false);
+
+  const [incoming, setIncoming] = useState<number | null>(null);
+
+  const raf1Ref = useRef<number | null>(null);
+  const raf2Ref = useRef<number | null>(null);
+  const tRef = useRef<number | null>(null);
+
+  const ZOOM_MS = 650;
 
   const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
   
@@ -83,24 +91,39 @@ export default function ProyectoGallery({ images }: Props) {
     else goPrev();
   };
 
-  const openAt = useCallback((i: number) => {
-    if (!images.length) return;
+  const openAt = useCallback(
+    (i: number) => {
+      if (!images.length) return;
 
-    if (typeof document !== "undefined") {
-      lastActiveTriggerRef.current = document.activeElement as HTMLElement | null;
-    }
+      if (typeof document !== "undefined") {
+        lastActiveTriggerRef.current = document.activeElement as HTMLElement | null;
+      }
 
-    const safe = Math.max(0, Math.min(i, images.length - 1));
+      const safe = Math.max(0, Math.min(i, images.length - 1));
 
-    setActive(safe);
+      // primera vez: inicializa displayed y active
+      if (displayed === null) {
+        setDisplayed(safe);
+        setActive(safe);
+        setIsLoading(false);
+        setIsZooming(false);
+        setIncoming(null);
+        return;
+      }
 
-    // si es la primera vez que abres, muestras inmediatamente
-    setDisplayed((cur) => (cur === null ? safe : cur));
+      // si ya está mostrando esa misma, no hagas nada
+      if (safe === displayed) {
+        setActive(safe);
+        return;
+      }
 
-    // loader solo si vas a cambiar a otra distinta (displayed existente ≠ safe)
-    setIsLoading((_) => (displayed !== null && displayed !== safe));
-    setIsFading((_) => (displayed !== null && displayed !== safe));
-  }, [images.length, displayed]);
+      // cambio normal: SOLO cambia active; el effect hará el resto
+      setActive(safe);
+      setIsLoading(true);
+      setIsZooming(false);
+    },
+    [images.length, displayed]
+  );
 
 
   // ✅ helper: cambia índice y enciende loader
@@ -108,7 +131,7 @@ export default function ProyectoGallery({ images }: Props) {
     setActive((cur) => {
       if (cur === null) return null;
       setIsLoading(true);
-      setIsFading(true);
+      setIsZooming(false);
       return updater(cur);
     });
   }, []);
@@ -211,22 +234,27 @@ export default function ProyectoGallery({ images }: Props) {
     if (displayed === null) {
       setDisplayed(active);
       setIsLoading(false);
-      setIsFading(false);
+      setIncoming(null);
+      setIsZooming(false);
       return;
     }
 
-    // si ya está en pantalla, no hay nada que cargar
     if (displayed === active) {
       setIsLoading(false);
-      setIsFading(false);
+      setIncoming(null);
+      setIsZooming(false);
       return;
     }
 
-    // carga "active" en memoria y cuando termine, promuévela a displayed
     let cancelled = false;
 
+    // cancelar animaciones pendientes previas
+    if (raf1Ref.current) cancelAnimationFrame(raf1Ref.current);
+    if (raf2Ref.current) cancelAnimationFrame(raf2Ref.current);
+    if (tRef.current) window.clearTimeout(tRef.current);
+
     setIsLoading(true);
-    setIsFading(true);
+    setIsZooming(false); // fase 0: sin zooming
 
     const item = images[active];
     const img = new window.Image();
@@ -236,20 +264,40 @@ export default function ProyectoGallery({ images }: Props) {
 
     img.onload = () => {
       if (cancelled) return;
-      setDisplayed(active);
+
+      // fase 1: montar incoming aún SIN zooming
+      setIncoming(active);
       setIsLoading(false);
-      setIsFading(false);
+
+      // fase 2: próximo frame -> activar zooming (ahí recién anima)
+      raf1Ref.current = requestAnimationFrame(() => {
+        raf2Ref.current = requestAnimationFrame(() => {
+          if (cancelled) return;
+          setIsZooming(true);
+
+          // fase 3: al terminar -> promover displayed y limpiar
+          tRef.current = window.setTimeout(() => {
+            if (cancelled) return;
+            setDisplayed(active);
+            setIncoming(null);
+            setIsZooming(false);
+          }, ZOOM_MS);
+        });
+      });
     };
 
     img.onerror = () => {
       if (cancelled) return;
-      // fallback: quita loader para no quedarse colgado
       setIsLoading(false);
-      setIsFading(false);
+      setIncoming(null);
+      setIsZooming(false);
     };
 
     return () => {
       cancelled = true;
+      if (raf1Ref.current) cancelAnimationFrame(raf1Ref.current);
+      if (raf2Ref.current) cancelAnimationFrame(raf2Ref.current);
+      if (tRef.current) window.clearTimeout(tRef.current);
     };
   }, [active, displayed, images]);
 
@@ -452,18 +500,30 @@ export default function ProyectoGallery({ images }: Props) {
             </button>
 
             <div
-              className={`gallery-main${isLoading ? " is-loading" : ""}${isFading ? " is-fading" : ""}`}
+              className={`gallery-main${isLoading ? " is-loading" : ""}${isZooming ? " is-zooming" : ""}`}
               ref={mainRef}
               onPointerDown={onPointerDown}
               onPointerUp={onPointerUp}
             >
               {displayed !== null && (
                 <img
-                  key={displayed}
+                  className="slide-img base"
                   src={images[displayed].modalSrc}
                   srcSet={images[displayed].modalSrcset}
                   sizes={images[displayed].modalSizes}
                   alt={images[displayed].alt}
+                  loading="eager"
+                  decoding="async"
+                />
+              )}
+
+              {incoming !== null && (
+                <img
+                  className="slide-img incoming"
+                  src={images[incoming].modalSrc}
+                  srcSet={images[incoming].modalSrcset}
+                  sizes={images[incoming].modalSizes}
+                  alt={images[incoming].alt}
                   loading="eager"
                   decoding="async"
                 />
