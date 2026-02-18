@@ -42,7 +42,7 @@ export default function ProyectoCardView({ project, href, className, children }:
 
           {(project.servicios ?? []).slice(0, 2).map((s) => (
           <span className="tech-badge" key={s}>
-            {formatSimpleLabel(s)},
+            {formatSimpleLabel(s)}
           </span>
           ))}
           {extra > 0 ? <span className="tag">+{extra}</span> : null}

@@ -7,18 +7,24 @@ import RelatedProyectoReact from "./RelatedProyectoReact.tsx";
 type Proyecto = (typeof proyectos)[number];
 
 type Props = {
-  currentSlug: string;
+  currentSlug?: string;
   limit?: number;
-  // ✅ ya NO recibimos resolveImg desde el slug, porque aquí resolvemos coverUrl
+  ids?: string[];        // ✅ ahora por id
+  title?: string;
+  subtitle?: string;
 };
 
-const { currentSlug, limit = 3 } = Astro.props as Props;
+const {
+  currentSlug,
+  limit = 3,
+  ids,
+  title = ids?.length ? "Proyectos destacados" : "Proyectos relacionados",
+  subtitle: subtitleOverride,
+} = Astro.props as Props;
 
-// ✅ conserva querystring del slug (ej: ?estado=...&q=...)
-// esto ayuda a "volver" con filtros
 const backQuery = Astro.url.search ?? "";
 
-// ✅ glob para obtener URL serializable
+// glob para URL serializable
 type ImgModule = { default: ImageMetadata };
 const imgs = import.meta.glob<ImgModule>(
   "../../../assets/images/proyecto/**/*.{png,jpg,jpeg,webp,avif}",
@@ -31,45 +37,58 @@ function resolveCoverUrl(relPath: string): string {
   return mod ? mod.default.src : "";
 }
 
-const current = proyectos.find((p) => p.slug === currentSlug);
-
 let related: Proyecto[] = [];
-let subtitle = "";
+let subtitle = subtitleOverride ?? "";
 
-if (current && isVisibleProject(current)) {
-  const base = proyectos
-    .filter(isVisibleProject)
-    .filter((p) => p.slug !== currentSlug);
-
-  const currentServicios = new Set(
-    (current.servicios ?? []).map((r) => String(r).toLowerCase())
-  );
-  const currentDpto = current.ubicacion?.departamento?.toLowerCase?.() ?? "";
-
-  const relatedByServicio = base
-    .filter((p) =>
-      (p.servicios ?? []).some((r) => currentServicios.has(String(r).toLowerCase()))
-    )
+// ✅ MODO MANUAL (si vienen ids)
+if (ids?.length) {
+  related = ids
+    .map((id) => proyectos.find((p) => p.id === id))
+    .filter((p): p is Proyecto => !!p && isVisibleProject(p))
     .slice(0, limit);
 
-  related = relatedByServicio;
-  subtitle =
-    relatedByServicio.length > 0
-      ? "Relacionados por servicio."
-      : "Relacionados por departamento.";
+  if (!subtitle) subtitle = "";
+} else {
+  // ✅ MODO AUTO (relacionados por slug actual)
+  const current = proyectos.find((p) => p.slug === currentSlug);
 
-  if (related.length < limit && currentDpto) {
-    const remaining = limit - related.length;
-    const used = new Set(related.map((p) => p.slug));
+  if (current && isVisibleProject(current)) {
+    const base = proyectos
+      .filter(isVisibleProject)
+      .filter((p) => p.slug !== current.slug);
 
-    const byDpto = base
-      .filter((p) => !used.has(p.slug))
-      .filter(
-        (p) => (p.ubicacion?.departamento?.toLowerCase?.() ?? "") === currentDpto
+    const currentServicios = new Set(
+      (current.servicios ?? []).map((r) => String(r).toLowerCase())
+    );
+    const currentDpto = current.ubicacion?.departamento?.toLowerCase?.() ?? "";
+
+    const relatedByServicio = base
+      .filter((p) =>
+        (p.servicios ?? []).some((r) =>
+          currentServicios.has(String(r).toLowerCase())
+        )
       )
-      .slice(0, remaining);
+      .slice(0, limit);
 
-    related = [...related, ...byDpto];
+    related = relatedByServicio;
+    subtitle =
+      relatedByServicio.length > 0
+        ? "Relacionados por servicio."
+        : "Relacionados por departamento.";
+
+    if (related.length < limit && currentDpto) {
+      const remaining = limit - related.length;
+      const used = new Set(related.map((p) => p.slug));
+
+      const byDpto = base
+        .filter((p) => !used.has(p.slug))
+        .filter(
+          (p) => (p.ubicacion?.departamento?.toLowerCase?.() ?? "") === currentDpto
+        )
+        .slice(0, remaining);
+
+      related = [...related, ...byDpto];
+    }
   }
 }
 
@@ -81,6 +100,7 @@ const relatedWithCover = related.map((p) => ({
 
 <RelatedProyectoReact
   client:visible
+  title={title}
   subtitle={subtitle}
   projects={relatedWithCover}
   backQuery={backQuery}
