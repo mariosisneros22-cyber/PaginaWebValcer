@@ -23,38 +23,110 @@ type Props = {
 
 export default function ProyectoGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayed, setDisplayed] = useState<number | null>(null);
 
   const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
-
+  
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const lastActiveTriggerRef = useRef<HTMLElement | null>(null);
+  
+  const mainRef = useRef<HTMLDivElement | null>(null);
+  const touchRef = useRef<{ x: number; y: number; t: number; active: boolean }>({
+    x: 0,
+    y: 0,
+    t: 0,
+    active: false,
+  });
+    
   const maxVisible = 6;
   const visible = images.slice(0, Math.min(maxVisible, images.length));
   const remaining = Math.max(0, images.length - maxVisible);
 
+  const SWIPE_MIN_PX = 40;     // distancia mínima
+  const SWIPE_MAX_Y = 60;      // si se mueve mucho en vertical, no es swipe
+  const SWIPE_MAX_MS = 800;    // si tarda demasiado, no cuenta
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    // solo dedo / touch
+    if (e.pointerType !== "touch") return;
+
+    touchRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      t: Date.now(),
+      active: true,
+    };
+
+    // capturar el puntero para seguir recibiendo eventos
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch") return;
+    if (!touchRef.current.active) return;
+
+    const dx = e.clientX - touchRef.current.x;
+    const dy = e.clientY - touchRef.current.y;
+    const dt = Date.now() - touchRef.current.t;
+
+    touchRef.current.active = false;
+
+    // descartar si fue más scroll vertical que swipe
+    if (Math.abs(dy) > SWIPE_MAX_Y) return;
+    if (dt > SWIPE_MAX_MS) return;
+    if (Math.abs(dx) < SWIPE_MIN_PX) return;
+
+    // swipe izquierda => next, derecha => prev
+    if (dx < 0) goNext();
+    else goPrev();
+  };
+
   const openAt = useCallback(
     (i: number) => {
+      
       if (!images.length) return;
+      if (typeof document !== "undefined") {
+        lastActiveTriggerRef.current = document.activeElement as HTMLElement | null;
+      }
       const safe = Math.max(0, Math.min(i, images.length - 1));
+      setIsLoading(true);
+      setDisplayed((cur) => (cur === null ? safe : cur));
       setActive(safe);
     },
     [images.length]
   );
 
-  const close = useCallback(() => setActive(null), []);
-
-  const next = useCallback(() => {
+  // ✅ helper: cambia índice y enciende loader
+  const goTo = useCallback((updater: (cur: number) => number) => {
     setActive((cur) => {
       if (cur === null) return null;
-      return (cur + 1) % images.length;
+      setIsLoading(true);
+      return updater(cur);
     });
-  }, [images.length]);
+  }, []);
 
-  const prev = useCallback(() => {
-    setActive((cur) => {
-      if (cur === null) return null;
-      return (cur - 1 + images.length) % images.length;
-    });
-  }, [images.length]);
+  const goNext = useCallback(() => {
+    goTo((cur) => (cur + 1) % images.length);
+  }, [goTo, images.length]);
 
+  const goPrev = useCallback(() => {
+    goTo((cur) => (cur - 1 + images.length) % images.length);
+  }, [goTo, images.length]);
+
+  const close = useCallback(() => {
+    setActive(null);
+    setIsLoading(false);
+
+    // ✅ restaurar foco al trigger
+    const el = lastActiveTriggerRef.current;
+    if (el) {
+      // pequeño defer para asegurar que el modal ya desmontó
+      setTimeout(() => el.focus?.(), 0);
+    }
+  }, []);
+
+  
   // ✅ Ventana de thumbs (si hay muchas imágenes, no renderiza todas)
   const THUMBS_WINDOW = 10;
 
@@ -88,8 +160,8 @@ export default function ProyectoGallery({ images }: Props) {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft") goPrev();
     };
 
     window.addEventListener("keydown", onKey);
@@ -102,20 +174,30 @@ export default function ProyectoGallery({ images }: Props) {
       body.style.top = "";
       window.scrollTo(0, scrollY);
     };
-  }, [active, close, next, prev]);
+  }, [active, close, goNext, goPrev]);
 
   // ✅ Preload inteligente: cache + ventana alrededor (sin repetir cargas)
   const preloadedRef = useRef<Set<string>>(new Set());
 
-  const preloadSrc = useCallback((src: string) => {
-    if (!src) return;
-    if (preloadedRef.current.has(src)) return;
+  const preloadModal = useCallback(
+    (i: number) => {
+      if (typeof window === "undefined") return;
 
-    preloadedRef.current.add(src);
-    const img = new window.Image();
-    img.decoding = "async";
-    img.src = src;
-  }, []);
+      const item = images[i];
+      if (!item) return;
+
+      const key = item.modalSrc + "|" + item.modalSrcset;
+      if (preloadedRef.current.has(key)) return;
+
+      preloadedRef.current.add(key);
+
+      const img = new window.Image();
+      img.decoding = "async";
+      img.src = item.modalSrc;
+      (img as any).srcset = item.modalSrcset;
+    },
+    [images]
+  );
 
   const preloadAround = useCallback(
     (index: number, radius = 2) => {
@@ -125,11 +207,28 @@ export default function ProyectoGallery({ images }: Props) {
         if (offset === 0) continue;
 
         const i = (index + offset + images.length) % images.length;
-        preloadSrc(images[i].modalSrc);
+        preloadModal(i);
       }
     },
-    [images, preloadSrc]
+    [images, preloadModal]
   );
+
+  const prefetchIndex = useCallback(
+    (i: number) => {
+      if (!images.length) return;
+      const safe = Math.max(0, Math.min(i, images.length - 1));
+      preloadModal(safe);
+      preloadAround(safe, 1);
+    },
+    [images.length, preloadModal, preloadAround]
+  );
+
+  const activeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
+
 
   // ✅ al abrir/cambiar imagen: precarga a los lados (2 adelante/2 atrás)
   useEffect(() => {
@@ -149,7 +248,7 @@ export default function ProyectoGallery({ images }: Props) {
       // precarga suave: solo modalSrc, no srcset completo
       for (let i = 0; i < images.length; i++) {
         if (i === active) continue;
-        preloadSrc(images[i].modalSrc);
+        preloadModal(i)
       }
     };
 
@@ -164,7 +263,52 @@ export default function ProyectoGallery({ images }: Props) {
       const id = window.setTimeout(run, 350);
       return () => window.clearTimeout(id);
     }
-  }, [active, images, preloadSrc]);
+  }, [active, images, preloadModal]);
+
+    // ✅ Focus trap + autofocus al abrir
+  useEffect(() => {
+    if (active === null) return;
+
+    const root = modalRef.current;
+    if (!root) return;
+
+    const getFocusable = () => {
+      const list = root.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      return Array.from(list).filter((el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"));
+    };
+
+    // autofocus: primero (usualmente el botón volver)
+    const focusables = getFocusable();
+    focusables[0]?.focus?.();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusablesNow = getFocusable();
+      if (!focusablesNow.length) return;
+
+      const first = focusablesNow[0];
+      const last = focusablesNow[focusablesNow.length - 1];
+      const activeEl = document.activeElement as HTMLElement | null;
+
+      // Shift+Tab en primero => va al último
+      if (e.shiftKey && activeEl === first) {
+        e.preventDefault();
+        last.focus();
+      }
+
+      // Tab en último => va al primero
+      if (!e.shiftKey && activeEl === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    root.addEventListener("keydown", onKeyDown);
+    return () => root.removeEventListener("keydown", onKeyDown);
+  }, [active]);
 
   useEffect(() => {
     if (active === null) return;
@@ -196,6 +340,8 @@ export default function ProyectoGallery({ images }: Props) {
               key={i}
               type="button"
               className="gallery-item"
+              onMouseEnter={() => prefetchIndex(hasOverlay ? hiddenStartIndex : i)}
+              onFocus={() => prefetchIndex(hasOverlay ? hiddenStartIndex : i)}
               onClick={() => {
                 // si hay overlay, abre en la primera oculta (mejor UX)
                 if (hasOverlay) openAt(hiddenStartIndex);
@@ -221,7 +367,7 @@ export default function ProyectoGallery({ images }: Props) {
       {/* MODAL */}
       {active !== null && (
         <div className="gallery-modal" onClick={close} role="dialog" aria-modal="true">
-          <div className="gallery-modal-inner" onClick={(e) => e.stopPropagation()}>
+          <div className="gallery-modal-inner" ref={modalRef} onClick={(e) => e.stopPropagation()} tabIndex={-1}>
             <button
               className="gallery-close"
               onClick={close}
@@ -239,22 +385,71 @@ export default function ProyectoGallery({ images }: Props) {
               </svg>
             </button>
 
-            <button className="gallery-nav left" onClick={prev} type="button" aria-label="Anterior">
+            <button
+              className="gallery-nav left"
+              type="button"
+              aria-label="Anterior"
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrev();
+              }}
+            >
               ‹
             </button>
 
-            <div className="gallery-main">
+            <div className={`gallery-main${isLoading ? " is-loading" : ""}`}  ref={mainRef} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
               <img
-                src={images[active].modalSrc}
-                srcSet={images[active].modalSrcset}
-                sizes={images[active].modalSizes}
-                alt={images[active].alt}
+                key={displayed ?? "none"}
+                src={displayed === null ? "" : images[displayed].modalSrc}
+                srcSet={displayed === null ? "" : images[displayed].modalSrcset}
+                sizes={displayed === null ? "" : images[displayed].modalSizes}
+                alt={displayed === null ? "" : images[displayed].alt}
                 loading="eager"
                 decoding="async"
+                style={{ opacity: isLoading ? 0.25 : 1 }}
+                onLoad={(e) => {
+                  // ✅ apaga loader si lo que cargó es la imagen del "active" actual
+                  const cur = activeRef.current;
+                  if (cur === null) return;
+
+                  const expected = images[cur]?.modalSrc;
+                  const loaded = (e.currentTarget as HTMLImageElement).currentSrc || e.currentTarget.src;
+
+                  if (expected && loaded.includes(expected)) {
+                    setIsLoading(false);
+                  }
+                }}
               />
+              {active !== null && displayed !== active && (
+                <img
+                  className="gallery-preload"
+                  src={images[active].modalSrc}
+                  srcSet={images[active].modalSrcset}
+                  sizes={images[active].modalSizes}
+                  alt=""
+                  decoding="async"
+                  loading="eager"
+                  onLoad={() => {
+                    setDisplayed(active);
+                    setIsLoading(false);
+                  }}
+                />
+              )}
+
+              <div className="gallery-loader" aria-hidden="true">
+                <div className="dot" />
+              </div>
             </div>
 
-            <button className="gallery-nav right" onClick={next} type="button" aria-label="Siguiente">
+            <button
+              className="gallery-nav right"
+              type="button"
+              aria-label="Siguiente"
+              onClick={(e) => {
+                e.stopPropagation();
+                goNext();
+              }}
+            >
               ›
             </button>
 
@@ -271,6 +466,8 @@ export default function ProyectoGallery({ images }: Props) {
                       else thumbBtnRefs.current.set(realIndex, el);
                     }}
                     className={`thumb-btn${realIndex === active ? " active" : ""}`}
+                    onMouseEnter={() => prefetchIndex(realIndex)}
+                    onFocus={() => prefetchIndex(realIndex)}
                     onClick={() => openAt(realIndex)}
                     aria-label={`Ir a foto ${realIndex + 1}`}
                   >
