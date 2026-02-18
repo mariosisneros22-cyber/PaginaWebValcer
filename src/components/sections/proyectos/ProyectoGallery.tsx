@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./proyecto-gallery.css";
 
 export type GalleryImage = {
@@ -17,80 +17,53 @@ export type GalleryImage = {
   modalSizes: string;
 };
 
-type Props = {
-  images: GalleryImage[];
-};
+type Props = { images: GalleryImage[] };
+
+const MAX_VISIBLE = 6;
+const THUMBS_WINDOW = 10;
+
+const SWIPE_MIN_PX = 40;
+const SWIPE_MAX_Y = 60;
+const SWIPE_MAX_MS = 800;
+
+const ZOOM_MS = 650;
 
 export default function ProyectoGallery({ images }: Props) {
-  const [active, setActive] = useState<number | null>(null);
+  const [active, setActive] = useState<number | null>(null); // índice target
+  const [displayed, setDisplayed] = useState<number | null>(null); // índice visible
+  const [incoming, setIncoming] = useState<number | null>(null); // índice entrando
+
   const [isLoading, setIsLoading] = useState(false);
-  const [displayed, setDisplayed] = useState<number | null>(null);
   const [isZooming, setIsZooming] = useState(false);
 
-  const [incoming, setIncoming] = useState<number | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
+  const lastActiveTriggerRef = useRef<HTMLElement | null>(null);
+  const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+
+  const touchRef = useRef({ x: 0, y: 0, t: 0, active: false });
+
+  // control de animaciones cancelables
   const raf1Ref = useRef<number | null>(null);
   const raf2Ref = useRef<number | null>(null);
   const tRef = useRef<number | null>(null);
 
-  const ZOOM_MS = 650;
+  const clearAnimTimers = useCallback(() => {
+    if (raf1Ref.current) cancelAnimationFrame(raf1Ref.current);
+    if (raf2Ref.current) cancelAnimationFrame(raf2Ref.current);
+    if (tRef.current) window.clearTimeout(tRef.current);
+    raf1Ref.current = raf2Ref.current = tRef.current = null;
+  }, []);
 
-  const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
-  
-  const modalRef = useRef<HTMLDivElement | null>(null);
-  const lastActiveTriggerRef = useRef<HTMLElement | null>(null);
-  
-  const mainRef = useRef<HTMLDivElement | null>(null);
-  const touchRef = useRef<{ x: number; y: number; t: number; active: boolean }>({
-    x: 0,
-    y: 0,
-    t: 0,
-    active: false,
-  });
-    
-  const maxVisible = 6;
-  const visible = images.slice(0, Math.min(maxVisible, images.length));
-  const remaining = Math.max(0, images.length - maxVisible);
+  // ---------- GRID SLICE ----------
+  const visible = useMemo(
+    () => images.slice(0, Math.min(MAX_VISIBLE, images.length)),
+    [images]
+  );
+  const remaining = Math.max(0, images.length - MAX_VISIBLE);
 
-  const SWIPE_MIN_PX = 40;     // distancia mínima
-  const SWIPE_MAX_Y = 60;      // si se mueve mucho en vertical, no es swipe
-  const SWIPE_MAX_MS = 800;    // si tarda demasiado, no cuenta
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    // solo dedo / touch
-    if (e.pointerType !== "touch") return;
-
-    touchRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      t: Date.now(),
-      active: true,
-    };
-
-    // capturar el puntero para seguir recibiendo eventos
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-  };
-
-  const onPointerUp = (e: React.PointerEvent) => {
-    if (e.pointerType !== "touch") return;
-    if (!touchRef.current.active) return;
-
-    const dx = e.clientX - touchRef.current.x;
-    const dy = e.clientY - touchRef.current.y;
-    const dt = Date.now() - touchRef.current.t;
-
-    touchRef.current.active = false;
-
-    // descartar si fue más scroll vertical que swipe
-    if (Math.abs(dy) > SWIPE_MAX_Y) return;
-    if (dt > SWIPE_MAX_MS) return;
-    if (Math.abs(dx) < SWIPE_MIN_PX) return;
-
-    // swipe izquierda => next, derecha => prev
-    if (dx < 0) goNext();
-    else goPrev();
-  };
-
+  // ---------- OPEN ----------
   const openAt = useCallback(
     (i: number) => {
       if (!images.length) return;
@@ -101,23 +74,22 @@ export default function ProyectoGallery({ images }: Props) {
 
       const safe = Math.max(0, Math.min(i, images.length - 1));
 
-      // primera vez: inicializa displayed y active
+      // primera apertura
       if (displayed === null) {
         setDisplayed(safe);
         setActive(safe);
+        setIncoming(null);
         setIsLoading(false);
         setIsZooming(false);
-        setIncoming(null);
         return;
       }
 
-      // si ya está mostrando esa misma, no hagas nada
+      // si ya es la que está visible, solo actualiza active (thumb highlight)
       if (safe === displayed) {
         setActive(safe);
         return;
       }
 
-      // cambio normal: SOLO cambia active; el effect hará el resto
       setActive(safe);
       setIsLoading(true);
       setIsZooming(false);
@@ -125,41 +97,66 @@ export default function ProyectoGallery({ images }: Props) {
     [images.length, displayed]
   );
 
-
-  // ✅ helper: cambia índice y enciende loader
-  const goTo = useCallback((updater: (cur: number) => number) => {
-    setActive((cur) => {
-      if (cur === null) return null;
-      setIsLoading(true);
-      setIsZooming(false);
-      return updater(cur);
-    });
-  }, []);
+  // ---------- NAV ----------
+  const goTo = useCallback(
+    (updater: (cur: number) => number) => {
+      setActive((cur) => {
+        if (cur === null) return null;
+        setIsLoading(true);
+        setIsZooming(false);
+        return updater(cur);
+      });
+    },
+    []
+  );
 
   const goNext = useCallback(() => {
+    if (!images.length) return;
     goTo((cur) => (cur + 1) % images.length);
   }, [goTo, images.length]);
 
   const goPrev = useCallback(() => {
+    if (!images.length) return;
     goTo((cur) => (cur - 1 + images.length) % images.length);
   }, [goTo, images.length]);
 
+  // ---------- CLOSE ----------
   const close = useCallback(() => {
     setActive(null);
     setIsLoading(false);
+    setIsZooming(false);
+    setIncoming(null);
+    clearAnimTimers();
 
-    // ✅ restaurar foco al trigger
     const el = lastActiveTriggerRef.current;
-    if (el) {
-      // pequeño defer para asegurar que el modal ya desmontó
-      setTimeout(() => el.focus?.(), 0);
-    }
-  }, []);
+    if (el) setTimeout(() => el.focus?.(), 0);
+  }, [clearAnimTimers]);
 
-  
-  // ✅ Ventana de thumbs (si hay muchas imágenes, no renderiza todas)
-  const THUMBS_WINDOW = 10;
+  // ---------- SWIPE ----------
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch") return;
+    touchRef.current = { x: e.clientX, y: e.clientY, t: Date.now(), active: true };
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
 
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch") return;
+    if (!touchRef.current.active) return;
+
+    const dx = e.clientX - touchRef.current.x;
+    const dy = e.clientY - touchRef.current.y;
+    const dt = Date.now() - touchRef.current.t;
+    touchRef.current.active = false;
+
+    if (Math.abs(dy) > SWIPE_MAX_Y) return;
+    if (dt > SWIPE_MAX_MS) return;
+    if (Math.abs(dx) < SWIPE_MIN_PX) return;
+
+    if (dx < 0) goNext();
+    else goPrev();
+  };
+
+  // ---------- THUMBS WINDOW ----------
   const { thumbStart, thumbs } = useMemo(() => {
     if (active === null) return { thumbStart: 0, thumbs: [] as GalleryImage[] };
 
@@ -173,7 +170,7 @@ export default function ProyectoGallery({ images }: Props) {
     };
   }, [active, images]);
 
-  // ✅ Scroll lock cuando el modal está abierto
+  // ---------- SCROLL LOCK + KEYBOARD ----------
   useEffect(() => {
     if (active === null) return;
 
@@ -206,171 +203,177 @@ export default function ProyectoGallery({ images }: Props) {
     };
   }, [active, close, goNext, goPrev]);
 
-  // ✅ Preload inteligente: cache + ventana alrededor (sin repetir cargas)
-  const preloadedRef = useRef<Set<string>>(new Set());
+  // ---------- IMAGE LOADER (unificado) ----------
 
-  const preloadModal = useCallback(
+  const loadedRef = useRef<Set<string>>(new Set()); // ya cargadas
+  const inflightRef = useRef<Map<string, Promise<void>>>(new Map()); // cargas en curso
+
+  const makeKey = useCallback(
+    (item: GalleryImage) => `${item.modalSrc}|${item.modalSrcset}`,
+    []
+  );
+
+  const loadModalImage = useCallback(
     (i: number) => {
-      if (typeof window === "undefined") return;
+      if (typeof window === "undefined") return Promise.resolve();
 
       const item = images[i];
-      if (!item) return;
+      if (!item) return Promise.resolve();
 
-      const key = item.modalSrc + "|" + item.modalSrcset;
-      if (preloadedRef.current.has(key)) return;
+      const key = makeKey(item);
 
-      preloadedRef.current.add(key);
+      // ya está cargada
+      if (loadedRef.current.has(key)) return Promise.resolve();
 
-      const img = new window.Image();
-      img.decoding = "async";
-      img.src = item.modalSrc;
-      (img as any).srcset = item.modalSrcset;
+      // ya está cargándose
+      const inflight = inflightRef.current.get(key);
+      if (inflight) return inflight;
+
+      // crea promesa de carga
+      const p = new Promise<void>((resolve) => {
+        const img = new window.Image();
+        img.decoding = "async";
+        img.src = item.modalSrc;
+        (img as any).srcset = item.modalSrcset;
+
+        const done = () => {
+          loadedRef.current.add(key);
+          inflightRef.current.delete(key);
+          resolve();
+        };
+
+        img.onload = done;
+        img.onerror = done; // no bloqueamos UI si falla; resolvemos igual
+      });
+
+      inflightRef.current.set(key, p);
+      return p;
     },
     [images]
   );
 
-  useEffect(() => {
-    if (active === null) return;
-    if (displayed === null) {
-      setDisplayed(active);
-      setIsLoading(false);
-      setIncoming(null);
-      setIsZooming(false);
-      return;
-    }
-
-    if (displayed === active) {
-      setIsLoading(false);
-      setIncoming(null);
-      setIsZooming(false);
-      return;
-    }
-
-    let cancelled = false;
-
-    // cancelar animaciones pendientes previas
-    if (raf1Ref.current) cancelAnimationFrame(raf1Ref.current);
-    if (raf2Ref.current) cancelAnimationFrame(raf2Ref.current);
-    if (tRef.current) window.clearTimeout(tRef.current);
-
-    setIsLoading(true);
-    setIsZooming(false); // fase 0: sin zooming
-
-    const item = images[active];
-    const img = new window.Image();
-    img.decoding = "async";
-    img.src = item.modalSrc;
-    (img as any).srcset = item.modalSrcset;
-
-    img.onload = () => {
-      if (cancelled) return;
-
-      // fase 1: montar incoming aún SIN zooming
-      setIncoming(active);
-      setIsLoading(false);
-
-      // fase 2: próximo frame -> activar zooming (ahí recién anima)
-      raf1Ref.current = requestAnimationFrame(() => {
-        raf2Ref.current = requestAnimationFrame(() => {
-          if (cancelled) return;
-          setIsZooming(true);
-
-          // fase 3: al terminar -> promover displayed y limpiar
-          tRef.current = window.setTimeout(() => {
-            if (cancelled) return;
-            setDisplayed(active);
-            setIncoming(null);
-            setIsZooming(false);
-          }, ZOOM_MS);
-        });
-      });
-    };
-
-    img.onerror = () => {
-      if (cancelled) return;
-      setIsLoading(false);
-      setIncoming(null);
-      setIsZooming(false);
-    };
-
-    return () => {
-      cancelled = true;
-      if (raf1Ref.current) cancelAnimationFrame(raf1Ref.current);
-      if (raf2Ref.current) cancelAnimationFrame(raf2Ref.current);
-      if (tRef.current) window.clearTimeout(tRef.current);
-    };
-  }, [active, displayed, images]);
-
   const preloadAround = useCallback(
     (index: number, radius = 2) => {
       if (!images.length) return;
-
       for (let offset = -radius; offset <= radius; offset++) {
         if (offset === 0) continue;
-
         const i = (index + offset + images.length) % images.length;
-        preloadModal(i);
+        void loadModalImage(i);
       }
     },
-    [images, preloadModal]
+    [images.length, loadModalImage]
   );
 
   const prefetchIndex = useCallback(
     (i: number) => {
       if (!images.length) return;
       const safe = Math.max(0, Math.min(i, images.length - 1));
-      preloadModal(safe);
+      void loadModalImage(safe);
       preloadAround(safe, 1);
     },
-    [images.length, preloadModal, preloadAround]
+    [images.length, loadModalImage, preloadAround]
   );
 
-  const activeRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
-
-
-  // ✅ al abrir/cambiar imagen: precarga a los lados (2 adelante/2 atrás)
+    // precarga laterales al cambiar (2 adelante/2 atrás)
   useEffect(() => {
     if (active === null) return;
     if (images.length <= 1) return;
-
     preloadAround(active, 2);
   }, [active, images.length, preloadAround]);
 
-
-    // ✅ (opcional) precarga baja prioridad del resto cuando el modal está abierto
+  // precarga baja prioridad del resto cuando el modal está abierto
   useEffect(() => {
     if (active === null) return;
     if (images.length <= 3) return;
 
     const run = () => {
-      // precarga suave: solo modalSrc, no srcset completo
       for (let i = 0; i < images.length; i++) {
         if (i === active) continue;
-        preloadModal(i)
+        void loadModalImage(i);
       }
     };
 
-    // requestIdleCallback si existe
     const ric = (window as any).requestIdleCallback as undefined | ((cb: () => void) => number);
     const cancelRic = (window as any).cancelIdleCallback as undefined | ((id: number) => void);
 
     if (ric) {
       const id = ric(run);
       return () => cancelRic?.(id);
-    } else {
-      const id = window.setTimeout(run, 350);
-      return () => window.clearTimeout(id);
     }
-  }, [active, images, preloadModal]);
 
-    // ✅ Focus trap + autofocus al abrir
+    const id = window.setTimeout(run, 350);
+    return () => window.clearTimeout(id);
+  }, [active, images.length, loadModalImage]);
+
+  // ---------- TRANSICIÓN (active -> displayed) ----------
   useEffect(() => {
     if (active === null) return;
 
+    if (displayed === null) {
+      setDisplayed(active);
+      setIncoming(null);
+      setIsLoading(false);
+      setIsZooming(false);
+      return;
+    }
+
+    if (displayed === active) {
+      setIncoming(null);
+      setIsLoading(false);
+      setIsZooming(false);
+      return;
+    }
+
+    let cancelled = false;
+    clearAnimTimers();
+
+    setIsLoading(true);
+    setIsZooming(false);
+
+    void (async () => {
+      await loadModalImage(active);
+      if (cancelled) return;
+
+      // 1) monta incoming sin zoom
+      setIncoming(active);
+      setIsLoading(false);
+
+      // 2) 2 RAF para garantizar paint inicial
+      raf1Ref.current = requestAnimationFrame(() => {
+        raf2Ref.current = requestAnimationFrame(() => {
+          if (cancelled) return;
+          setIsZooming(true);
+
+          // 3) al final: promover displayed y limpiar
+          tRef.current = window.setTimeout(() => {
+            if (cancelled) return;
+
+            setDisplayed(active);
+
+            requestAnimationFrame(() => {
+              if (cancelled) return;
+              setIncoming(null);
+
+              requestAnimationFrame(() => {
+                if (cancelled) return;
+                setIsZooming(false);
+              });
+            });
+          }, ZOOM_MS);
+        });
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+      clearAnimTimers();
+    };
+  }, [active, displayed, loadModalImage, clearAnimTimers]);
+
+
+  // ---------- FOCUS TRAP ----------
+  useEffect(() => {
+    if (active === null) return;
     const root = modalRef.current;
     if (!root) return;
 
@@ -378,31 +381,27 @@ export default function ProyectoGallery({ images }: Props) {
       const list = root.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      return Array.from(list).filter((el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"));
+      return Array.from(list).filter(
+        (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
+      );
     };
 
-    // autofocus: primero (usualmente el botón volver)
-    const focusables = getFocusable();
-    focusables[0]?.focus?.();
+    getFocusable()[0]?.focus?.();
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
 
-      const focusablesNow = getFocusable();
-      if (!focusablesNow.length) return;
+      const focusables = getFocusable();
+      if (!focusables.length) return;
 
-      const first = focusablesNow[0];
-      const last = focusablesNow[focusablesNow.length - 1];
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
       const activeEl = document.activeElement as HTMLElement | null;
 
-      // Shift+Tab en primero => va al último
       if (e.shiftKey && activeEl === first) {
         e.preventDefault();
         last.focus();
-      }
-
-      // Tab en último => va al primero
-      if (!e.shiftKey && activeEl === last) {
+      } else if (!e.shiftKey && activeEl === last) {
         e.preventDefault();
         first.focus();
       }
@@ -412,43 +411,30 @@ export default function ProyectoGallery({ images }: Props) {
     return () => root.removeEventListener("keydown", onKeyDown);
   }, [active]);
 
+  // ---------- KEEP ACTIVE THUMB IN VIEW ----------
   useEffect(() => {
     if (active === null) return;
-
     const btn = thumbBtnRefs.current.get(active);
-    if (!btn) return;
-
-    // Mantener la miniatura activa visible dentro del rail
-    btn.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",  // vertical
-      inline: "nearest", // horizontal
-    });
+    btn?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
   }, [active]);
-
-  // índice “oculto” (cuando hay +N)
-  const hiddenStartIndex = maxVisible;
 
   return (
     <>
       {/* GRID */}
       <div className="gallery-grid">
         {visible.map((img, i) => {
-          const isLastCell = i === maxVisible - 1;
+          const isLastCell = i === MAX_VISIBLE - 1;
           const hasOverlay = isLastCell && remaining > 0;
+          const idxToOpen = hasOverlay ? MAX_VISIBLE : i;
 
           return (
             <button
               key={i}
               type="button"
               className="gallery-item"
-              onMouseEnter={() => prefetchIndex(hasOverlay ? hiddenStartIndex : i)}
-              onFocus={() => prefetchIndex(hasOverlay ? hiddenStartIndex : i)}
-              onClick={() => {
-                // si hay overlay, abre en la primera oculta (mejor UX)
-                if (hasOverlay) openAt(hiddenStartIndex);
-                else openAt(i);
-              }}
+              onMouseEnter={() => prefetchIndex(idxToOpen)}
+              onFocus={() => prefetchIndex(idxToOpen)}
+              onClick={() => openAt(idxToOpen)}
               aria-label={img.alt || `Foto ${i + 1}`}
             >
               <img
@@ -459,7 +445,6 @@ export default function ProyectoGallery({ images }: Props) {
                 loading="lazy"
                 decoding="async"
               />
-
               {hasOverlay && <span className="gallery-overlay">+{remaining}</span>}
             </button>
           );
@@ -469,13 +454,13 @@ export default function ProyectoGallery({ images }: Props) {
       {/* MODAL */}
       {active !== null && (
         <div className="gallery-modal" onClick={close} role="dialog" aria-modal="true">
-          <div className="gallery-modal-inner" ref={modalRef} onClick={(e) => e.stopPropagation()} tabIndex={-1}>
-            <button
-              className="gallery-close"
-              onClick={close}
-              aria-label="Volver"
-              type="button"
-            >
+          <div
+            className="gallery-modal-inner"
+            ref={modalRef}
+            onClick={(e) => e.stopPropagation()}
+            tabIndex={-1}
+          >
+            <button className="gallery-close" onClick={close} aria-label="Volver" type="button">
               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M15 18L9 12L15 6"
@@ -491,6 +476,7 @@ export default function ProyectoGallery({ images }: Props) {
               className="gallery-nav left"
               type="button"
               aria-label="Anterior"
+              disabled={isLoading}
               onClick={(e) => {
                 e.stopPropagation();
                 goPrev();
@@ -501,32 +487,33 @@ export default function ProyectoGallery({ images }: Props) {
 
             <div
               className={`gallery-main${isLoading ? " is-loading" : ""}${isZooming ? " is-zooming" : ""}`}
-              ref={mainRef}
               onPointerDown={onPointerDown}
               onPointerUp={onPointerUp}
             >
               {displayed !== null && (
-                <img
-                  className="slide-img base"
-                  src={images[displayed].modalSrc}
-                  srcSet={images[displayed].modalSrcset}
-                  sizes={images[displayed].modalSizes}
-                  alt={images[displayed].alt}
-                  loading="eager"
-                  decoding="async"
-                />
+                <div className="slide-layer base">
+                  <img
+                    src={images[displayed].modalSrc}
+                    srcSet={images[displayed].modalSrcset}
+                    sizes={images[displayed].modalSizes}
+                    alt={images[displayed].alt}
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
               )}
 
               {incoming !== null && (
-                <img
-                  className="slide-img incoming"
-                  src={images[incoming].modalSrc}
-                  srcSet={images[incoming].modalSrcset}
-                  sizes={images[incoming].modalSizes}
-                  alt={images[incoming].alt}
-                  loading="eager"
-                  decoding="async"
-                />
+                <div className="slide-layer incoming">
+                  <img
+                    src={images[incoming].modalSrc}
+                    srcSet={images[incoming].modalSrcset}
+                    sizes={images[incoming].modalSizes}
+                    alt={images[incoming].alt}
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
               )}
 
               <div className="gallery-loader" aria-hidden="true">
@@ -534,12 +521,11 @@ export default function ProyectoGallery({ images }: Props) {
               </div>
             </div>
 
-
-
             <button
               className="gallery-nav right"
               type="button"
               aria-label="Siguiente"
+              disabled={isLoading}
               onClick={(e) => {
                 e.stopPropagation();
                 goNext();
