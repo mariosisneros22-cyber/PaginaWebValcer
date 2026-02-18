@@ -25,6 +25,7 @@ export default function ProyectoGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [displayed, setDisplayed] = useState<number | null>(null);
+  const [isFading, setIsFading] = useState(false);
 
   const thumbBtnRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
   
@@ -82,26 +83,32 @@ export default function ProyectoGallery({ images }: Props) {
     else goPrev();
   };
 
-  const openAt = useCallback(
-    (i: number) => {
-      
-      if (!images.length) return;
-      if (typeof document !== "undefined") {
-        lastActiveTriggerRef.current = document.activeElement as HTMLElement | null;
-      }
-      const safe = Math.max(0, Math.min(i, images.length - 1));
-      setIsLoading(true);
-      setDisplayed((cur) => (cur === null ? safe : cur));
-      setActive(safe);
-    },
-    [images.length]
-  );
+  const openAt = useCallback((i: number) => {
+    if (!images.length) return;
+
+    if (typeof document !== "undefined") {
+      lastActiveTriggerRef.current = document.activeElement as HTMLElement | null;
+    }
+
+    const safe = Math.max(0, Math.min(i, images.length - 1));
+
+    setActive(safe);
+
+    // si es la primera vez que abres, muestras inmediatamente
+    setDisplayed((cur) => (cur === null ? safe : cur));
+
+    // loader solo si vas a cambiar a otra distinta (displayed existente ≠ safe)
+    setIsLoading((_) => (displayed !== null && displayed !== safe));
+    setIsFading((_) => (displayed !== null && displayed !== safe));
+  }, [images.length, displayed]);
+
 
   // ✅ helper: cambia índice y enciende loader
   const goTo = useCallback((updater: (cur: number) => number) => {
     setActive((cur) => {
       if (cur === null) return null;
       setIsLoading(true);
+      setIsFading(true);
       return updater(cur);
     });
   }, []);
@@ -198,6 +205,53 @@ export default function ProyectoGallery({ images }: Props) {
     },
     [images]
   );
+
+  useEffect(() => {
+    if (active === null) return;
+    if (displayed === null) {
+      setDisplayed(active);
+      setIsLoading(false);
+      setIsFading(false);
+      return;
+    }
+
+    // si ya está en pantalla, no hay nada que cargar
+    if (displayed === active) {
+      setIsLoading(false);
+      setIsFading(false);
+      return;
+    }
+
+    // carga "active" en memoria y cuando termine, promuévela a displayed
+    let cancelled = false;
+
+    setIsLoading(true);
+    setIsFading(true);
+
+    const item = images[active];
+    const img = new window.Image();
+    img.decoding = "async";
+    img.src = item.modalSrc;
+    (img as any).srcset = item.modalSrcset;
+
+    img.onload = () => {
+      if (cancelled) return;
+      setDisplayed(active);
+      setIsLoading(false);
+      setIsFading(false);
+    };
+
+    img.onerror = () => {
+      if (cancelled) return;
+      // fallback: quita loader para no quedarse colgado
+      setIsLoading(false);
+      setIsFading(false);
+    };
+
+    return () => {
+      cancelled = true;
+    };
+  }, [active, displayed, images]);
 
   const preloadAround = useCallback(
     (index: number, radius = 2) => {
@@ -397,42 +451,21 @@ export default function ProyectoGallery({ images }: Props) {
               ‹
             </button>
 
-            <div className={`gallery-main${isLoading ? " is-loading" : ""}`}  ref={mainRef} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
-              <img
-                key={displayed ?? "none"}
-                src={displayed === null ? "" : images[displayed].modalSrc}
-                srcSet={displayed === null ? "" : images[displayed].modalSrcset}
-                sizes={displayed === null ? "" : images[displayed].modalSizes}
-                alt={displayed === null ? "" : images[displayed].alt}
-                loading="eager"
-                decoding="async"
-                style={{ opacity: isLoading ? 0.25 : 1 }}
-                onLoad={(e) => {
-                  // ✅ apaga loader si lo que cargó es la imagen del "active" actual
-                  const cur = activeRef.current;
-                  if (cur === null) return;
-
-                  const expected = images[cur]?.modalSrc;
-                  const loaded = (e.currentTarget as HTMLImageElement).currentSrc || e.currentTarget.src;
-
-                  if (expected && loaded.includes(expected)) {
-                    setIsLoading(false);
-                  }
-                }}
-              />
-              {active !== null && displayed !== active && (
+            <div
+              className={`gallery-main${isLoading ? " is-loading" : ""}${isFading ? " is-fading" : ""}`}
+              ref={mainRef}
+              onPointerDown={onPointerDown}
+              onPointerUp={onPointerUp}
+            >
+              {displayed !== null && (
                 <img
-                  className="gallery-preload"
-                  src={images[active].modalSrc}
-                  srcSet={images[active].modalSrcset}
-                  sizes={images[active].modalSizes}
-                  alt=""
-                  decoding="async"
+                  key={displayed}
+                  src={images[displayed].modalSrc}
+                  srcSet={images[displayed].modalSrcset}
+                  sizes={images[displayed].modalSizes}
+                  alt={images[displayed].alt}
                   loading="eager"
-                  onLoad={() => {
-                    setDisplayed(active);
-                    setIsLoading(false);
-                  }}
+                  decoding="async"
                 />
               )}
 
@@ -440,6 +473,8 @@ export default function ProyectoGallery({ images }: Props) {
                 <div className="dot" />
               </div>
             </div>
+
+
 
             <button
               className="gallery-nav right"
