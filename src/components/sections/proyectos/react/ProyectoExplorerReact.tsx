@@ -47,6 +47,8 @@ const LAYER_CLUSTERS = "clusters";
 const LAYER_CLUSTER_COUNT = "cluster-count";
 const LAYER_POINTS = "unclustered";
 
+
+
 type FeatureProps = {
   id: string;
   nombre: string;
@@ -100,6 +102,8 @@ export default function ProyectoExplorer({ projects }: Props) {
   const mapElRef = useRef<HTMLDivElement | null>(null);
   const initialViewRef = useRef<{ center: [number, number]; zoom: number } | null>(null);
 
+  const resultsTopRef = useRef<HTMLDivElement | null>(null);
+
   const lastUrlRef = useRef<string>("");
   // init filters from URL
   useEffect(() => {
@@ -146,6 +150,12 @@ export default function ProyectoExplorer({ projects }: Props) {
     window.history.replaceState({ filters }, "", next);
   }, [queryString, filters]);
 
+  useEffect(() => {
+    // opcional: cerrar selección al filtrar
+    setSelectedId(null);
+
+    resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [queryString]);
 
 
   // init map once
@@ -578,6 +588,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       </div>
 
       {/* SPLIT */}
+      <div ref={resultsTopRef} className="resultsTop"/>
       <div className="split">
         <aside className="splitMap">
           <div className="mapWrap">
@@ -613,10 +624,10 @@ export default function ProyectoExplorer({ projects }: Props) {
 
         <section className="splitList">
           {filtered.length > 0 ? (
-            <div className="projects-grid">
+            <div className="projects-grid" key={queryString}>
               {filtered.map((p) => (
                 <ProyectoCardView
-                  key={p.id}
+                  key={`${p.id}`}
                   project={p}
                   className={p.id === selectedId ? "isActive" : ""}
                 >

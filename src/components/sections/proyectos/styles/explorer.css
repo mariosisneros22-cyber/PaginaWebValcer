@@ -4,11 +4,16 @@
   padding: 14px;
   margin-bottom: 16px;
   background: rgba(255,255,255,.6);
+
+  position: sticky;
+  top: 90px;
+  z-index: 10;
+  backdrop-filter: blur(6px);
 }
 
 .row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   align-items: end;
 }
@@ -24,10 +29,14 @@ select, input {
   background: white;
 }
 
-.search { grid-column: span 2; }
+.search { grid-column: 1 / -1; }
 
 
-.actions { display: flex; justify-content: flex-end; }
+.actions { 
+  display: flex; 
+  justify-content: flex-end; 
+  grid-column: 1 / -1;
+}
 .actions button {
   border: 1px solid rgba(0,0,0,.12);
   border-radius: 10px;
@@ -78,8 +87,11 @@ select, input {
   width: fit-content;
 }
 
+.resultsTop { 
+  scroll-margin-top: 170px; 
+} 
 
-@media (max-width: 900px) {
+  @media (max-width: 900px) {
   .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .search { grid-column: span 2; }
   .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

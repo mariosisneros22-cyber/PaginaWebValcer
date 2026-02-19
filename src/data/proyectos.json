@@ -151,5 +151,1841 @@
       { "src": "proj_006/01.webp", "alt": "Avance de obra" }
     ],
     "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+  {
+    "id": "proj_001",
+    "slug": "proyecto-piloto",
+    "nombre": "Proyecto Piloto",
+    "cliente": "Municipalidad distrital de simon bolivar",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura",
+                  "transporte",
+                  "agronomia"        
+    ],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "portada": "proj_001/cover.webp",
+    "galeria": [
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/04.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/05.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/06.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/01.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/02.webp", "alt": "Avance de obra" },
+      { "src": "proj_001/03.webp", "alt": "Avance de obra" } 
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_002",
+    "slug": "proyecto-piloto-2",
+    "nombre": "Proyecto Piloto 2",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -10.66577,
+      "lng": -76.25309
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2025,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_002/cover.webp",
+    "galeria": [
+      { "src": "proj_002/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_003",
+    "slug": "proyecto-piloto-3",
+    "nombre": "Proyecto Piloto 3",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.111,
+      "lng": -77.0528
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_003/cover.webp",
+    "galeria": [
+      { "src": "proj_003/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": false
+  },
+  {
+    "id": "proj_004",
+    "slug": "proyecto-piloto-4",
+    "nombre": "Proyecto Piloto 4",
+    "cliente": "Cliente XYZ",
+    "estado": "en_ejecucion",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_004/cover.webp",
+    "galeria": [
+      { "src": "proj_004/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_005",
+    "slug": "proyecto-piloto-5",
+    "nombre": "Proyecto Piloto 5",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -13.53188,
+      "lng": -71.96701
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": 2024,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_005/cover.webp",
+    "galeria": [
+      { "src": "proj_005/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
+  },
+
+  {
+    "id": "proj_006",
+    "slug": "proyecto-piloto-6",
+    "nombre": "Proyecto Piloto 6",
+    "cliente": "Cliente ABC",
+    "estado": "finalizado",
+    "servicios": ["infraestructura"],
+    "ubicacion": {
+      "departamento": "Lima",
+      "provincia": "Lima",
+      "distrito": "Miraflores",
+      "lat": -12.121,
+      "lng": -77.029
+    },
+    "fecha_inicio": 2024,
+    "fecha_fin": null,
+    "resumen": "Resumen corto del proyecto.",
+    "portada": "proj_006/cover.webp",
+    "galeria": [
+      { "src": "proj_006/01.webp", "alt": "Avance de obra" }
+    ],
+    "visible": true
   }
 ]
