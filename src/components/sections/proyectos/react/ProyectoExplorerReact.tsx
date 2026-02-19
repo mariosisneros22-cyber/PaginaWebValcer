@@ -490,10 +490,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       {/* filtros*/ }
       <div className="filters" >
         <div className="filtersBar">
-          <button type="button" className="clearBtn" onClick={clearAll}>
-            Limpiar
-          </button>
-
+          
           <label className="field">
             <span className="fieldLabel">Estado</span>
             <select
@@ -548,16 +545,18 @@ export default function ProyectoExplorer({ projects }: Props) {
               onChange={(e) => onChange({ q: e.target.value || undefined })}
             />
           </label>
-
+          <button type="button" className="clearBtn" onClick={clearAll}>
+            Limpiar
+          </button>
           
         </div>
       </div>
-      
+
       {/* RESUMEN */}
-      <div className="summary">
-        <span>
+      <div className="summaryRow">
+        <div className="summaryCount">
           Mostrando <strong>{filtered.length}</strong> de <strong>{totalVisibles}</strong>
-        </span>
+        </div>
 
         {chips.length > 0 ? (
           <div className="chips">
@@ -573,7 +572,9 @@ export default function ProyectoExplorer({ projects }: Props) {
               </button>
             ))}
           </div>
-        ) : null}
+        ) : (
+          <span />
+        )}
       </div>
 
       {/* SPLIT */}

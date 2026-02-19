@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 type Props = { lng: number; lat: number; zoom?: number };
 
