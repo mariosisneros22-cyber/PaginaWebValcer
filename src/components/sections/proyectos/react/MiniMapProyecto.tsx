@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-// ⛔️ NO importar maplibre-gl arriba
-// import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Props = { lng: number; lat: number; zoom?: number };

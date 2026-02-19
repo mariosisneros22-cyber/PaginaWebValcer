@@ -1,7 +1,9 @@
 import React from "react";
-import type { Projecto } from "../../../lib/projects";
-import "./proyecto-explorer.css";
-import { estadoToKey,formatEstadoLabel, formatSimpleLabel } from "../../../lib/projects";
+
+import "../styles/card.css"
+
+import type { Projecto } from "../../../../lib/projects";
+import { estadoToKey,formatEstadoLabel, formatSimpleLabel } from "../../../../lib/projects";
 type ProjectWithCover = Projecto & { coverUrl: string };
 
 type Props = {
@@ -14,7 +16,7 @@ type Props = {
 export default function ProyectoCardView({ project, href, className, children }: Props) {
   const cls = `project-card${className ? ` ${className}` : ""}`;
   const estadoKey = estadoToKey(project.estado);  
-  const extra = (project.servicios?.length ?? 0) -2;
+  const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
   const Inner = (
     <>
       <div className="thumb">
@@ -40,11 +42,12 @@ export default function ProyectoCardView({ project, href, className, children }:
             {formatEstadoLabel(estadoKey)}
           </span>
 
-          {(project.servicios ?? []).slice(0, 2).map((s) => (
-          <span className="tech-badge" key={s}>
-            {formatSimpleLabel(s)}
-          </span>
+          {(project.servicios ?? []).slice(0, 2).map((s, i) => (
+            <span className="tech-badge" key={`${s}-${i}`}>
+              {formatSimpleLabel(s)}
+            </span>
           ))}
+
           {extra > 0 ? <span className="tag">+{extra}</span> : null}
         </div>
         {children ? <div className="cardActions">{children}</div> : null}
