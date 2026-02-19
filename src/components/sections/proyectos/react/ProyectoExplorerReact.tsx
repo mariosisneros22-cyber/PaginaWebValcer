@@ -15,11 +15,9 @@ import {
   formatSimpleLabel,
 } from "../../../../lib/projects";
 
-import type{
+import type {
   Map as MapLibreMap,
   GeoJSONSource,
-  LngLatBounds,
-  MapMouseEvent,
 } from "maplibre-gl"
 
 
@@ -35,11 +33,6 @@ type Props = {
   projects: ProjectWithCover[];
 };
 
-
-const PERU_BOUNDS: [[number, number], [number, number]] = [
-  [-81.35, -18.35], // SW (lng, lat)
-  [-68.65,  0.20],  // NE
-];
 const DEFAULT_CENTER: [number, number] = [-74.5, -9.2];
 const DEFAULT_ZOOM = 4;
 const SOURCE_ID = "projects";
@@ -103,8 +96,10 @@ export default function ProyectoExplorer({ projects }: Props) {
   const initialViewRef = useRef<{ center: [number, number]; zoom: number } | null>(null);
 
   const resultsTopRef = useRef<HTMLDivElement | null>(null);
+  //filtros
 
   const lastUrlRef = useRef<string>("");
+  
   // init filters from URL
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -149,14 +144,6 @@ export default function ProyectoExplorer({ projects }: Props) {
     // ✅ guardo filtros en history.state (clave para back/forward sin “cosas raras”)
     window.history.replaceState({ filters }, "", next);
   }, [queryString, filters]);
-
-  useEffect(() => {
-    // opcional: cerrar selección al filtrar
-    setSelectedId(null);
-
-    resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [queryString]);
-
 
   // init map once
   useEffect(() => {
@@ -349,7 +336,9 @@ export default function ProyectoExplorer({ projects }: Props) {
   }, [filteredWithCoords, selectedId]);
 
   // helpers
-  const clearAll = useCallback(() => setFilters({}), []);
+  const clearAll = useCallback(()=>{
+    setFilters({});
+  }, []);
 
   const onChange = useCallback((patch: Partial<ProjectFilters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -497,12 +486,16 @@ export default function ProyectoExplorer({ projects }: Props) {
 
 
   return (
-    <section className="container">
-      {/* FILTROS */}
-      <div className="filters">
-        <div className="row">
-          <label>
-            Estado
+    <section className="container container-explorer">
+      {/* filtros*/ }
+      <div className="filters" >
+        <div className="filtersBar">
+          <button type="button" className="clearBtn" onClick={clearAll}>
+            Limpiar
+          </button>
+
+          <label className="field">
+            <span className="fieldLabel">Estado</span>
             <select
               value={filters.estado ?? ""}
               onChange={(e) => onChange({ estado: e.target.value || undefined })}
@@ -516,8 +509,8 @@ export default function ProyectoExplorer({ projects }: Props) {
             </select>
           </label>
 
-          <label>
-            Servicio
+          <label className="field">
+            <span className="fieldLabel">Servicio</span>
             <select
               value={filters.servicio ?? ""}
               onChange={(e) => onChange({ servicio: e.target.value || undefined })}
@@ -531,8 +524,8 @@ export default function ProyectoExplorer({ projects }: Props) {
             </select>
           </label>
 
-          <label>
-            Departamento
+          <label className="field">
+            <span className="fieldLabel">Departamento</span>
             <select
               value={filters.dpto ?? ""}
               onChange={(e) => onChange({ dpto: e.target.value || undefined })}
@@ -546,24 +539,20 @@ export default function ProyectoExplorer({ projects }: Props) {
             </select>
           </label>
 
-          <label className="search">
-            Buscar
+          <label className="field searchField">
+            <span className="fieldLabel">Buscar</span>
             <input
               type="search"
-              placeholder="Nombre, cliente, ubicación, servicio…"
+              placeholder="Nombre, cliente, ubicación…"
               value={filters.q ?? ""}
               onChange={(e) => onChange({ q: e.target.value || undefined })}
             />
           </label>
 
-          <div className="actions">
-            <button type="button" onClick={clearAll}>
-              Limpiar
-            </button>
-          </div>
+          
         </div>
       </div>
-
+      
       {/* RESUMEN */}
       <div className="summary">
         <span>
@@ -606,7 +595,6 @@ export default function ProyectoExplorer({ projects }: Props) {
                     ×
                   </button>
                 </div>
-
                 <div className="popupBody">
                   <div className="popupMeta">
                     {selected.ubicacion.distrito ? `${selected.ubicacion.distrito}, ` : ""}
@@ -621,6 +609,7 @@ export default function ProyectoExplorer({ projects }: Props) {
             ) : null}
           </div>
         </aside>
+
 
         <section className="splitList">
           {filtered.length > 0 ? (
