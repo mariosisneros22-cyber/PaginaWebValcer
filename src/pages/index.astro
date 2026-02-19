@@ -2,17 +2,17 @@
 import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
-
+import RelatedProyecto from '../components/sections/proyectos/astro/RelatedProyecto.astro';
 import Slider from '../components/sections/index/infoSlider.astro';
 import Tab from '../components/sections/index/infoTab.astro';
 import SliderHero from '../components/sections/hero/sliderHero.astro';
 import Button from '../components/ui/button.astro';
-import Card from '../components/sections/index/infoCards.astro';
+
 import Carrusel from '../components/sections/index/carrusel.astro';
 
 import {serviceTabs} from '../utils/exportContent.ts'
 import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
-import { infoCard } from '../utils/projectInfo.ts';
+
 import { clients } from "../utils/clients";
 ---
 
@@ -104,12 +104,11 @@ import { clients } from "../utils/clients";
   <!-- Proyectos Destacados -->
   <section class="section-2">
     <div class="container">
-      <div class="proyectos-ht">
-        <h2 class="proyectos-titulo">Proyectos Destacados</h2>
-        <Button href="/proyectos">Ver todos los proyectos</Button>
-        <Card cards={infoCard} />
-      </div>
-    
+      <RelatedProyecto
+          ids={["proj_001", "proj_002", "proj_005","proj_004"]}
+          limit={4}
+        />
+      <Button href="/proyectos">Leer más</Button>
     </div>
   </section>
 
