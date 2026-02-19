@@ -1,0 +1,116 @@
+.mapWrap{
+  position: relative;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,.03);
+  margin: 10px 0 18px;
+}
+
+.marker{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid white;
+  background: black;
+  cursor: pointer;
+}
+
+.marker.isActive{
+  transform: scale(1.25);
+}
+
+.popup{
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  width: min(320px, calc(100% - 24px));
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.95);
+  padding: 12px;
+}
+.popupHead{
+  display:flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.popupClose{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.popupMeta{ opacity: .75; margin-top: 6px; }
+.popupLink{ display:inline-block; margin-top: 10px; text-decoration:none; color: inherit; }
+
+.mapEmpty{
+  position:absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.95);
+  opacity: .9;
+}
+
+
+
+.mapReset{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,.95);
+  cursor: pointer;
+}
+
+.split{
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.splitMap{
+  position: sticky;
+  top: 90px; /* ajusta según tu header */
+  height: calc(100vh - 110px);
+}
+
+.mapWrap{ margin: 0; }
+.map{ height: 100%; }
+
+.splitList{
+  min-height: 1px;
+}
+
+.splitMap .mapWrap{
+  height: 100%;
+}
+
+.miniMap{
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 980px){
+  .split{
+    grid-template-columns: 1fr;
+  }
+  .splitMap{
+    position: static;
+    height: auto;
+  }
+  .map{ height: 320px; }
+}
+
+

@@ -1,6 +1,7 @@
-import React from "react";
-import type { Projecto } from "../../../lib/projects";
-import ProyectoCardView from "./ProyectoCardView";
+import type { Projecto } from "../../../../lib/projects";
+import ProyectoCardView from "../react/ProyectoCardView";
+
+import "../styles/related.css"
 
 type ProjectWithCover = Projecto & { coverUrl: string };
 

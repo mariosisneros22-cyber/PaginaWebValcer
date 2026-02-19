@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Projecto, ProjectFilters } from "../../../lib/projects";
-import "./proyecto-explorer.css";
+import type { Projecto, ProjectFilters } from "../../../../lib/projects";
+
+import "../styles/explorer.css";
+import "../styles/map.css";
 
 import {
   applyProjectFilters,
@@ -11,9 +13,16 @@ import {
   getAvailableDepartamentos,
   formatEstadoLabel,
   formatSimpleLabel,
-} from "../../../lib/projects";
+} from "../../../../lib/projects";
 
-import maplibregl from "maplibre-gl";
+import type{
+  Map as MapLibreMap,
+  GeoJSONSource,
+  LngLatBounds,
+  MapMouseEvent,
+} from "maplibre-gl"
+
+
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import ProyectoCardView from "./ProyectoCardView";
@@ -87,7 +96,7 @@ export default function ProyectoExplorer({ projects }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
   // map refs
-  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapRef = useRef<MapLibreMap | null>(null);
   const mapElRef = useRef<HTMLDivElement | null>(null);
   const initialViewRef = useRef<{ center: [number, number]; zoom: number } | null>(null);
 
@@ -141,207 +150,185 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   // init map once
   useEffect(() => {
-    if (!mapElRef.current || mapRef.current) return;
+    let destroyed = false;
 
-    const map = new maplibregl.Map({
-      container: mapElRef.current,
-      style: {
-        version: 8,
-        glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: [
-              "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            ],
-            tileSize: 256,
-            attribution: "© OpenStreetMap contributors",
+    (async () => {
+      if (!mapElRef.current || mapRef.current) return;
+
+      const maplibregl = (await import("maplibre-gl")).default;
+      if (destroyed) return;
+
+      const map = new maplibregl.Map({
+        container: mapElRef.current,
+        style: {
+          version: 8,
+          glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: [
+                "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: "© OpenStreetMap contributors",
+            },
           },
+          layers: [{ id: "osm", type: "raster", source: "osm" }],
         },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
-      },
-      center: DEFAULT_CENTER,
-      zoom: DEFAULT_ZOOM,
-    });
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
+      });
 
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
+      map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-    mapRef.current = map;
-    initialViewRef.current = { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM };
+      mapRef.current = map;
+      initialViewRef.current = { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM };
 
-    map.on("load", () => {
+      map.on("load", () => {
+        if (destroyed) return;
 
-
-            // 1) Source cluster
-      if (!map.getSource(SOURCE_ID)) {
-        map.addSource(SOURCE_ID, {
-          type: "geojson",
-          data: { type: "FeatureCollection", features: [] },
-          cluster: true,
-          clusterRadius: 40,
-          clusterMaxZoom: 16,
-        });
-      }
-
-      // 2) Cluster circles
-      if (!map.getLayer(LAYER_CLUSTERS)) {
-        map.addLayer({
-          id: LAYER_CLUSTERS,
-          type: "circle",
-          source: SOURCE_ID,
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-radius": ["step", ["get", "point_count"], 16, 10, 20, 25, 26, 50, 32],
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#fff",
-            "circle-color": "#111",
-          },
-        });
-      }
-
-      // 3) Cluster count labels
-      if (!map.getLayer(LAYER_CLUSTER_COUNT)) {
-        map.addLayer({
-          id: LAYER_CLUSTER_COUNT,
-          type: "symbol",
-          source: SOURCE_ID,
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-size": 12,
-          },
-          paint: { "text-color": "#fff" },
-        });
-      }
-
-      // 4) Unclustered points
-      if (!map.getLayer(LAYER_POINTS)) {
-        map.addLayer({
-          id: LAYER_POINTS,
-          type: "circle",
-          source: SOURCE_ID,
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-radius": 7,
-            "circle-color": "#111",
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#fff",
-          },
-        });
-      }
-
-      // --------- Helpers robustos ---------
-
-      const getClickedClusterFeature = (e: maplibregl.MapMouseEvent) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT],
-        });
-        return features.find((f) => (f.properties as any)?.cluster_id != null) ?? null;
-      };
-
-      const expandCluster = async (e: any) => {
-        const map = mapRef.current;
-        if (!map) return;
-
-        // 1) intenta por e.features (evento por layer)
-        let feature = e?.features?.[0];
-
-        // 2) fallback: queryRenderedFeatures en el punto clickeado
-        if (!feature && e?.point) {
-          const feats = map.queryRenderedFeatures(e.point, {
-            layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT],
+        // 1) Source cluster
+        if (!map.getSource(SOURCE_ID)) {
+          map.addSource(SOURCE_ID, {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] },
+            cluster: true,
+            clusterRadius: 40,
+            clusterMaxZoom: 16,
           });
-          feature = feats.find((f) => (f.properties as any)?.cluster_id != null);
         }
 
-        if (!feature) return;
-
-        const clusterId = Number((feature.properties as any)?.cluster_id);
-        const pointCount = (feature.properties as any)?.point_count;
-        
-        if (!Number.isFinite(clusterId)) return;
-
-        const coords = (feature.geometry as any).coordinates as [number, number];
-        const currentZoom = map.getZoom();
-
-        const src: any = map.getSource(SOURCE_ID);
-        
-        // ESTRATEGIA ALTERNATIVA: en lugar de confiar en getClusterExpansionZoom,
-        // hacemos zoom progresivo hasta que el cluster se rompa
-        
-        // Si el cluster tiene pocos puntos (2-5), zoom más agresivo
-        let zoomIncrement = 3;
-        if (pointCount > 50) {
-          zoomIncrement = 1.5;
-        } else if (pointCount > 10) {
-          zoomIncrement = 1.5;
+        // 2) Cluster circles
+        if (!map.getLayer(LAYER_CLUSTERS)) {
+          map.addLayer({
+            id: LAYER_CLUSTERS,
+            type: "circle",
+            source: SOURCE_ID,
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-radius": ["step", ["get", "point_count"], 16, 10, 20, 25, 26, 50, 32],
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#fff",
+              "circle-color": "#111",
+            },
+          });
         }
 
-        const nextZoom = Math.min(currentZoom + zoomIncrement, 18);
+        // 3) Cluster count labels
+        if (!map.getLayer(LAYER_CLUSTER_COUNT)) {
+          map.addLayer({
+            id: LAYER_CLUSTER_COUNT,
+            type: "symbol",
+            source: SOURCE_ID,
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": "{point_count_abbreviated}",
+              "text-size": 12,
+            },
+            paint: { "text-color": "#fff" },
+          });
+        }
 
-        console.log('Expanding cluster:', { 
-          clusterId, 
-          pointCount, 
-          currentZoom: currentZoom.toFixed(2), 
-          nextZoom: nextZoom.toFixed(2),
-          increment: zoomIncrement 
+        // 4) Unclustered points
+        if (!map.getLayer(LAYER_POINTS)) {
+          map.addLayer({
+            id: LAYER_POINTS,
+            type: "circle",
+            source: SOURCE_ID,
+            filter: ["!", ["has", "point_count"]],
+            paint: {
+              "circle-radius": 7,
+              "circle-color": "#111",
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#fff",
+            },
+          });
+        }
+
+        // --------- Handlers ---------
+
+        const expandCluster = (e: any) => {
+          const map = mapRef.current;
+          if (!map) return;
+
+          let feature = e?.features?.[0];
+
+          if (!feature && e?.point) {
+            const feats = map.queryRenderedFeatures(e.point, {
+              layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT],
+            });
+            feature = feats.find((f) => (f.properties as any)?.cluster_id != null);
+          }
+
+          if (!feature) return;
+
+          const clusterId = Number((feature.properties as any)?.cluster_id);
+          const pointCount = (feature.properties as any)?.point_count;
+
+          if (!Number.isFinite(clusterId)) return;
+
+          const coords = (feature.geometry as any).coordinates as [number, number];
+          const currentZoom = map.getZoom();
+
+          let zoomIncrement = 3;
+          if (pointCount > 50) zoomIncrement = 1.5;
+          else if (pointCount > 10) zoomIncrement = 1.5;
+
+          const nextZoom = Math.min(currentZoom + zoomIncrement, 18);
+
+          map.easeTo({
+            center: coords,
+            zoom: nextZoom,
+            duration: 450,
+          });
+        };
+
+        map.on("click", LAYER_CLUSTERS, expandCluster);
+        map.on("click", LAYER_CLUSTER_COUNT, expandCluster);
+
+        map.on("click", LAYER_POINTS, (e) => {
+          const feats = map.queryRenderedFeatures(e.point, { layers: [LAYER_POINTS] });
+          const f = feats[0];
+          if (!f) return;
+
+          const id = (f.properties as any)?.id as string | undefined;
+          if (!id) return;
+
+          setSelectedId(id);
+
+          const coords = (f.geometry as any).coordinates as [number, number];
+          map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 16) });
         });
 
-        map.easeTo({ 
-          center: coords, 
-          zoom: nextZoom, 
-          duration: 450 
+        // Cursor
+        map.on("mouseenter", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = "pointer"));
+        map.on("mouseleave", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = ""));
+        map.on("mouseenter", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = "pointer"));
+        map.on("mouseleave", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = ""));
+        map.on("mouseenter", LAYER_POINTS, () => (map.getCanvas().style.cursor = "pointer"));
+        map.on("mouseleave", LAYER_POINTS, () => (map.getCanvas().style.cursor = ""));
+
+        // Fondo: cerrar selección
+        map.on("click", (e) => {
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT, LAYER_POINTS],
+          });
+          if (!features.length) setSelectedId(null);
         });
-      };
 
-      // Click en cluster (círculo) y en número
-      map.on("click", LAYER_CLUSTERS, expandCluster);
-      map.on("click", LAYER_CLUSTER_COUNT, expandCluster);
-
-      // ✅ Click en punto (esto lo habías perdido)
-      map.on("click", LAYER_POINTS, (e) => {
-        const feats = map.queryRenderedFeatures(e.point, { layers: [LAYER_POINTS] });
-        const f = feats[0];
-        if (!f) return;
-
-        const id = (f.properties as any)?.id as string | undefined;
-        if (!id) return;
-
-        setSelectedId(id);
-
-        const coords = (f.geometry as any).coordinates as [number, number];
-        map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 16) });
+        setMapReady(true);
       });
-
-      // Cursor
-      map.on("mouseenter", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = "pointer"));
-      map.on("mouseleave", LAYER_CLUSTERS, () => (map.getCanvas().style.cursor = ""));
-      map.on("mouseenter", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = "pointer"));
-      map.on("mouseleave", LAYER_CLUSTER_COUNT, () => (map.getCanvas().style.cursor = ""));
-      map.on("mouseenter", LAYER_POINTS, () => (map.getCanvas().style.cursor = "pointer"));
-      map.on("mouseleave", LAYER_POINTS, () => (map.getCanvas().style.cursor = ""));
-      map.on("click", LAYER_CLUSTERS, (e) => { console.log("cluster click", e.features?.[0]); });
-
-      // Fondo: cerrar selección si no clickeaste nada del source
-      map.on("click", (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: [LAYER_CLUSTERS, LAYER_CLUSTER_COUNT, LAYER_POINTS],
-        });
-        if (!features.length) setSelectedId(null);
-      });
-
-      setMapReady(true);
-
-
-    });
+    })();
 
     return () => {
-      map.remove();
+      destroyed = true;
+      mapRef.current?.remove();
       mapRef.current = null;
     };
   }, []);
+
 
 
   // keep selectedId valid
@@ -397,24 +384,41 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   // markers + fit bounds
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !mapReady) return;
+    let cancelled = false;
 
-    const source = map.getSource(SOURCE_ID) as maplibregl.GeoJSONSource | undefined;
-    if (!source) return;
+    (async () => {
+      const map = mapRef.current;
+      if (!map || !mapReady) return;
 
-    const geojson = toGeoJSON(filteredWithCoords);
-    source.setData(geojson as any);
+      const source = map.getSource(SOURCE_ID) as GeoJSONSource | undefined;
+      if (!source) return;
 
-    if (filteredWithCoords.length === 1) {
-      const p = filteredWithCoords[0];
-      map.flyTo({ center: [p.ubicacion.lng!, p.ubicacion.lat!], zoom: 13 });
-    } else if (filteredWithCoords.length > 1) {
-      const bounds = new maplibregl.LngLatBounds();
-      geojson.features.forEach((f) => bounds.extend(f.geometry.coordinates));
-      map.fitBounds(PERU_BOUNDS, { padding: 60, maxZoom: 16 });
-    }
+      const geojson = toGeoJSON(filteredWithCoords);
+      source.setData(geojson as any);
+
+      if (filteredWithCoords.length === 1) {
+        const p = filteredWithCoords[0];
+        map.flyTo({ center: [p.ubicacion.lng!, p.ubicacion.lat!], zoom: 13 });
+        return;
+      }
+
+      if (filteredWithCoords.length > 1) {
+        const maplibregl = (await import("maplibre-gl")).default;
+        if (cancelled) return;
+
+        const bounds = new maplibregl.LngLatBounds();
+        geojson.features.forEach((f) => bounds.extend(f.geometry.coordinates));
+
+        map.fitBounds(bounds, { padding: 60, maxZoom: 16, duration: 550 });
+        return;
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [filteredWithCoords, mapReady]);
+
 
 
 
