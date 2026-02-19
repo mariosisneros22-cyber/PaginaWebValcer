@@ -1,0 +1,16 @@
+---
+import ProyectoExplorerReact from "../react/ProyectoExplorerReact.tsx";
+
+import { resolveProjectAssetUrl } from "../utils/images.server";
+import proyectos from "../../../../data/proyectos.json";
+import { assertValidProjects } from "../../../../lib/projects";
+
+assertValidProjects(proyectos);
+
+const projectsWithCover = proyectos.map((p) => ({
+  ...p,
+  coverUrl: resolveProjectAssetUrl(p.portada),
+}));
+---
+
+<ProyectoExplorerReact client:load projects={projectsWithCover} />

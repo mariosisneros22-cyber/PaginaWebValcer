@@ -1,0 +1,163 @@
+
+.container-explorer{
+  height: 100vh;
+  overflow: hidden; /* evita que la página scrollee */
+  display: flex;
+  flex-direction: column;
+}
+
+.filters,
+.summary{
+  flex: 0 0 auto;
+}
+
+.filters{
+  position: relative;
+  z-index: 20;
+  margin-bottom: 2px;
+
+  /* quitamos caja */
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+
+  flex: 0 0 auto;
+}
+
+/* ===== Filters bar (una línea) ===== */
+
+.filtersBar{
+  display: grid;
+  grid-template-columns: 170px 190px 190px minmax(240px, 1fr) auto  auto;
+  gap: 10px;
+  align-items: end;
+  padding: 6px 0;
+}
+
+.field{
+  display: grid;
+  gap: 6px;
+  font-size: .92rem; /* equivalente a tu label actual */
+}
+
+.fieldLabel{
+  font-size: .82rem;
+  opacity: .85;
+  line-height: 1;
+}
+
+.clearBtn{
+  border: 1px solid rgba(220, 38, 38, .35);
+  background: rgba(220, 38, 38, .10);
+  color: rgb(185, 28, 28);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* Ajuste fino: en una línea, el input no debería crecer verticalmente */
+.filtersBar select,
+.filtersBar input{
+  width: 100%;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 10px;
+  padding: 10px 10px;
+  font-size: .95rem;
+  background: white;
+}
+
+
+
+.clearBtn.isFull{
+  width: 100%;
+}
+.summaryRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin: 10px 2px 14px;
+  opacity: .9;
+}
+
+.summaryCount{
+  white-space: nowrap;
+}
+.projects-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+
+.empty {
+  border: 1px dashed rgba(0,0,0,.18);
+  border-radius: 14px;
+  padding: 18px;
+  opacity: .9;
+}
+
+.chips{ 
+  display:flex; 
+  flex-wrap:wrap; 
+  gap:8px;
+  justify-content: flex-end;
+
+  min-width: 0;
+}
+.chip{
+  max-width: 100%;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.7);
+  font-size:.85rem;
+  cursor:pointer;
+}
+
+.clearBig{
+  display:inline-flex;
+  margin-top:10px;
+  border:1px solid rgba(0,0,0,.12);
+  padding:10px 14px;
+  border-radius:10px;
+  background:white;
+  cursor:pointer;
+  width: fit-content;
+}
+
+.resultsTop { 
+  scroll-margin-top: 170px; 
+} 
+
+@media (max-width: 900px) {
+  .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .search { grid-column: span 2; }
+  .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .filtersBar{
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+  }
+
+  /* Oculta selects en barra (se gestionan en el panel) */
+  .filtersBar .field:not(.searchField){
+    display: none;
+  }
+
+  .filtersBar .searchField{
+    display: grid;
+  }
+}
+@media (max-width: 560px) {
+  .row { grid-template-columns: 1fr; }
+  .search { grid-column: auto; }
+  .projects-grid { grid-template-columns: 1fr; }
+
+}
+

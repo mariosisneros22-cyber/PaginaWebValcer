@@ -1,3 +1,17 @@
+
+:root { --sbw: 0px; }
+html.modal-open,
+body.modal-open{
+  overflow: hidden;
+}
+
+body.modal-open{
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: calc(100% - var(--sbw, 0px));
+}
+
 /* src/styles/global.css */
 
 * {
@@ -58,7 +72,7 @@ a {
 }
 
 a:hover {
-  color: white;
+  color: rgb(141, 141, 141);
 }
 
 /* === CONTENEDORES === */
@@ -66,7 +80,7 @@ a:hover {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 ;
+  padding:  24px 16px;
 }
 
 .section {
@@ -217,4 +231,42 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+
+.tech-badge{
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 600;
+  width: fit-content;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.7);
+}
+
+/* Estados normalizados */
+.estado-en_ejecucion{
+  background: rgba(0, 120, 255, .10);
+  color: rgb(0, 90, 200);
+  border-color: rgba(0, 120, 255, .22);
+}
+
+.estado-finalizado{
+  background: rgba(0, 150, 80, .12);
+  color: rgb(0, 110, 60);
+  border-color: rgba(0, 150, 80, .22);
+}
+
+.estado-proyectado{
+  background: rgba(200, 140, 0, .15);
+  color: rgb(160, 110, 0);
+  border-color: rgba(200, 140, 0, .25);
+}
+
+/* fallback si cae un estado no contemplado */
+.estado-unknown{
+  background: rgba(0,0,0,.06);
+  color: rgba(0,0,0,.75);
 }

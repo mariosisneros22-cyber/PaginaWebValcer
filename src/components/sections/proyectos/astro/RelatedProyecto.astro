@@ -1,0 +1,97 @@
+---
+import proyectos from "../../../../data/proyectos.json";
+import { isVisibleProject } from "../../../../lib/projects";
+import RelatedProyectoReact from "../react/RelatedProyectoReact.tsx";
+
+import { resolveProjectAssetUrl } from "../utils/images.server";
+
+type Proyecto = (typeof proyectos)[number];
+
+type Props = {
+  currentSlug?: string;
+  limit?: number;
+  ids?: string[];        // ✅ ahora por id
+  title?: string;
+  subtitle?: string;
+};
+
+const {
+  currentSlug,
+  limit = 3,
+  ids,
+  title = ids?.length ? "Proyectos destacados" : "Proyectos relacionados",
+  subtitle: subtitleOverride,
+} = Astro.props as Props;
+
+const backQuery = Astro.url.search ?? "";
+
+
+
+let related: Proyecto[] = [];
+let subtitle = subtitleOverride ?? "";
+
+// ✅ MODO MANUAL (si vienen ids)
+if (ids?.length) {
+  related = ids
+    .map((id) => proyectos.find((p) => p.id === id))
+    .filter((p): p is Proyecto => !!p && isVisibleProject(p))
+    .slice(0, limit);
+
+  if (!subtitle) subtitle = "";
+} else {
+  // ✅ MODO AUTO (relacionados por slug actual)
+  const current = proyectos.find((p) => p.slug === currentSlug);
+
+  if (current && isVisibleProject(current)) {
+    const base = proyectos
+      .filter(isVisibleProject)
+      .filter((p) => p.slug !== current.slug);
+
+    const currentServicios = new Set(
+      (current.servicios ?? []).map((r) => String(r).toLowerCase())
+    );
+    const currentDpto = current.ubicacion?.departamento?.toLowerCase?.() ?? "";
+
+    const relatedByServicio = base
+      .filter((p) =>
+        (p.servicios ?? []).some((r) =>
+          currentServicios.has(String(r).toLowerCase())
+        )
+      )
+      .slice(0, limit);
+
+    related = relatedByServicio;
+    subtitle =
+      relatedByServicio.length > 0
+        ? "Relacionados por servicio."
+        : "Relacionados por departamento.";
+
+    if (related.length < limit && currentDpto) {
+      const remaining = limit - related.length;
+      const used = new Set(related.map((p) => p.slug));
+
+      const byDpto = base
+        .filter((p) => !used.has(p.slug))
+        .filter(
+          (p) => (p.ubicacion?.departamento?.toLowerCase?.() ?? "") === currentDpto
+        )
+        .slice(0, remaining);
+
+      related = [...related, ...byDpto];
+    }
+  }
+}
+
+const relatedWithCover = related.map((p) => ({
+  ...p,
+  coverUrl: resolveProjectAssetUrl(p.portada),
+}));
+---
+
+<RelatedProyectoReact
+  client:visible
+  title={title}
+  subtitle={subtitle}
+  projects={relatedWithCover}
+  backQuery={backQuery}
+/>
