@@ -1,0 +1,85 @@
+---
+import ServiciosSplitReact from "./ServiciosSplitReact";
+import serviciosRaw from "../../../data/servicios.json";
+import proyectosRaw from "../../../data/proyectos.json";
+
+import { getServiceImageByKey } from "../../../utils/serviciosImages";
+import { getProjectImageFromPath } from "../../../utils/proyectoImages";
+
+type ServicioJson = {
+  id: string;
+  title: string;
+  tagline: string;
+  items: string[];
+  imageKey: string;
+  projectsCtaLabel?: string;
+};
+
+type ProyectoJson = {
+  id: string;
+  slug: string;
+  nombre: string;
+  cliente?: string;
+  estado?: string;
+  servicios?: string[];
+  ubicacion?: {
+    departamento?: string;
+    provincia?: string;
+    distrito?: string;
+  };
+  portada?: string;
+  visible?: boolean;
+};
+
+const servicios = (serviciosRaw as ServicioJson[]).map((s) => {
+  const img = getServiceImageByKey(s.imageKey);
+  return {
+    id: s.id,
+    title: s.title,
+    tagline: s.tagline,
+    items: s.items,
+    imageSrc: img.src,
+    imageAlt: s.title,
+    projectsCtaLabel: s.projectsCtaLabel ?? "Ver proyectos",
+  };
+});
+
+const proyectos = (proyectosRaw as ProyectoJson[])
+  .filter((p) => p.visible !== false)
+  .map((p) => {
+    const cover = p.portada ? getProjectImageFromPath(p.portada) : null;
+    return {
+      id: p.id,
+      slug: p.slug,
+      nombre: p.nombre,
+      cliente: p.cliente ?? "",
+      estado: p.estado ?? "",
+      servicios: p.servicios ?? [],
+      ubicacionText: p.ubicacion
+        ? [p.ubicacion.distrito, p.ubicacion.provincia, p.ubicacion.departamento].filter(Boolean).join(", ")
+        : "",
+      coverSrc: cover?.src ?? "",
+    };
+  });
+
+// indexa proyectos por servicio (top 3)
+const projectsByService: Record<string, any[]> = {};
+for (const s of servicios) {
+  projectsByService[s.id] = proyectos
+    .filter((p) => p.servicios.includes(s.id))
+    .slice(0, 3);
+}
+---
+
+<section class="section services-split" id="servicios">
+  <div class="container">
+    
+
+    <ServiciosSplitReact
+      client:visible
+      services={servicios}
+      projectsByService={projectsByService}
+      projectsBaseHref="/proyectos"
+    />
+  </div>
+</section>

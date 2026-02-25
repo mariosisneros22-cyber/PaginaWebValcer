@@ -1,0 +1,259 @@
+/* src/components/sections/servicios/servicios-split.css */
+
+.services-head {
+  margin-bottom: var(--spacing-md);
+}
+
+.services-lead {
+  color: var(--color-text-light);
+  max-width: 70ch;
+}
+
+/* Layout */
+.services-split__layout {
+  display: grid;
+  grid-template-columns: minmax(250px, 360px) 1fr;
+  gap: clamp(10px, 1.6vw, 18px);
+  align-items: stretch;
+}
+
+/* Left: selector tipográfico (sin cards, sin bordes) */
+.services-split__left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+
+.services-split__right {
+  height: 100%;
+  min-height: 0; 
+}
+
+/* botón como texto grande */
+.services-split__tab {
+  position: relative;
+  width: 100%;
+  text-align: left;
+
+  border: 0;
+  background: transparent;
+  padding: 8px 0;
+
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.services-split__tab:hover {
+  transform: translateY(-1px);
+}
+
+/* foco accesible sin “caja” */
+.services-split__tab:focus-visible {
+  outline: 3px solid rgba(44, 118, 255, 0.30);
+  outline-offset: 6px;
+  border-radius: 10px;
+}
+
+.services-split__tabTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  /* estándar primero */
+  line-clamp: 2;
+
+  /* prefijo para navegadores actuales */
+  -webkit-line-clamp: 2;
+
+  overflow: hidden;
+
+  font-weight: 750;
+  font-size: clamp(1.4rem, 1.75vw, 2.1rem);
+  line-height: 1.1; 
+
+  color: rgba(50, 56, 80, 0.55);
+  transition: color var(--transition-fast);
+}
+
+.services-line {  
+  display: inline;
+}
+/* meta opcional (pequeño) */
+.services-split__tabMeta {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--text-sm);
+  color: var(--color-text-lighter);
+}
+
+/* estado activo: color fuerte + subrayado/barra */
+.services-split__tab.is-active .services-split__tabTitle {
+  color: var(--color-primary);
+}
+
+/* barra Derecha para activo (muy “pro”) */
+.services-split__tab.is-active::before {
+  content: "";
+  position: absolute;
+  right: 15px;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  border-radius: 0px;
+  background: var(--color-secondary);
+}
+
+/* al hover, aunque no esté activo, que se “encienda” */
+.services-split__tab:hover .services-split__tabTitle {
+  color: rgba(50, 56, 80, 0.85);
+}
+
+/* Right panel */
+
+/* Right panel wrapper */
+.services-split__right{
+  height: 100%;
+  min-height: 0;
+}
+
+/* Panel: 2 columnas (imagen | contenido) */
+.services-panel{
+  height: clamp(420px, 60vh, 620px);
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 42% 58%;
+  overflow: hidden;
+
+  border: 1px groove;
+  border-radius: 10px;
+  background: var(--color-background);
+}
+
+/* Media */
+.services-panel__media{
+  height: 100%;
+  min-height: 0;
+}
+
+.services-panel__media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content: 3 zonas (base | body | footer fijo) */
+.services-panel__content{
+  height: 100%;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
+
+  padding: var(--spacing-md);
+  color: var(--color-text);
+}
+
+/* Base */
+.services-panel__title{
+  color: var(--color-primary);
+  margin: 0 0 6px 0;
+}
+
+.services-panel__tagline{
+  color: var(--color-text-light);
+  margin: 0;
+  max-width: 60ch;
+
+  font-weight: bold;
+  font-size: 25px;
+  line-height: 1.5;
+}
+
+/* Lista estable */
+.services-panel__list{
+  margin: 0 0 12px 18px;
+  padding: 0;
+  color: var(--color-text);
+
+  /* ✅ más grande */
+  font-size: 17.5px;
+  line-height: 1.7;
+
+  /* si subes el font-size, ajusta la reserva de altura */
+  min-height: calc(1.7em * 6);
+}
+/* Body scrollable (aquí vive lo variable) */
+.services-panel__body{
+  min-height: 0;
+  overflow: auto;
+  padding-right: 6px; /* reduce “jump” por scrollbar */
+}
+
+/* Related estable */
+.services-panel__relatedTitle{
+  margin: 0 0 10px 0;
+  color: var(--color-primary);
+  font-weight: 650;
+  font-size: var(--text-sm);
+}
+
+.services-panel__related.is-empty .services-panel__relatedGrid{
+  display: none;
+}
+
+.services-panel__related.is-empty{
+  min-height: 70px; /* reserva mínima */
+}
+
+/* Footer fijo abajo */
+
+
+.services-panel__ctaRow{
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Botón outline */
+.services-btn-outline{
+  background: transparent;
+  border: 1px solid rgba(0,0,0,.25);
+  color: var(--color-primary);
+}
+
+.services-btn-outline:hover{
+  border-color: rgba(0,0,0,.45);
+}
+/* Responsive */
+@media (max-width: 900px){
+  .services-split__layout{
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .services-panel{
+    grid-template-columns: 1fr;
+    grid-template-rows: 220px auto; /* imagen arriba */
+    height: auto;
+    min-height: 0;
+  }
+
+  .services-panel__content{
+    height: auto;
+  }
+
+  .services-panel__body{
+    overflow: visible; /* en móvil, mejor sin scroll interno */
+    padding-right: 0;
+  }
+
+  .services-panel__list{
+    min-height: 0; /* no reserves altura en móvil */
+  }
+}

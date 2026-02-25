@@ -1,0 +1,29 @@
+[
+  {
+    "id": "iso-9001",
+    "number": "9001",
+    "title": "Sistema de Gestión de Calidad",
+    "scope": "Ejecución y supervisión de obras civiles y servicios asociados.",
+    "status": "vigente",
+    "year": 2024,
+    "certificate": null
+  },
+  {
+    "id": "iso-14001",
+    "number": "14001",
+    "title": "Sistema de Gestión Ambiental",
+    "scope": "Control y gestión ambiental en proyectos, operaciones y mantenimiento.",
+    "status": "vigente",
+    "year": 2024,
+    "certificate": null
+  },
+  {
+    "id": "iso-45001",
+    "number": "45001",
+    "title": "Seguridad y Salud en el Trabajo",
+    "scope": "Gestión de SST para operaciones en obra, planta y minería.",
+    "status": "vigente",
+    "year": 2024,
+    "certificate": null
+  }
+]

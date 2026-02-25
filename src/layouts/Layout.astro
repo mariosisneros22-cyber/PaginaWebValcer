@@ -36,8 +36,10 @@ const { title, heroTitle, heroImage, disableHero } = Astro.props;
     
     <main transition:animate="initial">
     <!--<main transition:animate="slide">   Opcional: animación al cambiar -->
-      <slot />
+    <slot />  
+    
     </main>
+    
     <Footer />
   </body>
 </html>

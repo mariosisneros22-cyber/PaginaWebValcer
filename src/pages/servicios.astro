@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import servicioHero from '../assets/images/servicios/servicioHero.jpg';
 
+import ServiciosSplit from "../components/sections/servicios/ServiciosSplit.astro";
+
 ---
 
 <Layout title="Valcer - Servicios"
@@ -9,8 +11,13 @@ import servicioHero from '../assets/images/servicios/servicioHero.jpg';
   heroImage={servicioHero} 
 >
   <!-- Resto del contenido -->
+  <div class="container">
+      <h1 class="services-lead">
+        Líneas de negocio integradas para infraestructura, ingeniería, operación y soporte de obra.
+      </p>
+  </div>
 
-  
+  <ServiciosSplit / >
 
 
 </Layout>
