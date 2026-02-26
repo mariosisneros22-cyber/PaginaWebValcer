@@ -11,9 +11,10 @@ type Props = {
   href?: string;              // opcional: si quieres que toda la card navegue
   className?: string;
   children?: React.ReactNode; // acciones
+  showServicios?:boolean;
 };
 
-export default function ProyectoCardView({ project, href, className, children }: Props) {
+export default function ProyectoCardView({ project, href, className, children, showServicios=true }: Props) {
   const cls = `project-card${className ? ` ${className}` : ""}`;
   const estadoKey = estadoToKey(project.estado);  
   const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
@@ -42,13 +43,16 @@ export default function ProyectoCardView({ project, href, className, children }:
             {formatEstadoLabel(estadoKey)}
           </span>
 
-          {(project.servicios ?? []).slice(0, 2).map((s, i) => (
-            <span className="tech-badge" key={`${s}-${i}`}>
-              {formatSimpleLabel(s)}
-            </span>
-          ))}
-
-          {extra > 0 ? <span className="tag">+{extra}</span> : null}
+          {showServicios && (
+            <>
+              {(project.servicios ?? []).slice(0, 2).map((s, i) => (
+                <span className="tech-badge" key={`${s}-${i}`}>
+                  {formatSimpleLabel(s)}
+                </span>
+              ))}
+              {extra > 0 ? <span className="tag">+{extra}</span> : null}
+            </>
+          )}
         </div>
         {children ? <div className="cardActions">{children}</div> : null}
       </div>

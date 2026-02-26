@@ -12,7 +12,7 @@ type Props = {
   limit?: number;
   ids?: string[];        // ✅ ahora por id
   title?: string;
-  subtitle?: string;
+  subtitle?: string
 };
 
 const {
@@ -94,4 +94,6 @@ const relatedWithCover = related.map((p) => ({
   subtitle={subtitle}
   projects={relatedWithCover}
   backQuery={backQuery}
+  showHeader={!ids}
+  variant={ids?.length ? "mag" : "grid"}
 />

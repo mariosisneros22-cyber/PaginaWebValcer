@@ -23,7 +23,7 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
     title="Bienvenido a Valcer"
     subtitle="Tu empresa de confianza"
   />
-  <section class = "section">
+  <section class = "section-2">
     <div class = "container containerabout">
       <!--About us -->
       <div class ="about-us">
@@ -109,12 +109,16 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 
   <!-- Proyectos Destacados -->
   <section class="section-2">
-    <div class="container container-proyect">
+    <div class="container">
+      <div class="proyectos-ht">
+        <h2 class="proyectos-titulo">Proyectos destacados</h2>
+        <Button href="/proyectos">Leer más</Button>
+      </div>
+
       <RelatedProyecto
-          ids={["proj_001", "proj_002", "proj_005","proj_004"]}
-          limit={4}
-        />
-      <Button href="/proyectos">Leer más</Button>
+        ids={["proj_001", "proj_002", "proj_005", "proj_004"]}
+        limit={4}
+      />
     </div>
   </section>
 
@@ -339,13 +343,20 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   }
 
   .proyectos-titulo {
-    margin: 0;
+    margin: -0.5rem;
+    letter-spacing: -0.5px;
+    font-size: var(--text-3xl);
+    font-weight: 600;
   }
 
   /* Clientes */
   .clientes-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
+    letter-spacing: -0.5px;
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    
   }
 
   @media (prefers-reduced-motion: reduce) {
