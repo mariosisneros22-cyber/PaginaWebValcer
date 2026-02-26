@@ -1,4 +1,5 @@
 ---
+import Button from '../../ui/button.astro';
 interface Slider {
   title: string;
   content: string;
@@ -16,6 +17,7 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
 <div class="about-slider-fade" data-slider={sliderId}>
+  
   <div class="cards-container">
     {slider.map((slide, index) => (
       <div 
@@ -44,7 +46,10 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
       </div>
     ))}
   </div>
-  
+  <div class="Button-slide">
+    <Button  href="/nosotros">Leer más</Button>
+  </div>
+
   <div class="slider-controls">
     <div class="slider-indicators" role="tablist" aria-label="Slider navigation">
       {slider.map((_, index) => (
@@ -61,6 +66,12 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
 </div>
 
 <style>
+  .Button-slide{
+    display: flex;
+    justify-content: center;
+    
+  }
+  
   .about-slider-fade {
     width: 100%;
   }
@@ -77,9 +88,10 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.6s ease-in-out, visibility 0s 0.6s;
-    background: #ffffff;
+    background: var(--color-background-light);
+    border-radius: 12px;
     padding: 2.5rem;
-    box-shadow: 0px 10px 5px -5px rgba(0,0,0,0.05);
+    box-shadow: 0px 15px 40px rgba(0,0,0,0.05);
     pointer-events: none;
     will-change: opacity;
   }
@@ -101,7 +113,7 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   .slider-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
   .slider-metric {

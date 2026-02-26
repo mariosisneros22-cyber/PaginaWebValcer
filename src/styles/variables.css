@@ -25,10 +25,11 @@
   --text-xl: clamp(1.2rem, 4vw, 1.5rem);        /* Extra grande */
   --text-2xl: clamp(1.5rem, 5vw, 2.5rem);       /* 2XL */
   --text-3xl: clamp(2rem, 6vw, 3.5rem);         /* 3XL */
+  --text-4xl: clamp(2.5rem, 7vw, 4.5rem);         /* 3XL */
   
   /* 🎨 FUENTE - AQUÍ CAMBIAS EL TIPO DE LETRA */
-  --font-primary: 'Inter', 'Roboto', system-ui, '-apple-system', 'sans-serif';
-  --font-secondary: 'Poppins', 'Montserrat', 'sans-serif';
+  --font-primary: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-secondary: 'Manrope', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Consolas', monospace;
   
   /* Anchos */

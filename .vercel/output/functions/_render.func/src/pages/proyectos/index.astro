@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import proyectoHero from "../../assets/images/proyecto/proyectoHero.jpg";
+
+import ProyectoExplorerReact from "../../components/sections/proyectos/react/ProyectoExplorerReact.tsx";
+
+import { resolveProjectAssetUrl } from "../../components/sections/proyectos/utils/images.server";
+import proyectos from "../../data/proyectos.json";
+import { assertValidProjects } from "../../lib/projects";
+
+assertValidProjects(proyectos);
+
+const projectsWithCover = proyectos.map((p) => ({
+  ...p,
+  coverUrl: resolveProjectAssetUrl(p.portada),
+}));
+---
+
+<Layout title="Valcer - Proyectos" heroTitle="Proyectos" heroImage={proyectoHero}>
+  <ProyectoExplorerReact client:idle projects={projectsWithCover} />
+</Layout>

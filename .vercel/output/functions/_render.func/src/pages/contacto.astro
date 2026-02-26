@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import contactoHero from '../assets/images/contacto/contactoHero.jpg';
+
+
+import ContactForm from '../components/sections/contacto/ContactForm.astro';
+import ContactInfo from '../components/sections/contacto/ContactInfo.astro';
+import ContactMap from '../components/sections/contacto/ContactMap.astro';
+
+---
+
+<Layout 
+  title="Valcer - Contacto"
+  heroTitle="Contacto" 
+  heroImage={contactoHero} 
+>
+
+
+<section class="section">
+  <div class="container">
+    <p class = "contact-intro__text">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container contact-grid">
+    <ContactForm />
+    <ContactInfo />
+    <div class="map-full">
+      <ContactMap />
+    </div>
+  </div>
+</section>
+  <!-- Resto del contenido -->
+</Layout>
+
+<style>
+
+  .contact-intro__text {
+    text-align: center;
+    padding: 4rem 0 2rem 0;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .map-full {
+    grid-column: 1 / -1; /* ✅ ocupa todo el ancho del grid */
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

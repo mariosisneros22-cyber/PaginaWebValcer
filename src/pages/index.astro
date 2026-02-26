@@ -27,16 +27,18 @@ import { clients } from "../utils/clients";
       <!--About us -->
       <div class ="about-us">
         <div class="about-us-content">
-          <h2>Sobre Nosotros</h2>
+          <h1>Sobre Nosotros</h1>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <Button href="/nosotros">Leer más</Button>
+          
         </div>
+        
         <div class = "about-us-image"> 
           <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
         </div>
       </div>
-
       <Slider slider={infoSliders} />
+
+     
     </div>
   </section>
 
@@ -139,8 +141,8 @@ import { clients } from "../utils/clients";
     min-width: 0;
   }
 
-  .about-us-content h2 {
-    font-size: var(--text-2xl);
+  .about-us-content h1 {
+    font-size: var(--text-3xl);
     margin-bottom: var(--spacing-md);
   }
 
@@ -148,6 +150,7 @@ import { clients } from "../utils/clients";
     line-height: 1.6;
     color: #555;
     margin-bottom: var(--spacing-md);
+    line-height: 2;
   }
 
   .about-us-image {

@@ -4,7 +4,8 @@ import servicioHero from '../assets/images/servicios/servicioHero.jpg';
 
 import ServiciosSplit from "../components/sections/servicios/ServiciosSplit.astro";
 import IsoGrid from "../components/sections/servicios/IsoGrid.astro";
-
+ 
+import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 ---
 
 <Layout title="Valcer - Servicios"
@@ -12,11 +13,7 @@ import IsoGrid from "../components/sections/servicios/IsoGrid.astro";
   heroImage={servicioHero} 
 >
   <!-- Resto del contenido -->
-  <div class="container">
-      <h1 class="services-lead">
-        Líneas de negocio integradas para infraestructura, ingeniería, operación y soporte de obra.
-      </p>
-  </div>
+  <ServiceIntro/>
 
   <ServiciosSplit />
 
