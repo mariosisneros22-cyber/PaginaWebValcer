@@ -1,12 +1,13 @@
 :root {
   /* Colores */
   --color-primary: #323850;
-  --color-primary-dark: #2690f3;
-  --color-secondary: #2c76ff;
+  --color-primary-dark: #0044ff;
+  --color-secondary: #79a5f5;
   --color-text: #333;
   --color-text-light: #666;
   --color-text-lighter: #999;
   --color-background: #ffffff;
+  --color-background-2: #38c0ff;
   --color-background-light: #f8f9fa;
   --color-border: #cfcfcf;
   
@@ -21,6 +22,7 @@
   --text-xs: clamp(0.7rem, 1.5vw, 0.8rem);      /* Más pequeño */
   --text-sm: clamp(0.8rem, 2vw, 0.9rem);        /* Pequeño */
   --text-base: clamp(0.9rem, 2.5vw, 1rem);      /* Base - reducido */
+  --text-md: clamp(0.95rem, 2.8vw, 1.1rem);
   --text-lg: clamp(1rem, 3vw, 1.2rem);          /* Grande */
   --text-xl: clamp(1.2rem, 4vw, 1.5rem);        /* Extra grande */
   --text-2xl: clamp(1.5rem, 5vw, 2.5rem);       /* 2XL */

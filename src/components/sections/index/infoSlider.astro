@@ -69,7 +69,7 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   .Button-slide{
     display: flex;
     justify-content: center;
-    
+    margin-top: var(--spacing-sm);
   }
   
   .about-slider-fade {
@@ -80,27 +80,57 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
     position: relative;
     min-height: 250px;
     contain: layout style paint;
+    overflow: hidden;
   }
 
-  .about-card {
+ .about-card{
     position: absolute;
     inset: 0;
+
+    color: white;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.6s ease-in-out, visibility 0s 0.6s;
-    background: var(--color-background-light);
+    pointer-events: none;
+
+    background: var(--color-secondary);
     border-radius: 12px;
     padding: 2.5rem;
     box-shadow: 0px 15px 40px rgba(0,0,0,0.05);
-    pointer-events: none;
-    will-change: opacity;
+
+    /* ✅ movimiento corto (menos brusco) */
+    transform: translate3d(18px, 0, 0) scale(0.997);
+
+    transition:
+      opacity 1400ms ease-in-out,
+      transform 1400ms ease-in-out,
+      visibility 0s 1400ms;
+
+    will-change: opacity, transform;
   }
 
-  .about-card.active {
+  .about-card.active{
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.6s ease-in-out, visibility 0s 0s;
     pointer-events: auto;
+
+    transform: translate3d(0,0,0) scale(1);
+
+    transition:
+      opacity 1400ms ease-in-out,
+      transform 1400ms ease-in-out,
+      visibility 0s 0s;
+  }
+
+  .about-card.leaving{
+    opacity: 0;
+    visibility: visible;
+    pointer-events: none;
+
+    transform: translate3d(-18px, 0, 0) scale(0.997);
+
+    transition:
+      opacity 1400ms ease-in-out,
+      transform 1400ms ease-in-out;
   }
 
   .slider-layout {
@@ -113,33 +143,35 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   .slider-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    
   }
 
   .slider-metric {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
-    color: var(--color-primary);
     line-height: 1;
   }
 
   .slider-content h3 {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
-    font-weight: 600;
+    font-weight: bold;
     margin: 0;
+    text-transform: uppercase;
+
   }
 
   .slider-content p {
-    font-size: 1rem;
-    color: #666;
+    font-size: var(--text-md);
+    font-weight: 500;
     line-height: 1.6;
     margin: 0;
   }
 
   .slider-icon {
-    width: 96px;
-    height: 96px;
+    width: 150px;
+    height: 150px;
     flex-shrink: 0;
+    filter: brightness(0) invert(1);
   }
 
   .slider-icon img {
@@ -239,18 +271,32 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
     if (totalCards === 0) return;
 
     function showCard(index) {
-      // Validar índice
       if (index < 0 || index >= totalCards) return;
 
-      cards.forEach(card => card.classList.remove('active'));
+      const prev = cards[currentCard];
+      const next = cards[index];
+
+      if (prev && prev !== next) {
+        prev.classList.remove('active');
+        prev.classList.add('leaving');
+
+        // al terminar la animación, ocultar del todo
+        window.setTimeout(() => {
+          prev.classList.remove('leaving');
+        }, 1400);
+      }
+
       indicators.forEach(ind => {
         ind.classList.remove('active');
         ind.setAttribute('aria-selected', 'false');
       });
-      
-      cards[index].classList.add('active');
+
+      next.classList.add('active');
+      next.classList.remove('leaving');
+
       indicators[index].classList.add('active');
       indicators[index].setAttribute('aria-selected', 'true');
+
       currentCard = index;
     }
 

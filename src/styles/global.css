@@ -85,11 +85,12 @@ a:hover {
 
 .section {
   padding: var(--spacing-lg) 0;
+  background: var(--color-background);
 }
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background: #d5e3ff;
+  background: var(--color-background-2);
 }
 
 

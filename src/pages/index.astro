@@ -23,7 +23,7 @@ import { clients } from "../utils/clients";
     subtitle="Tu empresa de confianza"
   />
   <section class = "section">
-    <div class = "container">
+    <div class = "container containerabout">
       <!--About us -->
       <div class ="about-us">
         <div class="about-us-content">
@@ -36,9 +36,9 @@ import { clients } from "../utils/clients";
           <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
         </div>
       </div>
+
       <Slider slider={infoSliders} />
 
-     
     </div>
   </section>
 
@@ -125,6 +125,12 @@ import { clients } from "../utils/clients";
 
 <style>
   /* about us */
+  .containerabout{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
   .about-us {
     display: flex;
     align-items: stretch;
@@ -151,6 +157,7 @@ import { clients } from "../utils/clients";
     color: #555;
     margin-bottom: var(--spacing-md);
     line-height: 2;
+    font-size: var(--text-lg);
   }
 
   .about-us-image {
