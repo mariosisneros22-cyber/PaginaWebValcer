@@ -1,12 +1,19 @@
 ---
+import Button from '../../ui/button.astro';
 interface Props {
   title?: string;
   description?: string;
+
+  buttonHref?: string;
+  buttonLabel?: string;
 }
 
 const { 
   title = "Soluciones Integrales para tu Proyecto",
-  description = "En Valcer, ofrecemos servicios especializados que combinan experiencia de más de 15 años, estándares internacionales de calidad y un equipo dedicado a tu éxito."
+  description = "En Valcer, ofrecemos servicios especializados que combinan experiencia de más de 15 años, estándares internacionales de calidad y un equipo dedicado a tu éxito.",
+
+  buttonHref,
+  buttonLabel = "Ver nuestros servicios",
 } = Astro.props;
 
 const advantages = [
@@ -33,7 +40,7 @@ const advantages = [
 ];
 ---
 
-<section class="section section-accent">
+<section class="section ">
   <div class="container">
     <div class="intro-header">
       <h1 class="intro-title">{title}</h1>
@@ -53,7 +60,12 @@ const advantages = [
     <div class="intro-cta">
       <p>Cada proyecto es único. Contamos con soluciones personalizadas para tus necesidades específicas.</p>
     </div>
-  </div>
+
+    {buttonHref && (
+      <div class="button-mid">
+        <Button href={buttonHref}>{buttonLabel}</Button>
+      </div>
+    )}
 </section>
 
 <style>

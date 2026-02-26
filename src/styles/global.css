@@ -271,3 +271,10 @@ img {
   background: rgba(0,0,0,.06);
   color: rgba(0,0,0,.75);
 }
+
+
+ .button-mid{
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-sm);
+  }
