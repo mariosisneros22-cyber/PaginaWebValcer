@@ -41,7 +41,6 @@ const LAYER_CLUSTER_COUNT = "cluster-count";
 const LAYER_POINTS = "unclustered";
 
 
-
 type FeatureProps = {
   id: string;
   nombre: string;
@@ -621,11 +620,11 @@ export default function ProyectoExplorer({ projects }: Props) {
                   project={p}
                   className={p.id === selectedId ? "isActive" : ""}
                 >
-                  <button type="button" className="seeOnMap" onClick={() => flyToProject(p)}>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => flyToProject(p)}>
                     Ver en mapa
                   </button>
 
-                  <a className="seeProject" href={`/proyectos/${p.slug}${queryString}`} >
+                  <a className="btn btn-primary btn-sm" href={`/proyectos/${p.slug}${queryString}`} >
                     Ver proyecto
                   </a>
                 </ProyectoCardView>
