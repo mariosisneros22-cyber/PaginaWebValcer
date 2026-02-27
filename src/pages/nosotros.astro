@@ -8,245 +8,73 @@ import Mvv from '../components/sections/nosotros/mvv.astro'
 
 import nosotrosHero from '../assets/images/nosotros/nosotrosHero.jpg';
 
-
-import {valPilar} from '../utils/valores.ts';
+import { valPilar } from '../utils/valores.ts';
 import { heroImages } from '../utils/indexImage';
+
+import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
 ---
 
-<Layout title="Valcer - Nosotros"
-  heroTitle= "Nosotros" 
-  heroImage={nosotrosHero} 
->
-  <!--Quienes somos-->
-  <section class="section section-who">
-    <div class="container who-grid">
-      <div class="who-content">
-        <h2>Quiénes somos</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-        </p>
+<Layout title="Valcer - Nosotros" heroTitle="Nosotros" heroImage={nosotrosHero}>
+  <!-- Quienes somos -->
+  <NosotrosSplit
+    title="Quiénes somos"
+    lead="Más de X años ejecutando proyectos con estándares técnicos y compromiso profesional."
+    paragraphs={[
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+    ]}
+    images={heroImages}
+  />
 
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur.
-        </p>  
-      
-      </div>
-
-      <div class="who-video youtube-video" data-video-id="PmRv-3-tUwA">
-        <div class="youtube-overlay ">   
-        ▶
-        </div>  
-      </div>
-      
-
-
-    </div>
-  </section>
-
-
-
-  <!--Pilares empresa-->
+  <!-- Pilares empresa -->
   <section class="section-2">
     <div class="container">
       <h2>Nuestros pilares</h2>
-        <div class="pillars-grid">
-          {valPilar.map((pillar) => (<Pilar {...pillar} />
-          ))}
-        </div>
+      <div class="pillars-grid">
+        {valPilar.map((pillar) => (<Pilar {...pillar} />))}
+      </div>
     </div>
   </section>
 
-
-  <!--Mision vision y valores-->
-
+  <!-- Mision vision y valores -->
   <Mvv
     mediaImage={nosotrosHero}
     mediaAlt="Ejecución de obra de Valcer"
     mediaSide="left"
-    mission={{
-      title: "Misión",
-      body:
-        "es brindar servicios de ejecución, supervisión y consultoría en obras civiles y de esta manera podamos satisfacer las necesidades de nuestros clientes entregando un servicio de calidad bajo las normas y leyes vigentes, propiciando un ambiente de trabajo seguro. \nApoyados con tecnología renovada, asegurando la protección de la integridad física de nuestros trabajadores, protegiendo el medio ambiente, trabajando dentro de un marco de ética; buscando la mejora continua y cumpliendo con la responsabilidad corporativa empresarial.",
-    }}
-    vision={{
-      title: "Visión",
-      body:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    }}
-    values={{
-      title: "Valores",
-      items: [
-        {
-          label: "Responsabilidad",
-          desc: "Cumplimos plazos y estándares.",
-          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>`,
-        },
-        {
-          label: "Compromiso",
-          desc: "Acompañamiento de inicio a fin.",
-          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg>`,
-        },
-        {
-          label: "Transparencia",
-          desc: "Información clara y trazable.",
-          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
-        },
-        {
-          label: "Trabajo en equipo",
-          desc: "Coordinación y comunicación constante.",
-          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3Z"/><path d="M8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Z"/><path d="M8 13c-2.21 0-4 1.79-4 4v2"/><path d="M16 13c2.21 0 4 1.79 4 4v2"/><path d="M12 12c1.66 0 3-1.34 3-3S13.66 6 12 6 9 7.34 9 9s1.34 3 3 3Z"/><path d="M12 14c-2.21 0-4 1.79-4 4v2h8v-2c0-2.21-1.79-4-4-4Z"/></svg>`,
-        },
-      ],
-    }}
+    mission={{ title: "Misión", body: "..." }}
+    vision={{ title: "Visión", body: "..." }}
+    values={{ title: "Valores", items: [/* ... */] }}
   />
 
-  <!--Equipo y experiencia-->
-  
   <Timeline />
 
-
-  <!-- Resto del contenido -->
+  <!-- CTA -->
   <section class="section-2">
     <div class="container cta-content">
-  
       <h2>¿Tienes un proyecto en mente?</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </p>
-
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <Button href="/contacto">CONTACTAR</Button>
-
-
     </div>
-    
   </section>
-
-
 </Layout>
 
 <style>
-  /*quienes somos section*/
-  .who-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch; 
-    gap: 3rem;
+  .pillars-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2rem;
+    position:relative;
+    overflow-x:hidden;
   }
 
-  .section-who h2 {
-    font-size: var(--text-2xl);
-    margin-bottom: 1.5rem;
+  .cta-content{
+    max-width:900px;
+    margin:0 auto;
+    text-align:center;
   }
-
-  .section-who p {
-    max-width: 720px;
-    line-height: 1.6;
-  }
-  /* video conf */
-
-
-  .who-video {
-    display: flex;
-  }
-
-  .video-start {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  /*youtube test*/
-  .youtube-video {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    cursor: pointer;
-  }
-
-  .youtube-overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: white;
-    font-size: 4rem;
-    background: rgba(0, 0, 0, 0.55);
-  }
-  /*Pilares*/
-
-  /* Grid: uno debajo del otro */
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    position: relative;
-    overflow-x: hidden;
-  }
-
-
-  /*Historia y trayectoria*/
-  .list {
-    margin-top: 1.5rem;
-    padding-left: 1.25rem;
-  }
-
-  .list li {
-    margin-bottom: 0.5rem;
-  }
-
-  /*Mision vision y valores*/
-  .section-highlight {
-    background: #f5f5f5;
-  }
-
-  .card {
-    padding: 2rem;
-    border: 1px solid #e5e5e5;
-  }
-
-
-  /*CTA*/
-
-  .cta-content {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-
-
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const el = document.querySelector('.youtube-video') as HTMLElement | null;
-    if (!el) return;
-
-    const id = el.dataset.videoId;
-    if (!id) return;
-
-    const handleClick = () => {
-      el.removeEventListener('click', handleClick);
-
-      el.innerHTML = `
-        <iframe
-
-          src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen
-          loading="lazy"
-          style="width:100%;height:100%;border:0"
-        ></iframe>
-      `;
-    };
-
-    el.addEventListener('click', handleClick);
-  });
-
-
   document.addEventListener('astro:page-load', () => {
     const pillars = document.querySelectorAll('.pillar');
     if (!pillars.length) return;
@@ -254,15 +82,15 @@ import { heroImages } from '../utils/indexImage';
     const observer = new IntersectionObserver(
       (entries, obs) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target as HTMLElement;
-            const index = [...pillars].indexOf(el);
+          if (!entry.isIntersecting) return;
 
-            el.style.transitionDelay = `${index * 120}ms`;
-            el.classList.add('is-visible');
+          const el = entry.target as HTMLElement; // ✅ fix TS
+          const index = [...pillars].indexOf(el);
 
-            obs.unobserve(el); // cleanup
-          }
+          el.style.transitionDelay = `${index * 120}ms`;
+          el.classList.add('is-visible');
+
+          obs.unobserve(el);
         });
       },
       { threshold: 0.2 }

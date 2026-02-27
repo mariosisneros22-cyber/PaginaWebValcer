@@ -1,0 +1,104 @@
+---
+import Diagonal from './diagonal.astro';
+
+type Img = { src: string; alt?: string };
+
+interface Props {
+  title: string;
+  lead?: string;
+  paragraphs: string[];
+  images: Img[];
+}
+
+const { title, lead, paragraphs, images } = Astro.props;
+const imgs = (images ?? []).slice(0, 4);
+---
+
+<section class="section section-who">
+  <div class="container who-wrap">
+
+    <!-- Fila superior: 2 columnas -->
+    <div class="who-top">
+      <div class="who-top__left">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+
+      <div class="who-top__right">
+        <h2>{title}</h2>
+        {lead ? <p class="who-lead">{lead}</p> : null}
+      </div>
+    </div>
+
+    <!-- Fila inferior: imágenes a todo el ancho -->
+    <div class="who-bottom">
+      <Diagonal images={imgs} ratio="16/9" />
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .who-wrap{
+    display: grid;
+    gap: clamp(18px, 3vw, 28px);
+  }
+
+  /* Top: 2 columnas */
+  .who-top{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(22px, 4vw, 64px);
+    align-items: start;
+  }
+  .who-top__left{
+    font-size: var(--text-lg);
+    margin-top: 1rem;
+  }
+  .who-top__left,
+  .who-top__right{
+    min-width: 0;
+  }
+
+  .who-top__right{
+    text-align: right;
+
+  }
+  /* Tipografía */
+  .who-top__right h2{
+    font-size: var(--text-3xl);
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .who-lead{
+    font-size: var(--text-xl);
+    line-height: 1.6;
+    color: var(--color-text-light);
+    margin: 0;
+    max-width: 40ch;
+  }
+
+  .who-top__left p{
+    margin: 0 0 12px;
+    line-height: 1.7;
+    max-width: 75ch;
+  }
+
+  /* Bottom: imágenes full width */
+  .who-bottom{
+    width: 100%;
+  }
+
+  /* En móvil: apila título y texto */
+  @media (max-width: 900px){
+    .who-top{
+      grid-template-columns: 1fr;
+    }
+
+    /* si quieres que el título vaya primero en móvil */
+    .who-top__right{ order: -1; }
+  }
+
+
+</style>
+
