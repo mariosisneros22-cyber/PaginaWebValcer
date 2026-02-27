@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./servicios-split.css"
+
+
 
 type Service = {
   id: string;
@@ -40,89 +42,108 @@ export default function ServiciosSplitReact({
     [activeId, services]
   );
 
-  const related = projectsByService?.[active?.id ?? ""] ?? [];
-  const allHref = `${projectsBaseHref}?servicio=${encodeURIComponent(active?.id ?? "")}`;
+
+  const [animTick, setAnimTick] = useState(0);
+
+  useEffect(() => {
+    setAnimTick((x) => x + 1);
+  }, [activeId]);
+
+  useEffect(() => {
+  // Preload images once
+  const urls = (services ?? []).map((s) => s.imageSrc).filter(Boolean);
+  const imgs: HTMLImageElement[] = [];
+
+  urls.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+    imgs.push(img);
+  });
+
+  return () => {
+    // allow GC
+    imgs.length = 0;
+  };
+}, [services]);
+
 
   return (
-    <div className="services-split__layout">
-      {/* LEFT: selector */}
-      <div className="services-split__left" role="tablist" aria-label="Servicios">
+    <section className="services-folders">
+      {/* Tabs tipo archivador */}
+      <div className="container cnt-service">
+          <h2 className="services-title">Nuestros Servicios</h2>
+          <p className="services-subtitle">
+            Ingeniería y ejecución especializada para proyectos de alto impacto.
+          </p>
+      </div>
+
+      <div className="services-folders__tabs" role="tablist" aria-label="Servicios">
         {services.map((s) => {
           const selected = s.id === activeId;
           return (
             <button
               key={s.id}
               type="button"
-              className={`services-split__tab ${selected ? "is-active" : ""}`}
+              className={`services-folders__tab ${selected ? "is-active" : ""}`}
               role="tab"
               aria-selected={selected}
-              aria-controls={`panel-${s.id}`}
-              onClick={() => setActiveId(s.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setActiveId(s.id);
-                }
-              }}
+              aria-controls={`svc-panel-${s.id}`}
+              onClick={() => setActiveId(s.id)} // ✅ opcional: toggle (0 o 1 abierto)
             >
-              <h3 className="services-split__tabTitle">
-                {s.title.split("\n").map((line, i) => (
-                    <span key={i} className="services-line">
-                    {line}
-                    <br />
-                  </span>
-                ))}
-              </h3>
+              {s.title.replaceAll("\n", " ")}
             </button>
           );
         })}
       </div>
 
-      {/* RIGHT: panel */}
-      <div
-        id={`panel-${active?.id ?? ""}`}
-        className="services-split__right"
-        role="tabpanel"
-        aria-label={active?.title ?? "Servicio"}
-      >
-        <div className="services-panel">
-          <div className="services-panel__media" aria-hidden="true">
-            <img
-              src={active?.imageSrc ?? ""}
-              alt={active?.imageAlt ?? active?.title ?? "Servicio"}
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-
-          <div className="services-panel__content">
-            <div className="services-panel__base">
-              <p className="services-panel__tagline">{active?.tagline}</p>
+      {/* Panel */}
+      <div className="services-folders__panel">
+        {activeId ? (
+          <>
+            <div className="services-folders__media" data-anim={animTick} aria-hidden="true">
+              <img
+                src={active?.imageSrc ?? ""}
+                alt={active?.imageAlt ?? active?.title ?? "Servicio"}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
 
-            {/* BODY: zona variable (no mueve footer) */}
-            <div className="services-panel__body">
-              <ul className="services-panel__list">
+            <div
+              key={activeId}
+              id={`svc-panel-${active?.id ?? ""}`}
+              className="services-folders__content"
+              data-anim={animTick}
+              role="tabpanel"
+              aria-label={active?.title ?? "Servicio"}
+            >
+              <p className="services-folders__tagline">{active?.tagline}</p>
+
+              <ul className="services-folders__list">
                 {(active?.items ?? []).slice(0, 6).map((it) => (
                   <li key={it}>{it}</li>
                 ))}
               </ul>
-            </div>
 
-            {/* FOOTER: fijo abajo derecha */}
-            <div className="services-panel__footer">
-              <div className="services-panel__ctaRow">
-                <a className="btn btn-primary" href={allHref}>
+              <div className="services-folders__ctaRow">
+                <a
+                  className="btn btn-primary btn-sm"
+                  href={`${projectsBaseHref}?servicio=${encodeURIComponent(active?.id ?? "")}`}
+                >
                   {active?.projectsCtaLabel ?? "Ver proyectos"}
                 </a>
-                <a className="btn services-btn-outline" href="/contacto">
+                <a className="btn btn-sm services-btn-outline" href="/contacto">
                   Cotizar
                 </a>
               </div>
             </div>
+          </>
+        ) : (
+          <div className="services-folders__empty">
+            <p>Selecciona un servicio para ver el detalle.</p>
           </div>
-        </div>
+        )}
       </div>
-    </div>
+    </section>
   );
 }
