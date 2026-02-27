@@ -1,12 +1,15 @@
   /* src/components/sections/servicios/iso-grid.css */
 
-.iso-section {
-  /* opcional: separa visualmente de servicios */
-  background: var(--color-background-light);
-}
-
 .iso-head {
   margin-bottom: var(--spacing-md);
+  font-size: var(--text-2xl);
+  text-align: right;
+}
+
+.iso-head h2{
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  
 }
 
 .iso-lead {
@@ -20,7 +23,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   justify-content: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-lg);
 }
 /* Card */
 .iso-card {

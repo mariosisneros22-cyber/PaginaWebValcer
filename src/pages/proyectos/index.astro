@@ -3,8 +3,63 @@ import Layout from "../../layouts/Layout.astro";
 import proyectoHero from "../../assets/images/proyecto/proyectoHero.jpg";
 
 import ProyectoExplorer from "../../components/sections/proyectos/astro/ProyectoExplorer.astro";
+import Button from "../../components/ui/button.astro";
 ---
 
 <Layout title="Valcer - Proyectos" heroTitle="Proyectos" heroImage={proyectoHero}>
+
+  <section class="section-2">
+    <div class="container">
+      <h2 class="inp-t"> Construimos soluciones que transforman territorio e industria.</h2>
+      <p class="inp-p"> Más de 20 proyectos ejecutados en todo el país</p>
+    </div>
+  </section>
+
   <ProyectoExplorer />
+
+  <section class="section">
+    <div class="container">
+      <h2 class="fnp-t">¿Tienes un proyecto en mente?</h2>
+      <p class="fnp-p">Conversemos sobre cómo podemos ayudarte.</p>
+
+      <Button href="/contacto"> Conversemos </Button>
+
+    </div>
+    
+  </section>
 </Layout>
+
+<style>
+
+
+.section-2 .container, {
+  text-align: center;
+}
+.section .container{
+  margin-top: var(----spacing-lg);
+  text-align: center;
+}
+.inp-t, .fnp-t{
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.inp-p{
+  font-size: var(--text-2xl);
+  opacity: .8;
+  margin-bottom: 1.5rem;
+}
+
+.inp-t{
+  text-transform: uppercase;
+}
+.fnp-p{
+  font-size:var(--text-xl);
+}
+.section-2 .btn{
+  margin-top: 0.5rem;
+}
+
+</style>
+
