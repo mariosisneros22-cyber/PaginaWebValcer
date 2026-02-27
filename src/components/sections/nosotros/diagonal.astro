@@ -79,21 +79,18 @@ const imgs = (images ?? []).slice(0, 4);
 
   @media (max-width: 768px){
     .diag-lamellas{
-      height: auto;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      border: 0;
+      aspect-ratio: auto;
       overflow: visible;
-      background: transparent;
     }
+
     .lamella{
       aspect-ratio: 4/3;
       clip-path: none;
-      border-radius: 12px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.08);
+      border-radius: 10px; /* opcional */
     }
-    .lamella + .lamella{ box-shadow: none; }
   }
 </style>
 
