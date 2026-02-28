@@ -35,7 +35,14 @@ export default function ServiciosSplitReact({
   projectsBaseHref,
 }: Props) {
   const firstId = services?.[0]?.id ?? "";
-  const [activeId, setActiveId] = useState(firstId);
+
+  const getInitialTab = () => {
+    if (typeof window === "undefined") return firstId;
+    const tab = new URLSearchParams(window.location.search).get("tab") ?? "";
+    return services.some((s) => s.id === tab) ? tab : firstId;
+  };
+
+  const [activeId, setActiveId] = useState(getInitialTab);
 
   const active = useMemo(
     () => services.find((s) => s.id === activeId) ?? services[0],
@@ -44,6 +51,16 @@ export default function ServiciosSplitReact({
 
 
   const [animTick, setAnimTick] = useState(0);
+
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!activeId) return;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", activeId);
+    window.history.replaceState({}, "", url.toString());
+  }, [activeId]);
 
   useEffect(() => {
     setAnimTick((x) => x + 1);

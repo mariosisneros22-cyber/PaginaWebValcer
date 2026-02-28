@@ -1,95 +1,311 @@
-<footer class="footer">
+---
+import serviciosRaw from "../data/servicios.json";
+import proyectosRaw from "../data/proyectos.json";
+
+type Servicio = {
+  id: string;
+  title: string;
+};
+
+const servicios = (serviciosRaw as Servicio[]).map((s) => ({
+  id: s.id,
+  title: s.title.replace(/\s*\n\s*/g, " "),
+}));
+
+const totalProyectos = (proyectosRaw as unknown[]).length;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" aria-labelledby="footer-title">
   <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Valcer</h3>
-        <p>Tu empresa de confianza</p>
+    <section class="footer-cta" aria-label="Llamado a la accion">
+      <div>
+        <h2 id="footer-title">Listos para ejecutar tu proximo proyecto</h2>
+        <p>Conversemos sobre alcance, plazos y enfoque tecnico.</p>
       </div>
-      
-      <div class="footer-section">
+      <a class="btn-footer" href="/contacto">Conversemos</a>
+    </section>
+
+    <div class="footer-grid">
+      <section class="footer-col">
+        <h3>Valcer</h3>
+        <p>
+          Ejecucion, supervision y consultoria para obras civiles e infraestructura
+          con estandares de calidad y seguridad.
+        </p>
+        <ul class="footer-kpis" aria-label="Indicadores">
+          <li><strong>{totalProyectos}+</strong> proyectos</li>
+          <li><strong>{servicios.length}</strong> lineas de servicio</li>
+        </ul>
+      </section>
+
+      <nav class="footer-col" aria-label="Enlaces principales">
         <h4>Enlaces</h4>
         <ul class="footer-links">
           <li><a href="/">Inicio</a></li>
           <li><a href="/proyectos">Proyectos</a></li>
           <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/nosotros">Nosotros</a></li>
           <li><a href="/contacto">Contacto</a></li>
         </ul>
-      </div>
-      
-      <div class="footer-section">
+      </nav>
+
+      <section class="footer-col" aria-label="Servicios">
+        <h4>Servicios</h4>
+        <ul class="footer-links">
+          {servicios.map((s) => (
+            <li><a href={`/servicios?tab=${encodeURIComponent(s.id)}#servicios`}>{s.title}</a></li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="footer-col" aria-label="Politicas">
+        <h4>Politicas</h4>
+        <ul class="footer-links">
+          <li>
+            <a href="/docs/politicas.pdf" target="_blank" rel="noopener noreferrer">
+              Politicas (PDF)
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <address class="footer-col footer-contact" aria-label="Datos de contacto">
         <h4>Contacto</h4>
-        <p>Email: info@valcer.com</p>
-        <p>Tel: +51 123 456 789</p>
-      </div>
+        <p><span>Email:</span> <a href="mailto:contacto@valcer.com">contacto@valcer.com</a></p>
+        <p><span>Telefono:</span> <a href="tel:+51123456789">+51 123 456 789</a></p>
+        <p><span>Horario:</span> Lun - Vie, 9:00 a 18:00</p>
+      </address>
     </div>
-    
+
     <div class="footer-bottom">
-      <p>&copy; 2026 Valcer. Todos los derechos reservados.</p>
+      <p>&copy; {year} Valcer. Todos los derechos reservados.</p>
+      <nav aria-label="Legal">
+        <a href="/privacidad">Privacidad</a>
+        <a href="/terminos">Terminos</a>
+      </nav>
     </div>
   </div>
 </footer>
 
 <style>
   .footer {
-    background: #2d3748;
-    color: white;
-    padding: var(--spacing-lg) 0 var(--spacing-md);
+    background: var(--color-primary);
+    color: #fff;
+    padding: var(--spacing-lg) 0 var(--spacing-sm);
+    margin-top: var(--spacing-lg);
   }
 
-  .footer-content {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-lg);
+  .footer-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
+    background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 14px;
   }
 
-  .footer-section h3,
-  .footer-section h4 {
-    color: white;
-    margin-bottom: var(--spacing-sm);
+  .footer-cta h2 {
+    margin: 0 0 .4rem;
+    font-size: var(--text-xl);
+    color: #fff;
+    line-height: 1.2;
   }
 
-  .footer-section p {
-    color: #a0aec0;
-    margin-bottom: var(--spacing-xs);
+  .footer-cta p {
+    margin: 0;
+    color: rgba(255,255,255,.85);
+  }
+
+  .btn-footer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .7rem 1.1rem;
+    background: #fff;
+    color: var(--color-primary);
+    border-radius: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .btn-footer:hover {
+    opacity: .92;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr 1.1fr;
+    gap: var(--spacing-md);
+  }
+
+  .footer-col h3,
+  .footer-col h4 {
+    margin: 0 0 1rem;
+    font-size: var(--text-md);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .footer-col h3::after,
+  .footer-col h4::after {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 2px;
+    margin-top: .45rem;
+    background: rgba(255,255,255,.45);
+  }
+
+  .footer-col p,
+  .footer-links a,
+  .footer-contact p {
+    font-size: var(--text-sm);
+    font-weight: 400;
+    line-height: 1.6;
+    color: rgba(255,255,255,.78);
+  }
+
+  .footer-col p {
+    margin: 0 0 .55rem;
+  }
+
+  .footer-kpis {
+    list-style: none;
+    padding: 0;
+    margin: .85rem 0 0;
+  }
+
+  .footer-kpis li {
+    margin-bottom: .35rem;
+    color: rgba(255,255,255,.88);
+    font-size: var(--text-sm);
+  }
+
+  .footer-kpis strong {
+    color: #fff;
+    font-weight: 800;
   }
 
   .footer-links {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   .footer-links li {
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: .5rem;
   }
 
   .footer-links a {
-    color: #a0aec0;
+    text-decoration: none;
     transition: color var(--transition-fast);
   }
 
   .footer-links a:hover {
-    color: white;
+    color: #fff;
+  }
+
+  .footer-contact {
+    font-style: normal;
+  }
+
+  .footer-contact span {
+    color: rgba(255,255,255,.62);
+    font-weight: 600;
+  }
+
+  .footer-contact a {
+    color: rgba(255,255,255,.92);
+    text-decoration: none;
   }
 
   .footer-bottom {
-    text-align: center;
-    padding-top: var(--spacing-md);
-    border-top: 1px solid #4a5568;
-    color: #718096;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid rgba(255,255,255,.24);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    flex-wrap: wrap;
   }
 
-  /* RESPONSIVE - Tablet y móvil */
+  .footer-bottom p {
+    margin: 0;
+    color: rgba(255,255,255,.72);
+    font-size: var(--text-sm);
+  }
+
+  .footer-bottom nav {
+    display: flex;
+    gap: .9rem;
+  }
+
+  .footer-bottom nav a {
+    color: rgba(255,255,255,.82);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  .footer-bottom nav a:hover {
+    color: #fff;
+  }
+
+  .footer a:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 1200px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   @media (max-width: 768px) {
-    .footer-content {
-      grid-template-columns: 1fr;
-      gap: var(--spacing-md);
-      text-align: center;
+    .footer-cta {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    .footer {
-      padding: var(--spacing-md) 0 var(--spacing-sm);
-      margin-top: var(--spacing-md);
+    .btn-footer {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-sm);
+    }
+
+    .footer-col:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .footer-col h3,
+    .footer-col h4 {
+      font-size: var(--text-base);
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>
