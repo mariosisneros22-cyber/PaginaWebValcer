@@ -1,5 +1,11 @@
-.related .head { margin-bottom: 14px; }
-.related .head h2 { margin: 0 0 6px; }
+.related .head { 
+  margin-bottom: 14px; 
+}
+.related .head h2 { 
+  margin: 0 0 6px; 
+  font-size: var(--text-xl);
+  font-weight: 750;
+}
 .related .head p { margin: 0; opacity: .75; }
 
 .related--mag .magGrid{
