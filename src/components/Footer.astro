@@ -30,8 +30,8 @@ const year = new Date().getFullYear();
       <section class="footer-col">
         <h3>Valcer</h3>
         <p>
-          Ejecucion, supervision y consultoria para obras civiles e infraestructura
-          con estandares de calidad y seguridad.
+          Ejecucion, supervision y consultoria para obras civiles e infraestructura con
+          estandares de calidad y seguridad.
         </p>
         <ul class="footer-kpis" aria-label="Indicadores">
           <li><strong>{totalProyectos}+</strong> proyectos</li>
@@ -54,7 +54,9 @@ const year = new Date().getFullYear();
         <h4>Servicios</h4>
         <ul class="footer-links">
           {servicios.map((s) => (
-            <li><a href={`/servicios?tab=${encodeURIComponent(s.id)}#servicios`}>{s.title}</a></li>
+            <li>
+              <a href={`/servicios?tab=${encodeURIComponent(s.id)}#servicios`}>{s.title}</a>
+            </li>
           ))}
         </ul>
       </section>
@@ -72,8 +74,18 @@ const year = new Date().getFullYear();
 
       <address class="footer-col footer-contact" aria-label="Datos de contacto">
         <h4>Contacto</h4>
-        <p><span>Email:</span> <a href="mailto:contacto@valcer.com">contacto@valcer.com</a></p>
-        <p><span>Telefono:</span> <a href="tel:+51123456789">+51 123 456 789</a></p>
+        <p>
+          <span>Email:</span>{" "}
+          <button type="button" class="copy-btn" data-copy="contacto@valcer.com">
+            contacto@valcer.com
+          </button>
+        </p>
+        <p>
+          <span>Telefono:</span>{" "}
+          <button type="button" class="copy-btn" data-copy="+51 123 456 789">
+            +51 123 456 789
+          </button>
+        </p>
         <p><span>Horario:</span> Lun - Vie, 9:00 a 18:00</p>
       </address>
     </div>
@@ -86,7 +98,11 @@ const year = new Date().getFullYear();
       </nav>
     </div>
   </div>
-</footer>
+
+  <div id="copy-toast" class="copy-toast" role="status" aria-live="polite">
+    Informacion Copiada
+  </div>
+</footer> 
 
 <style>
   .footer {
@@ -222,9 +238,21 @@ const year = new Date().getFullYear();
     font-weight: 600;
   }
 
-  .footer-contact a {
+  /* ✅ Botón copiar: estilo "link" en TODAS las resoluciones */
+  .copy-btn {
+    background: none;
+    border: 0;
     color: rgba(255,255,255,.92);
-    text-decoration: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    font: inherit;
+  }
+
+  .copy-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   .footer-bottom {
@@ -263,6 +291,36 @@ const year = new Date().getFullYear();
     outline: 2px solid #fff;
     outline-offset: 3px;
     border-radius: 4px;
+  }
+
+  /* ✅ Toast global */
+  .copy-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(15, 15, 15, 0.92);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+    z-index: 9999;
+  }
+
+  .copy-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-toast {
+      transition: none;
+    }
   }
 
   @media (max-width: 1200px) {
@@ -309,3 +367,57 @@ const year = new Date().getFullYear();
     }
   }
 </style>
+
+<script>
+  if (!window.__valcerCopyInit) {
+    window.__valcerCopyInit = true;
+
+    function showToast(message: string | null) {
+      const toast = document.getElementById("copy-toast");
+      if (!toast) return;
+
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+
+      if (window.__valcerToastTimer) {
+        clearTimeout(window.__valcerToastTimer);
+      }
+      window.__valcerToastTimer = window.setTimeout(() => {
+        toast.classList.remove("is-visible");
+      }, 1600);
+    }
+
+    async function copyText(text: string) {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+
+    document.addEventListener("click", async (e) => {
+      const el = e.target instanceof Element ? e.target : null;
+      const btn = el?.closest?.(".copy-btn");
+      if (!btn) return;
+
+      const text = btn.getAttribute("data-copy");
+      if (!text) return;
+
+      try {
+        await copyText(text);
+        showToast("Informacion Copiada");
+      } catch {
+        showToast("No se pudo copiar");
+      }
+    });
+  }
+</script>
