@@ -32,7 +32,7 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
 <section class="timeline-section" data-timeline style={`--n:${scenes.length}; --tail:0.6;`}>
   <div class="container">
     <header class="timeline-header">
-      <h2>Historia y trayectoria</h2>
+      <h2 class="timeline-title">Conoce nuestra historia y trayectoria</h2>
     </header>
 
     <div class="timeline-track" data-track>
@@ -55,6 +55,11 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
 <style>
   .timeline-track{ 
     height: calc((var(--n) + var(--tail,0)) * 100vh); 
+  }
+
+  .timeline-title{
+    font-size: var(--text-3xl);
+    font-weight: 700;
   }
 
   .timeline-stage{

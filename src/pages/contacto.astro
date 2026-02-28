@@ -16,14 +16,12 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
 >
 
 
-<section class="section">
   <div class="container">
     <p class = "contact-intro__text">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
   </div>
-</section>
 
 
 <section class="section">
@@ -43,10 +41,11 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
   .contact-intro__text {
     text-align: center;
     padding: 4rem 0 2rem 0;
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: var(--text-xl);
+    line-height: 1.8;
+    font-weight: 400;
   }
 
   .contact-grid {

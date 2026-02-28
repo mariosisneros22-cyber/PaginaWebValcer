@@ -3,12 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/ui/button.astro';
 
 import Timeline from '../components/sections/nosotros/timeline.astro'
-import Pilar from '../components/sections/nosotros/pilar.astro'
-import Mvv from '../components/sections/nosotros/mvv.astro'
+
+import Mvv from '../components/sections/nosotros/mv.astro'
 
 import nosotrosHero from '../assets/images/nosotros/nosotrosHero.jpg';
 
-import { valPilar } from '../utils/valores.ts';
+import ValoresZigZag from '../components/sections/nosotros/valoresZigZag.astro';
+import {valores} from '../utils/valores'
 import { heroImages } from '../utils/indexImage';
 
 import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
@@ -27,23 +28,22 @@ import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
   />
 
   <!-- Pilares empresa -->
-  <section class="section-2">
-    <div class="container">
-      <h2>Nuestros pilares</h2>
-      <div class="pillars-grid">
-        {valPilar.map((pillar) => (<Pilar {...pillar} />))}
-      </div>
-    </div>
-  </section>
+  <ValoresZigZag items={valores} />
 
   <!-- Mision vision y valores -->
   <Mvv
-    mediaImage={nosotrosHero}
-    mediaAlt="Ejecución de obra de Valcer"
-    mediaSide="left"
-    mission={{ title: "Misión", body: "..." }}
-    vision={{ title: "Visión", body: "..." }}
-    values={{ title: "Valores", items: [/* ... */] }}
+    title="Propósito y rumbo"
+    manifesto="Construimos infraestructura con seguridad y rigor técnico, para generar confianza hoy y desarrollo mañana."
+    leftTag="Propósito"
+    rightTag="Rumbo"
+    mission={{
+      title: "Cómo trabajamos",
+      body: "Brindar servicios de ejecución, supervisión y consultoría en obras civiles y de esta manera podamos satisfacer las necesidades de nuestros clientes entregando un servicio de calidad bajo las normas y leyes vigentes, propiciando un ambiente de trabajo seguro.",
+    }}
+    vision={{
+      title: "Hacia dónde vamos",
+      body: "Ser una empresa líder, y promotor en el desarrollo del país a nivel nacional ejecutando los mejores proyectos constructivos, aplicando los más altos estándares de calidad.",
+    }}
   />
 
   <Timeline />
@@ -60,42 +60,48 @@ import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
 
 <style>
   .pillars-grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:2rem;
-    position:relative;
-    overflow-x:hidden;
+    --overlap: 18px;
+    --cut: 44px;
+
+    display: grid;
+    gap: 0;
+    margin-top: 18px;
+
+    /* ✅ cinta centrada (no full container) */
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-content{
+    text-align: center;
   }
 
-  .cta-content{
-    max-width:900px;
-    margin:0 auto;
-    text-align:center;
+  .cta-content h2{
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+
+  .cta-content p{
+    font-size: var(--text-xl)
   }
 </style>
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const pillars = document.querySelectorAll('.pillar');
+    const pillars = document.querySelectorAll<HTMLElement>('.pillar');
     if (!pillars.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        const index = [...pillars].indexOf(el);
+        el.style.transitionDelay = `${index * 120}ms`;
+        el.classList.add('is-visible');
+        obs.unobserve(el);
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -10% 0px" });
 
-          const el = entry.target as HTMLElement; // ✅ fix TS
-          const index = [...pillars].indexOf(el);
-
-          el.style.transitionDelay = `${index * 120}ms`;
-          el.classList.add('is-visible');
-
-          obs.unobserve(el);
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    pillars.forEach((pillar) => observer.observe(pillar));
+    pillars.forEach((p) => observer.observe(p));
   });
 </script>
