@@ -2,41 +2,19 @@
 import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
-import RelatedProyectoReact from '../components/sections/proyectos/react/RelatedProyectoReact.tsx';
+import RelatedProyecto from '../components/sections/proyectos/astro/RelatedProyecto.astro';
 import Slider from '../components/sections/index/infoSlider.astro';
-import ServiceShowcase from '../components/sections/index/ServiceShowcase.astro';
+
 import SliderHero from '../components/sections/hero/sliderHero.astro';
 import Button from '../components/ui/button.astro';
 
 import Carrusel from '../components/sections/index/carrusel.astro';
 
-import { serviceTabs, heroImages, about, infoSliders } from '../data/homepage';
+import {serviceTabs} from '../utils/exportContent.ts'
+import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
 
 import { clients } from "../utils/clients";
-
-import { resolveProjectAssetUrl } from '../components/sections/proyectos/utils/images.server';
-import { getServiceImageByKey } from '../utils/serviciosImages';
-import proyectos from '../data/proyectos.json';
-import servicios from '../data/servicios.json';
-
-const getRelatedProjects = (ids: string[]) => {
-  return ids
-    .map(id => proyectos.find(p => p.id === id))
-    .filter((p): p is typeof proyectos[0] => p !== undefined)
-    .slice(0, 4)
-    .map(p => ({
-      ...p,
-      coverUrl: resolveProjectAssetUrl(p.portada),
-    }));
-};
-
-const relatedProjects = getRelatedProjects(["proj_001", "proj_002", "proj_005","proj_004"]);
-
-// Process servicios with images
-const serviciosWithImages = servicios.map((s: any) => ({
-  ...s,
-  imageSrc: getServiceImageByKey(s.imageKey).src,
-}));
+import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 ---
 
 <Layout title="Valcer - Inicio">
@@ -45,26 +23,28 @@ const serviciosWithImages = servicios.map((s: any) => ({
     title="Bienvenido a Valcer"
     subtitle="Tu empresa de confianza"
   />
-  <section class = "section">
-    <div class = "container">
+  <section class = "section-2">
+    <div class = "container containerabout">
       <!--About us -->
       <div class ="about-us">
         <div class="about-us-content">
-          <h2>Sobre Nosotros</h2>
+          <h3>Sobre Nosotros</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <Button href="/nosotros">Leer más</Button>
+          
         </div>
+        
         <div class = "about-us-image"> 
           <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
         </div>
       </div>
 
       <Slider slider={infoSliders} />
+
     </div>
   </section>
 
-  <!-- Servicios Destacados -->
-  <ServiceShowcase services={serviciosWithImages} />
+  <!-- Servicios Interactivos -->
+  <ServiceIntro   buttonHref="/servicios" buttonLabel="Ver nuestros servicios"/>
 
   <!-- Valor Diferencial -->
   <section class="section section-video">
@@ -75,7 +55,6 @@ const serviciosWithImages = servicios.map((s: any) => ({
       loop
       playsinline
       preload="none"
-      poster="/images/logo-video.jpg"
     >
       <source
         src="/videos/fondo-video.mp4"
@@ -90,41 +69,56 @@ const serviciosWithImages = servicios.map((s: any) => ({
     <div class="section-overlay"></div>
 
     <div class="container section-content">
-      <h2 class="valor-titulo">Por qué elegir Valcer</h2>
 
-      <div class="valor-grid">
+      <h2 class="valor-titulo">Nuestro enfoque en cada proyecto</h2>
+
+      <p class="valor-subtitulo">
+        Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
+      </p>
+
+      <div class="valor-grid valor-grid-3">
         <div class="valor-item">
-          <div class="valor-numero">01</div>
-          <h3>Experiencia Industrial</h3>
-          <p>Más de 15 años trabajando en proyectos de alta complejidad en el sector industrial.</p>
+          <div class="valor-index">01</div>
+          <h3>Planificamos</h3>
+          <p>
+            Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
+            asegurando claridad operativa desde el primer día.
+          </p>
         </div>
 
         <div class="valor-item">
-          <div class="valor-numero">02</div>
-          <h3>Estándares de Calidad</h3>
-          <p>Cumplimos con las certificaciones internacionales más exigentes.</p>
+          <div class="valor-index">02</div>
+          <h3>Ejecutamos</h3>
+          <p>
+            Supervisión en campo, coordinación técnica y control continuo
+            para mantener calidad y seguridad durante toda la intervención.
+          </p>
         </div>
 
         <div class="valor-item">
-          <div class="valor-numero">03</div>
-          <h3>Equipo Especializado</h3>
-          <p>Profesionales altamente capacitados.</p>
-        </div>
-
-        <div class="valor-item">
-          <div class="valor-numero">04</div>
-          <h3>Compromiso y Seguridad</h3>
-          <p>Seguridad laboral como prioridad.</p>
+          <div class="valor-index">03</div>
+          <h3>Garantizamos</h3>
+          <p>
+            Validación final, documentación técnica y entrega estructurada
+            conforme a requerimientos del cliente.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Proyectos Destacados -->
-  <section class="section section-accent">
-    <div class="container container-proyect">
-      <RelatedProyectoReact client:visible projects={relatedProjects} />
-      <Button href="/proyectos">Leer más</Button>
+  <section class="section-2">
+    <div class="container">
+      <div class="proyectos-ht">
+        <h2 class="proyectos-titulo">Proyectos destacados</h2>
+        <Button href="/proyectos">Leer más</Button>
+      </div>
+
+      <RelatedProyecto
+        ids={["proj_001", "proj_002", "proj_005", "proj_004"]}
+        limit={4}
+      />
     </div>
   </section>
 
@@ -139,6 +133,12 @@ const serviciosWithImages = servicios.map((s: any) => ({
 
 <style>
   /* about us */
+  .containerabout{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
   .about-us {
     display: flex;
     align-items: stretch;
@@ -155,15 +155,20 @@ const serviciosWithImages = servicios.map((s: any) => ({
     min-width: 0;
   }
 
-  .about-us-content h2 {
-    font-size: var(--text-2xl);
+  .about-us-content h3 {
+    font-size: var(--text-3xl);
     margin-bottom: var(--spacing-md);
+    letter-spacing: -0.5px;
+    font-weight: 700;
+    margin-bottom: 1rem;
   }
 
   .about-us-content p {
     line-height: 1.6;
     color: #555;
     margin-bottom: var(--spacing-md);
+    line-height: 2;
+    font-size: var(--text-lg);
   }
 
   .about-us-image {
@@ -232,7 +237,12 @@ const serviciosWithImages = servicios.map((s: any) => ({
   .section-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(39, 44, 96, 0.65);
+    background: linear-gradient(
+      180deg,
+      rgba(15, 20, 45, 0.88) 0%,
+      rgba(20, 25, 55, 0.78) 50%,
+      rgba(15, 20, 45, 0.88) 100%
+    );
     z-index: 1;
   }
 
@@ -249,8 +259,23 @@ const serviciosWithImages = servicios.map((s: any) => ({
 
   .valor-titulo {
     text-align: center;
-    margin-bottom: var(--spacing-lg);
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-size: var(--text-3xl);
+    letter-spacing: -0.5px;
+  }
+  .valor-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.9);
+    font-size: var(--text-md);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
   }
 
   .valor-grid {
@@ -269,42 +294,35 @@ const serviciosWithImages = servicios.map((s: any) => ({
     transform: translateY(-8px);
   }
 
-  .valor-numero {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: var(--color-primary);
-    color: white;
-    font-size: var(--text-xl);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto var(--spacing-sm);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  .valor-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .valor-subtitulo {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto var(--spacing-lg);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    font-size: var(--text-lg);
   }
 
   .valor-item h3 {
     font-weight: 700;
     margin-bottom: var(--spacing-xs);
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    font-size: var(--text-xl);
   }
 
   .valor-item p {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     color: rgba(255, 255, 255, 0.95);
     line-height: 1.6;
     margin: 0;
   }
 
-  @media (max-width: 768px) {
-    .valor-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-md);
-    }
-
-    .section-video {
-      min-height: 600px;
+  @media (max-width: 900px) {
+    .valor-grid-3 {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -325,13 +343,20 @@ const serviciosWithImages = servicios.map((s: any) => ({
   }
 
   .proyectos-titulo {
-    margin: 0;
+    margin: -0.5rem;
+    letter-spacing: -0.5px;
+    font-size: var(--text-3xl);
+    font-weight: 600;
   }
 
   /* Clientes */
   .clientes-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
+    letter-spacing: -0.5px;
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    
   }
 
   @media (prefers-reduced-motion: reduce) {

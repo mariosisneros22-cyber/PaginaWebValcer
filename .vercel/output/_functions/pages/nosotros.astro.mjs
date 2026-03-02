@@ -1,15 +1,16 @@
-import { c as createComponent, m as maybeRenderHead, a as addAttribute, d as renderTemplate, r as renderComponent, F as Fragment, e as createAstro, b as renderScript, u as unescapeHTML } from '../chunks/astro/server_BPQpu14k.mjs';
+import { c as createComponent, m as maybeRenderHead, a as addAttribute, d as renderTemplate, r as renderComponent, F as Fragment, e as createAstro, b as renderScript } from '../chunks/astro/server_DEPTrjPg.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../chunks/Layout_BEcER1h5.mjs';
-import { $ as $$Button } from '../chunks/button_CaUVeSfR.mjs';
-import { $ as $$Image } from '../chunks/_astro_assets_DDRr7B4I.mjs';
+import { $ as $$Layout } from '../chunks/Layout_B3F6PsX_.mjs';
+import { $ as $$Button } from '../chunks/button_B7UJg7TY.mjs';
+import { $ as $$Image } from '../chunks/_astro_assets_hQqkGHLl.mjs';
 /* empty css                                    */
 import 'clsx';
+import { h as heroImages } from '../chunks/indexImage_D4ymw4AB.mjs';
 export { renderers } from '../renderers.mjs';
 
-const $$Astro$2 = createAstro();
+const $$Astro$4 = createAstro();
 const $$Timelineitem = createComponent(($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$2, $$props, $$slots);
+  const Astro2 = $$result.createAstro($$Astro$4, $$props, $$slots);
   Astro2.self = $$Timelineitem;
   const { index, year, title, description, image, imageAlt, layout, side, tagline } = Astro2.props;
   return renderTemplate`${maybeRenderHead()}<article class="scene" data-scene${addAttribute(index, "data-index")}${addAttribute(layout, "data-layout")}${addAttribute(side ?? void 0, "data-side")}${addAttribute(`A\xF1o ${year}: ${layout === "outro" ? tagline ?? "" : title}`, "aria-label")} data-astro-cid-fxj26z35> <div class="scene-marker" data-astro-cid-fxj26z35> <div class="scene-year" data-astro-cid-fxj26z35> ${layout === "split" ? renderTemplate`<span class="year year-vertical"${addAttribute(year.split("").join("\n"), "data-text")} data-astro-cid-fxj26z35> ${year.split("").join("\n")} </span>` : renderTemplate`<span class="year year-horizontal"${addAttribute(year, "data-text")} data-astro-cid-fxj26z35> ${year} </span>`} </div> <div class="scene-dot" aria-hidden="true" data-astro-cid-fxj26z35></div> </div> <div class="scene-content" data-astro-cid-fxj26z35> ${layout === "outro" ? renderTemplate`<p class="scene-tagline" data-astro-cid-fxj26z35>${tagline ?? ""}</p>` : renderTemplate`${renderComponent($$result, "Fragment", Fragment, { "data-astro-cid-fxj26z35": true }, { "default": ($$result2) => renderTemplate` <h2 data-astro-cid-fxj26z35>${title}</h2> <p data-astro-cid-fxj26z35>${description}</p> ` })}`} </div> ${image ? renderTemplate`<div class="scene-media" data-astro-cid-fxj26z35> ${renderComponent($$result, "Image", $$Image, { "src": image, "alt": imageAlt ?? "", "loading": "lazy", "data-astro-cid-fxj26z35": true })} </div>` : null} </article> `;
@@ -148,39 +149,23 @@ const $$Timeline = createComponent(($$result, $$props, $$slots) => {
     const side = layout === "split" ? (index - 1) % 2 === 0 ? "A" : "B" : void 0;
     return { ...item, layout, side };
   });
-  return renderTemplate`${maybeRenderHead()}<section class="section timeline-section" data-timeline${addAttribute(`--n:${scenes.length}; --tail:0.6;`, "style")} data-astro-cid-zd5g3drv> <div class="container" data-astro-cid-zd5g3drv> <header class="timeline-header" data-astro-cid-zd5g3drv> <h2 data-astro-cid-zd5g3drv>Historia y trayectoria</h2> </header> <div class="timeline-track" data-track data-astro-cid-zd5g3drv> <div class="timeline-stage" data-stage data-astro-cid-zd5g3drv> <div class="timeline-axis" aria-hidden="true" data-astro-cid-zd5g3drv> <div class="axis-line" data-astro-cid-zd5g3drv></div> <div class="axis-progress" data-astro-cid-zd5g3drv></div> </div> <div class="timeline-scenes" data-astro-cid-zd5g3drv> ${scenes.map((item, index) => renderTemplate`${renderComponent($$result, "TimelineItem", $$Timelineitem, { ...item, "index": index, "data-astro-cid-zd5g3drv": true })}`)} </div> </div> </div> </div> </section>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/timeline.astro?astro&type=script&index=0&lang.ts")}`;
+  return renderTemplate`${maybeRenderHead()}<section class="timeline-section" data-timeline${addAttribute(`--n:${scenes.length}; --tail:0.6;`, "style")} data-astro-cid-zd5g3drv> <div class="container" data-astro-cid-zd5g3drv> <header class="timeline-header" data-astro-cid-zd5g3drv> <h2 class="timeline-title" data-astro-cid-zd5g3drv>Conoce nuestra historia y trayectoria</h2> </header> <div class="timeline-track" data-track data-astro-cid-zd5g3drv> <div class="timeline-stage" data-stage data-astro-cid-zd5g3drv> <div class="timeline-axis" aria-hidden="true" data-astro-cid-zd5g3drv> <div class="axis-line" data-astro-cid-zd5g3drv></div> <div class="axis-progress" data-astro-cid-zd5g3drv></div> </div> <div class="timeline-scenes" data-astro-cid-zd5g3drv> ${scenes.map((item, index) => renderTemplate`${renderComponent($$result, "TimelineItem", $$Timelineitem, { ...item, "index": index, "data-astro-cid-zd5g3drv": true })}`)} </div> </div> </div> </div> </section>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/timeline.astro?astro&type=script&index=0&lang.ts")}`;
 }, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/timeline.astro", void 0);
 
-const $$Astro$1 = createAstro();
-const $$Pilar = createComponent(($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
-  Astro2.self = $$Pilar;
+const $$Astro$3 = createAstro();
+const $$Mv = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$3, $$props, $$slots);
+  Astro2.self = $$Mv;
   const {
-    title,
-    text,
-    color = "#000",
-    direction = "right",
-    align = "left",
-    offsetx = "0"
-  } = Astro2.props;
-  return renderTemplate`${maybeRenderHead()}<div${addAttribute(`pillar from-${direction} align-${align}`, "class")}${addAttribute(`--pillar-color: ${color}; --pillar-offsetx: ${offsetx}%`, "style")} data-astro-cid-zagzordr> <h3 data-astro-cid-zagzordr>${title}</h3> <p data-astro-cid-zagzordr>${text}</p> </div> `;
-}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/pilar.astro", void 0);
-
-const $$Astro = createAstro();
-const $$Mvv = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
-  Astro2.self = $$Mvv;
-  const {
-    title = "Misi\xF3n, visi\xF3n y valores",
+    title = "Prop\xF3sito y rumbo",
+    manifesto = "Construimos infraestructura con seguridad y rigor t\xE9cnico, para generar confianza hoy y desarrollo ma\xF1ana.",
+    leftTag = "Prop\xF3sito",
+    rightTag = "Rumbo",
     mission,
-    vision,
-    values,
-    mediaImage,
-    mediaAlt,
-    mediaSide = "left"
+    vision
   } = Astro2.props;
-  return renderTemplate`${maybeRenderHead()}<section class="section" data-astro-cid-74zkp6bd> <div class="container mvv" data-astro-cid-74zkp6bd> <h2 class="mvv__title" data-astro-cid-74zkp6bd>${title}</h2> <div${addAttribute(`mvv__frame ${mediaSide === "right" ? "mvv__frame--right" : ""}`, "class")} data-mvv data-astro-cid-74zkp6bd> <div class="mvv__top" data-astro-cid-74zkp6bd> <div class="mvv__media"${addAttribute(mediaAlt?.trim() ? void 0 : "true", "aria-hidden")} data-reveal style="--d:0ms" data-astro-cid-74zkp6bd> <img class="mvv__mediaImg"${addAttribute(mediaImage.src, "src")}${addAttribute(mediaImage.width, "width")}${addAttribute(mediaImage.height, "height")}${addAttribute(mediaAlt?.trim() ? mediaAlt : "", "alt")} loading="lazy" decoding="async" data-astro-cid-74zkp6bd> </div> <div class="mvv__mv" aria-label="Misión y Visión" data-reveal style="--d:0ms" data-astro-cid-74zkp6bd> <article class="mvv__mvItem" aria-labelledby="mvv-mision-title" data-astro-cid-74zkp6bd> <h3 class="mvv__mvLabel" id="mvv-mision-title" data-astro-cid-74zkp6bd>${mission.title}</h3> <p class="mvv__mvText" data-astro-cid-74zkp6bd>${mission.body}</p> </article> <div class="mvv__divider" aria-hidden="true" data-astro-cid-74zkp6bd></div> <article class="mvv__mvItem" aria-labelledby="mvv-vision-title" data-astro-cid-74zkp6bd> <h3 class="mvv__mvLabel" id="mvv-vision-title" data-astro-cid-74zkp6bd>${vision.title}</h3> <p class="mvv__mvText" data-astro-cid-74zkp6bd>${vision.body}</p> </article> </div> </div> <div class="mvv__values"${addAttribute(values.title, "aria-label")} data-reveal style="--d:140ms" data-astro-cid-74zkp6bd> <h3 class="mvv__mvLabel" data-astro-cid-74zkp6bd>${values.title}</h3> ${values.items?.length > 0 && renderTemplate`<ul class="mvv__valuesGrid" role="list" data-astro-cid-74zkp6bd> ${values.items.map((v, i) => renderTemplate`<li class="mvv__valuesCard" data-reveal-item${addAttribute(`--d:${220 + i * 150}ms`, "style")} data-astro-cid-74zkp6bd> <div class="mvv__valuesText" data-astro-cid-74zkp6bd> <h4 class="mvv__valuesLabel" data-astro-cid-74zkp6bd>${v.label}</h4> ${v.desc ? renderTemplate`<p class="mvv__valuesDesc" data-astro-cid-74zkp6bd>${v.desc}</p>` : null} </div> ${v.icon ? renderTemplate`<div class="mvv__valuesIcon" aria-hidden="true" data-astro-cid-74zkp6bd>${unescapeHTML(v.icon)}</div>` : null} </li>`)} </ul>`} </div> </div> </div> </section>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/mvv.astro?astro&type=script&index=0&lang.ts")}`;
-}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/mvv.astro", void 0);
+  return renderTemplate`${maybeRenderHead()}<section class="section" data-astro-cid-bnl7p2gw> <div class="container mvx" data-mv data-astro-cid-bnl7p2gw> <header class="mvx__header" data-reveal style="--d:0ms" data-astro-cid-bnl7p2gw> <h2 class="mvx__title" data-astro-cid-bnl7p2gw>${title}</h2> ${manifesto ? renderTemplate`<p class="mvx__manifesto" aria-label="Declaración" data-astro-cid-bnl7p2gw> ${manifesto} </p>` : null} </header> <div class="mvx__cols" role="group" aria-label="Propósito y rumbo" data-astro-cid-bnl7p2gw> <article class="mvx__block" data-reveal style="--d:140ms" aria-labelledby="mvx-left-tag" data-astro-cid-bnl7p2gw> <p class="mvx__tag" id="mvx-left-tag" data-astro-cid-bnl7p2gw>${leftTag}</p> <h3 class="mvx__label" data-astro-cid-bnl7p2gw>${mission.title}</h3> <p class="mvx__text" data-astro-cid-bnl7p2gw>${mission.body}</p> </article> <article class="mvx__block" data-reveal style="--d:240ms" aria-labelledby="mvx-right-tag" data-astro-cid-bnl7p2gw> <p class="mvx__tag" id="mvx-right-tag" data-astro-cid-bnl7p2gw>${rightTag}</p> <h3 class="mvx__label" data-astro-cid-bnl7p2gw>${vision.title}</h3> <p class="mvx__text" data-astro-cid-bnl7p2gw>${vision.body}</p> </article> </div> </div> </section>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/mv.astro?astro&type=script&index=0&lang.ts")}`;
+}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/mv.astro", void 0);
 
 const nosotrosHero = new Proxy({"src":"/_astro/nosotrosHero.DLoHjq2l.jpg","width":6000,"height":3243,"format":"jpg"}, {
 						get(target, name, receiver) {
@@ -195,76 +180,70 @@ const nosotrosHero = new Proxy({"src":"/_astro/nosotrosHero.DLoHjq2l.jpg","width
 						}
 					});
 
-const valPilar = [
+const $$Astro$2 = createAstro();
+const $$ValoresZigZag = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$2, $$props, $$slots);
+  Astro2.self = $$ValoresZigZag;
+  const {
+    title = "Nuestros valores",
+    lead = "Son los principios que gu\xEDan c\xF3mo trabajamos, c\xF3mo decidimos y c\xF3mo entregamos resultados.",
+    items
+  } = Astro2.props;
+  return renderTemplate`${maybeRenderHead()}<section class="section values-zigzag" aria-labelledby="values-title" data-astro-cid-muhgpgjn> <div class="container" data-astro-cid-muhgpgjn> <header class="values-head" data-astro-cid-muhgpgjn> <h2 id="values-title" class="val-title" data-astro-cid-muhgpgjn>${title}</h2> <p class="val-subtitle" data-astro-cid-muhgpgjn>${lead}</p> </header> <ol class="values-track" data-astro-cid-muhgpgjn> ${items.map((it, i) => renderTemplate`<li class="value" data-value data-astro-cid-muhgpgjn> <div class="value-card" data-astro-cid-muhgpgjn> <div class="value-top" data-astro-cid-muhgpgjn> <span class="value-num" data-astro-cid-muhgpgjn>${String(i + 1).padStart(2, "0")}</span> <h3 class="value-title" data-astro-cid-muhgpgjn>${it.title}</h3> </div> <p class="value-principle" data-astro-cid-muhgpgjn>${it.principle}</p> <p class="value-body" data-astro-cid-muhgpgjn>${it.body}</p> </div> <span class="value-node" aria-hidden="true" data-astro-cid-muhgpgjn></span> </li>`)} </ol> </div> </section>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/valoresZigZag.astro?astro&type=script&index=0&lang.ts")}`;
+}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/valoresZigZag.astro", void 0);
+
+const valores = [
   {
-    title: "Seguridad",
-    text: "Trabajamos bajo losmás altos estándares de seguridad industrial.",
-    color: "#e9efff",
-    direction: "right",
-    align: "left",
-    offsetx: 40
+    title: "Trabajo en equipo y motivación",
+    principle: "La coordinación genera resultados superiores.",
+    body: "Cooperamos y conjugamos tareas para alcanzar objetivos comunes, promoviendo compromiso, comunicación y cohesión operativa."
   },
   {
-    title: "Calidad",
-    text: "Garantizamos procesos certificados y resultados consistentes.",
-    color: "#c8d8ff",
-    direction: "left",
-    align: "right",
-    offsetx: -35
+    title: "Responsabilidad corporativa empresarial",
+    principle: "Cada acción tiene impacto.",
+    body: "Actuamos con responsabilidad social, valorando el impacto de nuestras decisiones en comunidades, trabajadores y medio ambiente."
   },
   {
-    title: "Cumplimiento",
-    text: "Cunplimos plazos, normativas y compromisos asumidos.",
-    color: "rgb(180, 201, 255)",
-    direction: "right",
-    align: "left",
-    offsetx: 30
+    title: "Excelencia e innovación",
+    principle: "Mejora continua como estándar.",
+    body: "Buscamos la excelencia en cada acción, optimizando procesos con eficiencia y eficacia para cumplir objetivos con alto rendimiento."
+  },
+  {
+    title: "Entrega de resultados",
+    principle: "El compromiso se demuestra en la ejecución.",
+    body: "Contamos con un equipo calificado y capacitado, orientado a cumplir con entregables verificables y metas en tiempo y forma."
   }
 ];
 
+const $$Astro$1 = createAstro();
+const $$Diagonal = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
+  Astro2.self = $$Diagonal;
+  const { images, ratio = "16 / 7" } = Astro2.props;
+  const imgs = (images ?? []).slice(0, 4);
+  return renderTemplate`${maybeRenderHead()}<div class="diag-lamellas"${addAttribute(`--ratio:${ratio};`, "style")} data-lamellas data-astro-cid-iz6sbbw6> ${imgs.map((img, i) => renderTemplate`<button type="button"${addAttribute(`lamella ${i === 0 ? "is-active" : ""}`, "class")}${addAttribute(`background-image:url('${img.src}')`, "style")}${addAttribute(img.alt ?? `Imagen ${i + 1}`, "aria-label")} data-astro-cid-iz6sbbw6></button>`)} </div>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/diagonal.astro?astro&type=script&index=0&lang.ts")}`;
+}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/diagonal.astro", void 0);
+
+const $$Astro = createAstro();
+const $$NosotrosSplit = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$NosotrosSplit;
+  const { title, lead, paragraphs, images } = Astro2.props;
+  const imgs = (images ?? []).slice(0, 4);
+  return renderTemplate`${maybeRenderHead()}<section class="section section-who" data-astro-cid-fz2jav5i> <div class="container who-wrap" data-astro-cid-fz2jav5i> <!-- Fila superior: 2 columnas --> <div class="who-top" data-astro-cid-fz2jav5i> <div class="who-top__left" data-astro-cid-fz2jav5i> ${paragraphs.map((p) => renderTemplate`<p data-astro-cid-fz2jav5i>${p}</p>`)} </div> <div class="who-top__right" data-astro-cid-fz2jav5i> <h2 data-astro-cid-fz2jav5i>${title}</h2> ${lead ? renderTemplate`<p class="who-lead" data-astro-cid-fz2jav5i>${lead}</p>` : null} </div> </div> <!-- Fila inferior: imágenes a todo el ancho --> <div class="who-bottom" data-astro-cid-fz2jav5i> ${renderComponent($$result, "Diagonal", $$Diagonal, { "images": imgs, "ratio": "16/9", "data-astro-cid-fz2jav5i": true })} </div> </div> </section> `;
+}, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/nosotros/nosotrosSplit.astro", void 0);
+
 const $$Nosotros = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Valcer - Nosotros", "heroTitle": "Nosotros", "heroImage": nosotrosHero, "data-astro-cid-noeej2nj": true }, { "default": ($$result2) => renderTemplate`  ${maybeRenderHead()}<section class="section" data-astro-cid-noeej2nj> <div class="container who-grid" data-astro-cid-noeej2nj> <div class="who-content" data-astro-cid-noeej2nj> <h2 data-astro-cid-noeej2nj>Quiénes somos</h2> <p data-astro-cid-noeej2nj>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-</p> <p data-astro-cid-noeej2nj>
-Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur.
-</p> </div> <div class="who-video youtube-video" data-video-id="PmRv-3-tUwA" data-astro-cid-noeej2nj> <div class="youtube-overlay " data-astro-cid-noeej2nj>
-▶
-</div> </div> </div> </section>  <section class="section section-accent" data-astro-cid-noeej2nj> <div class="container" data-astro-cid-noeej2nj> <h2 data-astro-cid-noeej2nj>Nuestros pilares</h2> <div class="pillars-grid" data-astro-cid-noeej2nj> ${valPilar.map((pillar) => renderTemplate`${renderComponent($$result2, "Pilar", $$Pilar, { ...pillar, "data-astro-cid-noeej2nj": true })}`)} </div> </div> </section>  ${renderComponent($$result2, "Mvv", $$Mvv, { "mediaImage": nosotrosHero, "mediaAlt": "Ejecuci\xF3n de obra de Valcer", "mediaSide": "left", "mission": {
-    title: "Misi\xF3n",
-    body: "es brindar servicios de ejecuci\xF3n, supervisi\xF3n y consultor\xEDa en obras civiles y de esta manera podamos satisfacer las necesidades de nuestros clientes entregando un servicio de calidad bajo las normas y leyes vigentes, propiciando un ambiente de trabajo seguro. \nApoyados con tecnolog\xEDa renovada, asegurando la protecci\xF3n de la integridad f\xEDsica de nuestros trabajadores, protegiendo el medio ambiente, trabajando dentro de un marco de \xE9tica; buscando la mejora continua y cumpliendo con la responsabilidad corporativa empresarial."
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Valcer - Nosotros", "heroTitle": "Nosotros", "heroImage": nosotrosHero, "data-astro-cid-noeej2nj": true }, { "default": ($$result2) => renderTemplate`  ${renderComponent($$result2, "NosotrosSplit", $$NosotrosSplit, { "title": "Qui\xE9nes somos", "lead": "M\xE1s de X a\xF1os ejecutando proyectos con est\xE1ndares t\xE9cnicos y compromiso profesional.", "paragraphs": [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+  ], "images": heroImages, "data-astro-cid-noeej2nj": true })}  ${renderComponent($$result2, "ValoresZigZag", $$ValoresZigZag, { "items": valores, "data-astro-cid-noeej2nj": true })}  ${renderComponent($$result2, "Mvv", $$Mv, { "title": "Prop\xF3sito y rumbo", "manifesto": "Construimos infraestructura con seguridad y rigor t\xE9cnico, para generar confianza hoy y desarrollo ma\xF1ana.", "leftTag": "Prop\xF3sito", "rightTag": "Rumbo", "mission": {
+    title: "C\xF3mo trabajamos",
+    body: "Brindar servicios de ejecuci\xF3n, supervisi\xF3n y consultor\xEDa en obras civiles y de esta manera podamos satisfacer las necesidades de nuestros clientes entregando un servicio de calidad bajo las normas y leyes vigentes, propiciando un ambiente de trabajo seguro."
   }, "vision": {
-    title: "Visi\xF3n",
-    body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  }, "values": {
-    title: "Valores",
-    items: [
-      {
-        label: "Responsabilidad",
-        desc: "Cumplimos plazos y est\xE1ndares.",
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>`
-      },
-      {
-        label: "Compromiso",
-        desc: "Acompa\xF1amiento de inicio a fin.",
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg>`
-      },
-      {
-        label: "Transparencia",
-        desc: "Informaci\xF3n clara y trazable.",
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`
-      },
-      {
-        label: "Trabajo en equipo",
-        desc: "Coordinaci\xF3n y comunicaci\xF3n constante.",
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3Z"/><path d="M8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Z"/><path d="M8 13c-2.21 0-4 1.79-4 4v2"/><path d="M16 13c2.21 0 4 1.79 4 4v2"/><path d="M12 12c1.66 0 3-1.34 3-3S13.66 6 12 6 9 7.34 9 9s1.34 3 3 3Z"/><path d="M12 14c-2.21 0-4 1.79-4 4v2h8v-2c0-2.21-1.79-4-4-4Z"/></svg>`
-      }
-    ]
-  }, "data-astro-cid-noeej2nj": true })}  ${renderComponent($$result2, "Timeline", $$Timeline, { "data-astro-cid-noeej2nj": true })}  <section class="section-2" data-astro-cid-noeej2nj> <div class="container cta-content" data-astro-cid-noeej2nj> <h2 data-astro-cid-noeej2nj>¿Tienes un proyecto en mente?</h2> <p data-astro-cid-noeej2nj>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-</p> ${renderComponent($$result2, "Button", $$Button, { "href": "/contacto", "data-astro-cid-noeej2nj": true }, { "default": ($$result3) => renderTemplate`CONTACTAR` })} </div> </section> ` })}  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/pages/nosotros.astro?astro&type=script&index=0&lang.ts")}`;
+    title: "Hacia d\xF3nde vamos",
+    body: "Ser una empresa l\xEDder, y promotor en el desarrollo del pa\xEDs a nivel nacional ejecutando los mejores proyectos constructivos, aplicando los m\xE1s altos est\xE1ndares de calidad."
+  }, "data-astro-cid-noeej2nj": true })} ${renderComponent($$result2, "Timeline", $$Timeline, { "data-astro-cid-noeej2nj": true })}  ${maybeRenderHead()}<section class="section-2" data-astro-cid-noeej2nj> <div class="container cta-content" data-astro-cid-noeej2nj> <h2 data-astro-cid-noeej2nj>¿Tienes un proyecto en mente?</h2> <p data-astro-cid-noeej2nj>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> ${renderComponent($$result2, "Button", $$Button, { "href": "/contacto", "data-astro-cid-noeej2nj": true }, { "default": ($$result3) => renderTemplate`CONTACTAR` })} </div> </section> ` })}  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/pages/nosotros.astro?astro&type=script&index=0&lang.ts")}`;
 }, "D:/ttt/Paginaweb/LandingPage/super-shell/src/pages/nosotros.astro", void 0);
 
 const $$file = "D:/ttt/Paginaweb/LandingPage/super-shell/src/pages/nosotros.astro";

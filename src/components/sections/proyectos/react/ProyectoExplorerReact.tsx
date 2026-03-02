@@ -35,6 +35,9 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [-74.5, -9.2];
 const DEFAULT_ZOOM = 4;
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_INITIAL_BATCH = 6;
+const MOBILE_BATCH_STEP = 4;
 const SOURCE_ID = "projects";
 const LAYER_CLUSTERS = "clusters";
 const LAYER_CLUSTER_COUNT = "cluster-count";
@@ -89,6 +92,8 @@ export default function ProyectoExplorer({ projects }: Props) {
   const [filters, setFilters] = useState<ProjectFilters>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(MOBILE_INITIAL_BATCH);
   // map refs
   const mapRef = useRef<MapLibreMap | null>(null);
   const mapElRef = useRef<HTMLDivElement | null>(null);
@@ -124,6 +129,14 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   const totalVisibles = useMemo(() => applyProjectFilters(projects, {}).length, [projects]);
 
+  const visibleProjects = useMemo(() => {
+    if (!isMobile) return filtered;
+    return filtered.slice(0, visibleCount);
+  }, [filtered, isMobile, visibleCount]);
+
+  const hasMoreMobile = isMobile && visibleProjects.length < filtered.length;
+  const showingCount = isMobile ? visibleProjects.length : filtered.length;
+
   // memo: querystring
   const queryString = useMemo(() => buildProjectsQueryString(filters), [filters]);
 
@@ -143,6 +156,19 @@ export default function ProyectoExplorer({ projects }: Props) {
     // ✅ guardo filtros en history.state (clave para back/forward sin “cosas raras”)
     window.history.replaceState({ filters }, "", next);
   }, [queryString, filters]);
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    setVisibleCount(MOBILE_INITIAL_BATCH);
+  }, [isMobile, filters]);
 
   // init map once
   useEffect(() => {
@@ -365,6 +391,10 @@ export default function ProyectoExplorer({ projects }: Props) {
     });
   }, []);
 
+  const loadMoreMobile = useCallback(() => {
+    setVisibleCount((prev) => Math.min(prev + MOBILE_BATCH_STEP, filtered.length));
+  }, [filtered.length]);
+
   useEffect(() => {
     const onPopState = () => {
       const url = new URL(window.location.href);
@@ -549,12 +579,37 @@ export default function ProyectoExplorer({ projects }: Props) {
           </button>
           
         </div>
+
+        <div className="quickFilters" aria-label="Filtros rapidos">
+          <button
+            type="button"
+            className={`quickChip ${!filters.estado ? "is-active" : ""}`}
+            onClick={() => onChange({ estado: undefined })}
+            aria-pressed={!filters.estado}
+          >
+            Todos
+          </button>
+          {estados.map((estado) => {
+            const active = filters.estado === estado;
+            return (
+              <button
+                key={`quick-${estado}`}
+                type="button"
+                className={`quickChip ${active ? "is-active" : ""}`}
+                onClick={() => onChange({ estado: active ? undefined : estado })}
+                aria-pressed={active}
+              >
+                {formatEstadoLabel(estado)}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* RESUMEN */}
       <div className="summaryRow">
         <div className="summaryCount">
-          Mostrando <strong>{filtered.length}</strong> de <strong>{totalVisibles}</strong>
+          Mostrando <strong>{showingCount}</strong> de <strong>{totalVisibles}</strong>
         </div>
 
         {chips.length > 0 ? (
@@ -614,10 +669,11 @@ export default function ProyectoExplorer({ projects }: Props) {
         <section className="splitList">
           {filtered.length > 0 ? (
             <div className="projects-grid" key={queryString}>
-              {filtered.map((p) => (
+              {visibleProjects.map((p) => (
                 <ProyectoCardView
                   key={`${p.id}`}
                   project={p}
+                  mobileCompact
                   className={p.id === selectedId ? "isActive" : ""}
                 >
                   <button type="button" className="btn btn-secondary btn-sm" onClick={() => flyToProject(p)}>
@@ -639,6 +695,13 @@ export default function ProyectoExplorer({ projects }: Props) {
               </button>
             </div>
           )}
+          {hasMoreMobile ? (
+            <div className="loadMoreWrap">
+              <button type="button" className="loadMoreBtn" onClick={loadMoreMobile}>
+                Cargar mas ({filtered.length - visibleProjects.length} restantes)
+              </button>
+            </div>
+          ) : null}
         </section>
       </div>
     </section>

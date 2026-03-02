@@ -2,94 +2,24 @@
 import Layout from '../layouts/Layout.astro';
 import servicioHero from '../assets/images/servicios/servicioHero.jpg';
 
-import ServiceIntro from "../components/sections/servicios/ServiceIntro.astro";
-import ServiciosSplitReact from "../components/sections/servicios/ServiciosSplitReact";
+import ServiciosSplit from "../components/sections/servicios/ServiciosSplit.astro";
 import IsoGrid from "../components/sections/servicios/IsoGrid.astro";
-
-import serviciosRaw from "../data/servicios.json";
-import proyectosRaw from "../data/proyectos.json";
-import { getServiceImageByKey } from "../utils/serviciosImages";
-import { getProjectImageFromPath } from "../utils/proyectoImages";
-
-type ServicioJson = {
-  id: string;
-  title: string;
-  tagline: string;
-  items: string[];
-  imageKey: string;
-  projectsCtaLabel?: string;
-};
-
-type ProyectoJson = {
-  id: string;
-  slug: string;
-  nombre: string;
-  cliente?: string;
-  estado?: string;
-  servicios?: string[];
-  ubicacion?: {
-    departamento?: string;
-    provincia?: string;
-    distrito?: string;
-  };
-  portada?: string;
-  visible?: boolean;
-};
-
-const servicios = (serviciosRaw as ServicioJson[]).map((s) => ({
-  id: s.id,
-  title: s.title,
-  tagline: s.tagline,
-  items: s.items,
-  imageSrc: getServiceImageByKey(s.imageKey).src,
-  imageAlt: s.title,
-  projectsCtaLabel: s.projectsCtaLabel ?? "Ver proyectos",
-}));
-
-const proyectos = (proyectosRaw as ProyectoJson[])
-  .filter((p) => p.visible !== false)
-  .map((p) => {
-    const coverImg = p.portada ? getProjectImageFromPath(p.portada) : null;
-    return {
-      id: p.id,
-      slug: p.slug,
-      nombre: p.nombre,
-      cliente: p.cliente ?? "",
-      estado: p.estado ?? "",
-      servicios: p.servicios ?? [],
-      ubicacionText: p.ubicacion
-        ? [p.ubicacion.distrito, p.ubicacion.provincia, p.ubicacion.departamento]
-            .filter(Boolean)
-            .join(", ")
-        : "",
-      coverSrc: coverImg?.src ?? "",
-    };
-  });
-
-const projectsByService: Record<string, typeof proyectos> = {};
-for (const proj of proyectos) {
-  for (const servId of proj.servicios) {
-    if (!projectsByService[servId]) projectsByService[servId] = [];
-    projectsByService[servId].push(proj);
-  }
-}
-
+ 
+import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 ---
 
 <Layout title="Valcer - Servicios"
   heroTitle= "Servicios" 
   heroImage={servicioHero} 
 >
-  <!-- Intro con ventajas -->
-  <ServiceIntro />
+  <!-- Resto del contenido -->
 
-  <!-- Servicios interactivos -->
-  <section class="section">
-    <div class="container">
-      <ServiciosSplitReact client:idle services={servicios} projectsByService={projectsByService} projectsBaseHref="/proyectos" />
-    </div>
-  </section>
+  
+  <ServiceIntro/>
 
-  <!-- Certificaciones -->
+
+  <ServiciosSplit />
+
   <IsoGrid />
 </Layout>
+

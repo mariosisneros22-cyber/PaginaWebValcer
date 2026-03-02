@@ -9,28 +9,17 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
 
 ---
 
-<Layout 
-  title="Valcer - Contacto"
-  heroTitle="Contacto" 
-  heroImage={contactoHero} 
->
-
-
-<section class="section">
-  <div class="container">
-    <p class = "contact-intro__text">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </p>
-  </div>
-</section>
+<Layout title="Valcer - Contacto" heroTitle="Contacto" heroImage={contactoHero}>
 
 
 <section class="section">
   <div class="container contact-grid">
     <ContactForm />
     <ContactInfo />
-    <div class="map-full">
+  </div>
+
+  <div class="map-wrap">
+    <div class="container">
       <ContactMap />
     </div>
   </div>
@@ -40,26 +29,42 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
 
 <style>
 
-  .contact-intro__text {
-    text-align: center;
-    padding: 4rem 0 2rem 0;
-    max-width: 600px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-
   .contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.8fr 1fr;
     gap: 3rem;
     align-items: start;
   }
 
-  .map-full {
-    grid-column: 1 / -1; /* ✅ ocupa todo el ancho del grid */
+  /* “Levanta” visual: paneles tipo card */
+  :global(.contact-form),
+  :global(.info-block) {
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    padding: 1.75rem;
+    box-shadow: 0 12px 34px rgba(0,0,0,.08);
   }
 
+  :global(.contact-form) {
+    border-top: 4px solid rgba(0,0,0,.08); /* acento sutil sin colores */
+  }
+
+  /* separación del mapa */
+  .map-wrap {
+    margin-top: 2.25rem;
+  }
+
+  /* card para el mapa */
+  :global(.map-block) {
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  }
+
+  /* (luego veremos móvil, pero lo dejo) */
   @media (max-width: 768px) {
     .contact-grid {
       grid-template-columns: 1fr;
