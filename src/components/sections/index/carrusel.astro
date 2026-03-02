@@ -13,26 +13,28 @@ interface Props{
 const { clients } = Astro.props;
 ---
 
-<section class="section clientes-seccion">
-  <div class="carrusel-wrapper">
-    <div class="carrusel-track">
-      {clients.map((client) => (
-        <div class="cliente-logo">
-          <div class="logo-box">
-            <Image 
-              src={client.logo} 
-              alt={client.name} 
-              loading="eager"
-              width={180}
-              height={180}
-              quality={80}
-            />
-          </div>
+
+<div class="carrusel-wrapper">
+  <div class="carrusel-track">
+    {clients.map((client) => (
+      <div class="cliente-logo">
+        <div class="logo-box">
+          <Image 
+            src={client.logo} 
+            alt={client.name} 
+            loading="lazy"
+            decoding="async"
+            width={180}
+            height={180}
+            quality={70}
+            sizes="(max-width: 768px) 140px, 180px"
+            densities={[1, 2]}
+          />
         </div>
-      ))}
-    </div>
+      </div>
+    ))}
   </div>
-</section>
+</div>
 
 <style>
   .carrusel-wrapper {
@@ -57,8 +59,9 @@ const { clients } = Astro.props;
 
   .carrusel-track {
     display: flex;
+    width: max-content; /* ✅ importante */
     gap: var(--spacing-md, 1.5rem);
-    animation: scroll-infinite 30s linear infinite;
+    animation: scroll-infinite 60s linear infinite;
     will-change: transform;
   }
 
@@ -85,6 +88,14 @@ const { clients } = Astro.props;
     justify-content: center;
   }
 
+  .logo-box img {
+    opacity: 0.75;
+    transition: opacity 0.25s ease;
+    /* evita filter si notas jank: quítalo */
+  }
+
+  .cliente-logo:hover img { opacity: 1; }
+
   .logo-box :global(img) {
     width: 100%;
     height: 100%;
@@ -99,6 +110,10 @@ const { clients } = Astro.props;
     filter: grayscale(0%);
     opacity: 1;
     transform: scale(1.05);
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .carrusel-track { animation: none; transform: none; }
   }
   
   @keyframes scroll-infinite {
@@ -124,29 +139,39 @@ const { clients } = Astro.props;
 
 <script>
   function initCarrusel() {
-    const tracks = document.querySelectorAll('.carrusel-track');
-    
-    tracks.forEach(track => {
-      // Clonar TODO el contenido para duplicar
-      const content = Array.from(track.children);
-      
-      // Duplicar suficientes veces para llenar la pantalla + loop
-      const duplicates = 3; // Ajusta según necesites
-      
-      for (let i = 0; i < duplicates; i++) {
-        content.forEach(item => {
-          const clone = item.cloneNode(true) as HTMLElement;
-          track.appendChild(clone);
+    document.querySelectorAll('.carrusel-track').forEach((track) => {
+      // ✅ idempotente: no volver a clonar si ya se hizo
+      if (track.getAttribute('data-initialized') === 'true') return;
+      track.setAttribute('data-initialized', 'true');
+
+      const originals = Array.from(track.children);
+      if (originals.length === 0) return;
+
+      // Medir cuánto necesitamos duplicar para cubrir al menos 2 pantallas
+      const wrapper = track.closest('.carrusel-wrapper');
+      const targetWidth = (wrapper?.clientWidth ?? window.innerWidth) * 2;
+
+      // Clonar hasta exceder targetWidth (máximo límite por seguridad)
+      let guard = 0;
+      while (track.scrollWidth < targetWidth && guard < 10) {
+        originals.forEach((item) => {
+          track.appendChild(item.cloneNode(true));
         });
+        guard++;
       }
+
+      // ✅ Duplicación final exacta 1 vez para loop perfecto (2 copias)
+      originals.forEach((item) => {
+        track.appendChild(item.cloneNode(true));
+      });
     });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCarrusel);
+    document.addEventListener('DOMContentLoaded', initCarrusel, { once: true });
   } else {
     initCarrusel();
   }
-  
+
   document.addEventListener('astro:page-load', initCarrusel);
 </script>

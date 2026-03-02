@@ -22,6 +22,8 @@ assertValidProjects(proyectos);
 const { slug } = Astro.params;
 const proyecto = proyectos.find((p) => p.slug === slug);
 
+const backQuery = Astro.url.search ?? "";
+
 if (!proyecto || !isVisibleProject(proyecto)) {
   return Astro.redirect("/proyectos");
 }
@@ -98,30 +100,38 @@ const title = `Valcer - ${proyecto.nombre}`;
 
 <Layout title={title} heroTitle={proyecto.nombre} heroImage={portada}>
   <section class="proyecto-container">
+    <a class="proyecto-back" href={`/proyectos${backQuery}`} data-proyectos-back>Volver a proyectos</a>
 
-    <a class="proyecto-back" href="/proyectos" data-proyectos-back>
-      ← Volver a proyectos
-    </a>
+    {/* MAPA FULL */}
+    <section class="proyecto-mapwide">
+      {typeof proyecto.ubicacion?.lng === "number" && typeof proyecto.ubicacion?.lat === "number" ? (
+        <>
+          <header class="block-head">
+            <h2>Ubicación</h2>
+            <p class="muted">
+              {proyecto.ubicacion.distrito}, {proyecto.ubicacion.departamento}
+            </p>
+          </header>
 
-    <section class="proyecto-top">
+          <div class="map-card">
+            <MiniMapProyecto client:visible lng={proyecto.ubicacion.lng} lat={proyecto.ubicacion.lat} zoom={14} />
+          </div>
+        </>
+      ) : (
+        <div class="mapEmpty">Sin coordenadas para este proyecto.</div>
+      )}
+    </section>
+
+    {/* 2 COLS: FICHA + RESUMEN */}
+    <section class="proyecto-grid2">
       <section class="proyecto-tech">
-        <header class="tech-header">
-          <h2>Ficha técnica</h2>
-        </header>
-
+        <header class="tech-header"><h2>Ficha técnica</h2></header>
         <div class="tech-grid">
           <div class="tech-item">
             <span class="tech-label">Cliente</span>
             <span class="tech-value">{proyecto.cliente}</span>
           </div>
 
-
-          <div class="tech-item">
-            <span class="tech-label">Ubicación</span>
-            <span class="tech-value">
-              {proyecto.ubicacion.distrito}, {proyecto.ubicacion.departamento}
-            </span>
-          </div>
 
           <div class="tech-item">
             <span class="tech-label">Estado</span>
@@ -160,72 +170,116 @@ const title = `Valcer - ${proyecto.nombre}`;
         </div>
       </section>
 
-
-      <aside class="proyecto-minimap">
-        {typeof proyecto.ubicacion?.lng === "number" && typeof proyecto.ubicacion?.lat === "number" ? (
-          <MiniMapProyecto client:visible lng={proyecto.ubicacion.lng} lat={proyecto.ubicacion.lat} zoom={14} />
-        ) : (
-          <div class="mapEmpty">Sin coordenadas para este proyecto.</div>
-        )}
-      </aside>
-    </section>
-
-
-
-
-    <section class="proyecto-contenido">
-      
       {proyecto.resumen ? (
         <section class="proyecto-resumen">
-          <h3> Sobre {proyecto.nombre}</h3>
+          <header class="tech-header"><h2>Resumen</h2></header>
           <p class="resumen-text">{proyecto.resumen}</p>
         </section>
-      ) : null}
-
-      {(galeria?.length ?? 0) > 0 ? (
-        <section class="proyecto-fotos">
-          <h3>Registro fotográfico</h3>
-
-          <ProyectoGallery
-            client:visible
-            images={galeria}
-          />
+      ) : (
+        <section class="proyecto-resumen">
+          <header class="tech-header"><h2>Resumen</h2></header>
+          <p class="resumen-text">—</p>
         </section>
-      ) : null}
+      )}
     </section>
 
+    {/* GALERÍA FULL */}
+    {(galeria?.length ?? 0) > 0 ? (
+      <section class="proyecto-fotos">
+        <header class="block-head"><h2>Registro fotográfico</h2></header>
+        <ProyectoGallery client:visible images={galeria} />
+      </section>
+    ) : null}
 
-    <RelatedProyecto
-      currentSlug={proyecto.slug}
-      limit={3}
-    />
-
+    {/* RELACIONADOS FULL */}
+    <section class="proyecto-related">
+      <RelatedProyecto currentSlug={proyecto.slug} limit={3} />
+    </section>
   </section>
 </Layout>
 
 <style is:global>
-  .proyecto-container { max-width: 1100px; margin: 0 auto; padding: 24px 16px 44px; }
 
-  .proyecto-top{
-    display:grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 18px;
-    align-items: start;
-    margin-bottom: 24px;
+
+  .proyecto-back{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    padding:8px 14px;
+
+    border-radius: 999px;
+    background: rgba(236, 236, 236, 0.05);
+
+    font-size: var(--text-sm);
+    font-weight:500;
+    text-decoration:none;
+    color:#111;
+
+    transition: background .2s ease, transform .2s ease;
   }
 
-  .proyecto-tech {
+  .proyecto-back:hover{
+    background: rgba(0,0,0,.1);
+    transform: translateX(-2px);
+  }
+
+  .proyecto-back::before{
+    content: "←";
+    font-size: var(--text-sm);
+    opacity: .8;
+  }
+  .proyecto-fotos{
+    margin-top: 28px;
+  }
+
+  .proyecto-related{
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  .proyecto-mapwide { margin: 14px 0 18px; }
+
+
+  .proyecto-grid2{
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 18px;
+  }
+
+  .block-head{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin: 0 0 10px;
+  }
+
+  .block-head h2{ 
+    font-size: var(--text-xl);
+    margin:0; 
+    font-weight: 750; 
+  }
+
+  .muted{ margin:0; opacity:.75; font-size:var(--text-sm); }
+
+
+  .proyecto-container { max-width: 1100px; margin: 0 auto; padding: 24px 16px 44px; }
+
+  .proyecto-tech,
+  .proyecto-resumen{
+    padding: 22px;
     border: 1px solid rgba(0,0,0,.08);
     border-radius: 14px;
-    background: rgba(255,255,255,.7);
-    padding: 22px;
+
   }
 
   .tech-header { margin-bottom: 18px; }
 
   .tech-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: var(--text-xl);
     font-weight: 600;
   }
 
@@ -248,14 +302,14 @@ const title = `Valcer - ${proyecto.nombre}`;
   }
 
   .tech-label{
-    font-size: 12px;
+    font-size: var(--text-xs);
     letter-spacing: .08em;
     text-transform: uppercase;
     opacity: .6;
   }
 
   .tech-value{
-    font-size: 15px;
+    font-size: var(--text-base);
     font-weight: 500;
   }
 
@@ -268,44 +322,8 @@ const title = `Valcer - ${proyecto.nombre}`;
   }
 
   /* -------------------------------------------------- */
-  /* ✅ Detalles del proyecto (resumen + fotos) */
-  .proyecto-contenido{
-    margin-top: 22px;
-    display:grid;
-    gap: 14px;
-  }
+  /* Detalles del proyecto (resumen + fotos) */
 
-  .contenido-head{
-    border: 1px solid rgba(0,0,0,.08);
-    border-radius: 14px;
-    background: rgba(255,255,255,.7);
-    padding: 18px 22px;
-  }
-
-  .contenido-head h2{
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .contenido-sub{
-    margin-top: 8px;
-    opacity: .75;
-  }
-
-  .proyecto-resumen{
-    border: 1px solid rgba(0,0,0,.08);
-    border-radius: 14px;
-    background: rgba(255,255,255,.7);
-    padding: 18px 50px;
-  }
-
-  .proyecto-resumen h3{
-    margin: 0 0 8px;
-    font-size: 16px;
-    font-weight: 600;
-    
-  }
 
   .resumen-text{
     margin: 0;
@@ -315,13 +333,6 @@ const title = `Valcer - ${proyecto.nombre}`;
 
   /* -------------------------------------------------- */
   /* minimapa */
-  .proyecto-minimap{
-    border: 1px solid rgba(0,0,0,.08);
-    border-radius: 14px;
-    background: rgba(255,255,255,.6);
-    padding: 10px;
-  }
-
   .miniMap{
     width: 100%;
     height: 260px;
@@ -337,60 +348,21 @@ const title = `Valcer - ${proyecto.nombre}`;
     border-radius: 12px;
     background: rgba(0,0,0,.04);
     border: 1px dashed rgba(0,0,0,.18);
-    font-size: 14px;
+    font-size: var(--text-sm);
   }
 
-  /* -------------------------------------------------- */
-  /* galería */
-  .proyecto-gallery { margin-top: 22px; }
 
-  .proyecto-gallery-grid{
-    display:grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .proyecto-gallery-grid figure{
-    margin:0;
-    border-radius:14px;
-    overflow:hidden;
-    border:1px solid rgba(0,0,0,.08);
-  }
-
-  .proyecto-gallery-grid img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-
-  /* -------------------------------------------------- */
-  /* servicios chips (si aún lo usas en algún lado) */
-  .servicios-chips{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top: 10px;
-  }
 
   /* -------------------------------------------------- */
   /* responsive */
   @media (max-width: 900px){
-    .proyecto-top{ grid-template-columns: 1fr; }
 
     .tech-grid{ grid-template-columns: 1fr; }
     .tech-item--full{ grid-column: auto; }
-
-    .proyecto-gallery-grid{ grid-template-columns: 1fr; }
+  
+    .proyecto-grid2{ grid-template-columns: 1fr; }
   }
 
-  @media (max-width: 560px){
-    .proyecto-gallery-grid{ grid-template-columns: 1fr; }
-  }
 
 </style>
 
-<script is:inline>
-  const a = document.querySelector('[data-proyectos-back]');
-  if (a) a.setAttribute('href', '/proyectos' + window.location.search);
-</script>

@@ -1,0 +1,223 @@
+---
+import Button from '../../ui/button.astro';
+interface Props {
+  title?: string;
+  description?: string;
+
+  buttonHref?: string;
+  buttonLabel?: string;
+}
+
+const { 
+  title = "Soluciones Integrales para tu Proyecto",
+  description = "En Valcer, ofrecemos servicios especializados que combinan experiencia de más de 15 años, estándares internacionales de calidad y un equipo dedicado a tu éxito.",
+
+  buttonHref,
+  buttonLabel = "Ver nuestros servicios",
+} = Astro.props;
+
+const advantages = [
+  {
+    icon: "◆",
+    title: "Experiencia Acreditada",
+    description: "15+ años ejecutando proyectos complejos con certificaciones ISO y estándares internacionales"
+  },
+  {
+    icon: "▸",
+    title: "Ejecución Rápida",
+    description: "Metodologías probadas y equipos multidisciplinarios para cumplir plazos sin comprometer calidad"
+  },
+  {
+    icon: "✓",
+    title: "Seguridad Prioritaria",
+    description: "Protocolos rigurosos de seguridad laboral y gestión de riesgos en todas las operaciones"
+  },
+  {
+    icon: "★",
+    title: "Soporte Continuo",
+    description: "Acompañamiento desde la planificación hasta post-ejecución con comunicación transparente"
+  }
+];
+---
+
+<section class="section ">
+  <div class="container">
+    <div class="intro-header">
+      <h1 class="intro-title">{title}</h1>
+      <p class="intro-description">{description}</p>
+    </div>
+
+    <div class="advantages-grid">
+      {advantages.map((advantage) => (
+        <div class="advantage-card">
+          <div class="advantage-icon">{advantage.icon}</div>
+          <h3 class="advantage-title">{advantage.title}</h3>
+          <p class="advantage-description">{advantage.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="intro-cta">
+      <p>Cada proyecto es único. Contamos con soluciones personalizadas para tus necesidades específicas.</p>
+    </div>
+
+    {buttonHref && (
+      <div class="button-mid">
+        <Button href={buttonHref}>{buttonLabel}</Button>
+      </div>
+    )}
+</section>
+
+<style>
+
+  .intro-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .intro-title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+    letter-spacing: -0.5px;
+  }
+
+  .intro-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-light);
+    max-width: 70ch;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
+
+  .advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin: var(--spacing-lg) 0;
+  }
+
+  .advantage-card {
+    background: white;
+    border: 1.5px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(34, 56, 80, 0.08);
+  }
+
+  .advantage-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 24px rgba(34, 56, 80, 0.12);
+  }
+
+  .advantage-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .advantage-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .advantage-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .intro-cta {
+    text-align: center;
+    padding: var(--spacing-md);
+    background: rgba(38, 144, 243, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(38, 144, 243, 0.1);
+  }
+
+  .intro-cta p {
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .services-intro {
+      padding: var(--spacing-md) 0;
+    }
+
+    .intro-header {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .intro-title {
+      font-size: var(--text-2xl);
+    }
+
+    .advantages-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: var(--spacing-md) 0;
+    }
+
+    .advantage-card {
+      padding: 1.5rem;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .intro-header {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .intro-title {
+      font-size: var(--text-xl);
+    }
+
+    .intro-description {
+      font-size: var(--text-base);
+    }
+
+    .advantages-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: var(--spacing-md) 0;
+    }
+
+    .advantage-card {
+      padding: 1.25rem;
+      text-align: left;
+    }
+
+    .advantage-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .intro-cta {
+      padding: var(--spacing-sm);
+    }
+
+    .intro-cta p {
+      font-size: var(--text-base);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }
+</style>

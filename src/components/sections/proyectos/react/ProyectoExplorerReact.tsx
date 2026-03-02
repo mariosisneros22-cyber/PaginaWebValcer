@@ -35,11 +35,13 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [-74.5, -9.2];
 const DEFAULT_ZOOM = 4;
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_INITIAL_BATCH = 6;
+const MOBILE_BATCH_STEP = 4;
 const SOURCE_ID = "projects";
 const LAYER_CLUSTERS = "clusters";
 const LAYER_CLUSTER_COUNT = "cluster-count";
 const LAYER_POINTS = "unclustered";
-
 
 
 type FeatureProps = {
@@ -90,6 +92,9 @@ export default function ProyectoExplorer({ projects }: Props) {
   const [filters, setFilters] = useState<ProjectFilters>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(MOBILE_INITIAL_BATCH);
+  const [mapShouldInit, setMapShouldInit] = useState(false);
   // map refs
   const mapRef = useRef<MapLibreMap | null>(null);
   const mapElRef = useRef<HTMLDivElement | null>(null);
@@ -125,6 +130,14 @@ export default function ProyectoExplorer({ projects }: Props) {
 
   const totalVisibles = useMemo(() => applyProjectFilters(projects, {}).length, [projects]);
 
+  const visibleProjects = useMemo(() => {
+    if (!isMobile) return filtered;
+    return filtered.slice(0, visibleCount);
+  }, [filtered, isMobile, visibleCount]);
+
+  const hasMoreMobile = isMobile && visibleProjects.length < filtered.length;
+  const showingCount = isMobile ? visibleProjects.length : filtered.length;
+
   // memo: querystring
   const queryString = useMemo(() => buildProjectsQueryString(filters), [filters]);
 
@@ -145,11 +158,49 @@ export default function ProyectoExplorer({ projects }: Props) {
     window.history.replaceState({ filters }, "", next);
   }, [queryString, filters]);
 
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    setVisibleCount(MOBILE_INITIAL_BATCH);
+  }, [isMobile, filters]);
+
+  useEffect(() => {
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+    const g = globalThis as typeof globalThis & {
+      requestIdleCallback?: (callback: IdleRequestCallback, opts?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof g.requestIdleCallback === "function") {
+      idleId = g.requestIdleCallback(() => setMapShouldInit(true), { timeout: 1200 });
+    } else {
+      timeoutId = window.setTimeout(() => setMapShouldInit(true), 350);
+    }
+
+    return () => {
+      if (idleId !== null && typeof g.cancelIdleCallback === "function") {
+        g.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   // init map once
   useEffect(() => {
     let destroyed = false;
 
     (async () => {
+      if (!mapShouldInit) return;
       if (!mapElRef.current || mapRef.current) return;
 
       const maplibregl = (await import("maplibre-gl")).default;
@@ -324,7 +375,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapShouldInit]);
 
 
 
@@ -365,6 +416,10 @@ export default function ProyectoExplorer({ projects }: Props) {
       zoom: Math.max(map.getZoom(), 13),
     });
   }, []);
+
+  const loadMoreMobile = useCallback(() => {
+    setVisibleCount((prev) => Math.min(prev + MOBILE_BATCH_STEP, filtered.length));
+  }, [filtered.length]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -550,12 +605,37 @@ export default function ProyectoExplorer({ projects }: Props) {
           </button>
           
         </div>
+
+        <div className="quickFilters" aria-label="Filtros rapidos">
+          <button
+            type="button"
+            className={`quickChip ${!filters.estado ? "is-active" : ""}`}
+            onClick={() => onChange({ estado: undefined })}
+            aria-pressed={!filters.estado}
+          >
+            Todos
+          </button>
+          {estados.map((estado) => {
+            const active = filters.estado === estado;
+            return (
+              <button
+                key={`quick-${estado}`}
+                type="button"
+                className={`quickChip ${active ? "is-active" : ""}`}
+                onClick={() => onChange({ estado: active ? undefined : estado })}
+                aria-pressed={active}
+              >
+                {formatEstadoLabel(estado)}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* RESUMEN */}
       <div className="summaryRow">
         <div className="summaryCount">
-          Mostrando <strong>{filtered.length}</strong> de <strong>{totalVisibles}</strong>
+          Mostrando <strong>{showingCount}</strong> de <strong>{totalVisibles}</strong>
         </div>
 
         {chips.length > 0 ? (
@@ -615,17 +695,18 @@ export default function ProyectoExplorer({ projects }: Props) {
         <section className="splitList">
           {filtered.length > 0 ? (
             <div className="projects-grid" key={queryString}>
-              {filtered.map((p) => (
+              {visibleProjects.map((p) => (
                 <ProyectoCardView
                   key={`${p.id}`}
                   project={p}
+                  mobileCompact
                   className={p.id === selectedId ? "isActive" : ""}
                 >
-                  <button type="button" className="seeOnMap" onClick={() => flyToProject(p)}>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => flyToProject(p)}>
                     Ver en mapa
                   </button>
 
-                  <a className="seeProject" href={`/proyectos/${p.slug}${queryString}`} >
+                  <a className="btn btn-primary btn-sm" href={`/proyectos/${p.slug}${queryString}`} >
                     Ver proyecto
                   </a>
                 </ProyectoCardView>
@@ -640,6 +721,13 @@ export default function ProyectoExplorer({ projects }: Props) {
               </button>
             </div>
           )}
+          {hasMoreMobile ? (
+            <div className="loadMoreWrap">
+              <button type="button" className="loadMoreBtn" onClick={loadMoreMobile}>
+                Cargar mas ({filtered.length - visibleProjects.length} restantes)
+              </button>
+            </div>
+          ) : null}
         </section>
       </div>
     </section>

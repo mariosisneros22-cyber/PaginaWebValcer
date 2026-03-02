@@ -1,0 +1,177 @@
+---
+type TextBlock = { title: string; body: string };
+
+type Props = {
+  title?: string;        // título del bloque (opcional)
+  manifesto?: string;    // frase fuerte (opcional)
+
+  // Labels cortos (no genéricos)
+  leftTag?: string;      // ej: "Propósito" o "Hoy"
+  rightTag?: string;     // ej: "Rumbo" o "Futuro"
+
+  mission: TextBlock;    // ej: { title: "Cómo trabajamos", body: "..." }
+  vision: TextBlock;     // ej: { title: "Hacia dónde vamos", body: "..." }
+};
+
+const {
+  title = "Propósito y rumbo",
+  manifesto = "Construimos infraestructura con seguridad y rigor técnico, para generar confianza hoy y desarrollo mañana.",
+
+  leftTag = "Propósito",
+  rightTag = "Rumbo",
+
+  mission,
+  vision,
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container mvx" data-mv>
+    <header class="mvx__header" data-reveal style="--d:0ms">
+      <h2 class="mvx__title">{title}</h2>
+
+      {manifesto ? (
+        <p class="mvx__manifesto" aria-label="Declaración">
+          {manifesto}
+        </p>
+      ) : null}
+    </header>
+
+    <div class="mvx__cols" role="group" aria-label="Propósito y rumbo">
+      <article class="mvx__block" data-reveal style="--d:140ms" aria-labelledby="mvx-left-tag">
+        <p class="mvx__tag" id="mvx-left-tag">{leftTag}</p>
+        <h3 class="mvx__label">{mission.title}</h3>
+        <p class="mvx__text">{mission.body}</p>
+      </article>
+
+      <article class="mvx__block" data-reveal style="--d:240ms" aria-labelledby="mvx-right-tag">
+        <p class="mvx__tag" id="mvx-right-tag">{rightTag}</p>
+        <h3 class="mvx__label">{vision.title}</h3>
+        <p class="mvx__text">{vision.body}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mvx{
+    /* reveal */
+    --reveal-duration: 1100ms;
+    --reveal-ease: cubic-bezier(.22, 1, .36, 1);
+    --reveal-distance: 12px;
+  }
+
+  /* Header centrado */
+  .mvx__header{
+    text-align: center;
+    max-width: 72ch;
+    margin: 0 auto 1.75rem;
+    padding-bottom: 5rem;
+  }
+
+  .mvx__title{
+    margin: 0;
+    font-weight: 700;
+    font-size: var(--text-3xl);
+  }
+
+  .mvx__manifesto{
+    margin: .9rem auto 0;
+    font-size: clamp(1.15rem, 1.4vw, 1.55rem);
+    line-height: 1.35;
+    letter-spacing: .01em;
+  }
+
+  /* Dos columnas sin separadores */
+  .mvx__cols{
+    max-width: 1100px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 5vw, 6rem);
+    align-items: start;
+  }
+
+  .mvx__block{
+    text-align: center;
+    padding: 1rem;
+
+  }
+
+  .mvx__tag{
+    margin: 0 0 .35rem;
+    font-size: .82rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .65;
+  }
+
+  .mvx__label{
+    margin: 0 0 .85rem;
+    font-weight: 650;
+    letter-spacing: .02em;
+    font-size: var(--text-xl);
+    line-height: 1.25;
+  }
+
+  .mvx__text{
+    margin: 0 auto;
+    max-width: 52ch;
+    line-height: 2.5;
+    white-space: pre-line;
+    font-size: var(--text-md);
+    opacity: .92;
+
+  }
+
+  /* Reveal */
+  @media (prefers-reduced-motion: no-preference){
+    [data-mv] [data-reveal]{
+      opacity: 0;
+      transform: translateY(var(--reveal-distance));
+      transition:
+        opacity var(--reveal-duration) var(--reveal-ease),
+        transform var(--reveal-duration) var(--reveal-ease);
+      transition-delay: var(--d, 0ms);
+      will-change: opacity, transform;
+    }
+
+    [data-mv].is-reveal [data-reveal]{
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 900px){
+    .mvx__cols{
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const root = document.querySelector("[data-mv]");
+    if (!root) return;
+
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    if (reduced) {
+      root.classList.add("is-reveal");
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          obs.disconnect();
+          requestAnimationFrame(() => root.classList.add("is-reveal"));
+        }
+      },
+      { threshold: 0.25, rootMargin: "-10% 0px -10% 0px" }
+    );
+
+    obs.observe(root);
+  });
+</script>

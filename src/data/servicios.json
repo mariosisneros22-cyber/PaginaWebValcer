@@ -1,0 +1,53 @@
+[
+  {
+    "id": "construccion-infraestructura",
+    "title": "Construcción e \nInfraestructura",
+    "tagline": "Ejecución integral de obras con control de calidad, plazo y seguridad.",
+    "items": [
+      "Ejecución de obras civiles",
+      "Obras urbanas y edificaciones",
+      "Obras viales, puertos y afines",
+      "Represas e irrigaciones",
+      "Saneamiento básico"
+    ],
+    "imageKey": "construccion",
+    "projectsCtaLabel": "Ver proyectos"
+  },
+  {
+    "id": "ingenieria-consultoria",
+    "title": "Ingeniería y \nConsultoría",
+    "tagline": "Supervisión, control y gestión técnica para proyectos públicos y privados.",
+    "items": [
+      "Supervisión de obras civiles",
+      "Consultoría técnica",
+      "Formulación de proyectos",
+      "Evaluación de inversión pública y privada"
+    ],
+    "imageKey": "ingenieria",
+    "projectsCtaLabel": "Ver proyectos"
+  },
+  {
+    "id": "maquinaria-logistica",
+    "title": "Maquinaria y \nLogística",
+    "tagline": "Flota operativa para soporte de obra y transporte de carga.",
+    "items": [
+      "Alquiler de maquinaria pesada",
+      "Alquiler de maquinaria liviana",
+      "Transporte de carga por carretera"
+    ],
+    "imageKey": "maquinaria",
+    "projectsCtaLabel": "Ver proyectos"
+  },
+  {
+    "id": "industria-mineria",
+    "title": "Industria y \nMinería",
+    "tagline": "Mantenimiento industrial y trabajos en mina con estándares de seguridad.",
+    "items": [
+      "Mantenimiento y reparación de plantas",
+      "Trabajos en mina",
+      "Servicios generales"
+    ],
+    "imageKey": "industria",
+    "projectsCtaLabel": "Ver proyectos"
+  }
+]

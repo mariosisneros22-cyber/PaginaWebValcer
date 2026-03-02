@@ -10,6 +10,8 @@ export type RelatedProyectoReactProps = {
   subtitle?: string;
   projects: ProjectWithCover[];
   backQuery?: string;
+  showHeader?: boolean;
+  variant?: "grid" | "mag";
 };
 
 export default function RelatedProyectoReact({
@@ -17,6 +19,8 @@ export default function RelatedProyectoReact({
   subtitle,
   projects,
   backQuery = "",
+  showHeader = true,
+  variant = "grid", // ✅ por defecto el layout clásico
 }: RelatedProyectoReactProps) {
   if (!projects?.length) return null;
 
@@ -28,21 +32,52 @@ export default function RelatedProyectoReact({
       : "";
 
   return (
-    <section className="related">
-      <div className="head">
-        <h2>{title}</h2>
-        {subtitle ? <p>{subtitle}</p> : null}
-      </div>
+    <section className={`related ${variant === "mag" ? "related--mag" : ""}`}>
+      {showHeader && (
+        <div className="head">
+          <h2>{title}</h2>
+          {subtitle ? <p>{subtitle}</p> : null}
+        </div>
+      )}
 
-      <div className="relatedGrid">
-        {projects.map((p) => (
-          <ProyectoCardView
-            key={p.id}
-            project={p}
-            href={`/proyectos/${p.slug}${safeQuery}`}
-          />
-        ))}
-      </div>
+      {variant === "mag" ? (
+        (() => {
+          const featured = projects[0];
+          const secondary = projects.slice(1, 4);
+
+          return (
+            <div className="magGrid">
+              <ProyectoCardView
+                className="isFeatured"
+                project={featured}
+                href={`/proyectos/${featured.slug}${safeQuery}`}
+                showServicios={false}
+              />
+              <div className="magSide">
+                {secondary.map((p) => (
+                  <ProyectoCardView
+                    key={p.id}
+                    className="isSecondary"
+                    project={p}
+                    href={`/proyectos/${p.slug}${safeQuery}`}
+                    showServicios={false}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })()
+      ) : (
+        <div className="relatedGrid">
+          {projects.map((p) => (
+            <ProyectoCardView
+              key={p.id}
+              project={p}
+              href={`/proyectos/${p.slug}${safeQuery}`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

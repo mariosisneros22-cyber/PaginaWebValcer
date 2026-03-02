@@ -1,7 +1,7 @@
 .mapWrap{
   position: relative;
   border: 1px solid rgba(0,0,0,.08);
-  border-radius: 14px;
+  border-radius: 5px;
   overflow: hidden;
   background: rgba(0,0,0,.03);
   margin: 10px 0 18px;
@@ -40,7 +40,7 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-lg);
   line-height: 1;
 }
 .popupMeta{ opacity: .75; margin-top: 6px; }

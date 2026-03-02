@@ -1,9 +1,111 @@
-.related { margin-top: 34px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,.10); }
-.related .head { margin-bottom: 14px; }
-.related .head h2 { margin: 0 0 6px; }
+.related .head { 
+  margin-bottom: 14px; 
+}
+.related .head h2 { 
+  margin: 0 0 6px; 
+  font-size: var(--text-xl);
+  font-weight: 750;
+}
 .related .head p { margin: 0; opacity: .75; }
 
-.relatedGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.related--mag .magGrid{
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+  align-items: start; /* 👈 clave */
+}
+
+.related--mag .magSide{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.related--mag .project-card.isFeatured{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.related--mag .project-card.isFeatured .thumb{
+  flex: 0 0 auto; /* mantiene proporción */
+}
+
+.related--mag .project-card.isFeatured .body{
+  flex: 1; /* ocupa resto del espacio */
+}
+/* ✅ featured tweaks */
+.related--mag .project-card.isFeatured .thumb{
+  aspect-ratio: auto;              /* ✅ desactiva ratio */
+  height: clamp(180px, 22vw, 260px);/* ✅ controla altura */
+}
+.related--mag .project-card.isFeatured .thumb img,
+.related--mag .project-card.isFeatured .thumbFallback{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.related--mag .project-card.isFeatured .title { font-size: 1.25rem; }
+
+/* ✅ secundarios horizontales */
+.related--mag .project-card.isSecondary{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: stretch;
+}
+
+/* anula ratio para que no deforme / estire raro */
+.related--mag .project-card.isSecondary .thumb{
+  aspect-ratio: auto;
+  height: 100%;
+  min-height: 96px;
+}
+
+.related--mag .project-card.isSecondary .thumb img,
+.related--mag .project-card.isSecondary .thumbFallback{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.related--mag .project-card.isSecondary .body{
+  padding: 10px 12px;
+}
+
+.related--mag .project-card.isSecondary .title{
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.related--mag .project-card.isSecondary .meta{
+  margin: 4px 0 8px;
+  font-size: .9rem;
+}
+
+
+/* grid clásico (slug) */
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
 @media (max-width: 900px) { .relatedGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .relatedGrid { grid-template-columns: 1fr; } }
 
+/* responsive magazine */
+@media (max-width: 900px){
+  .related--mag .magGrid{ grid-template-columns: 1fr; }
+
+  .related--mag .project-card.isSecondary{
+    grid-template-columns: 1fr;
+  }
+
+  .related--mag .project-card.isSecondary .thumb{
+    aspect-ratio: 16/10;
+    height: auto;
+    min-height: 0;
+  }
+}

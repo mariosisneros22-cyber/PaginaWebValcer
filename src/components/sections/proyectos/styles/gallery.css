@@ -33,7 +33,7 @@
   color: #fff;
   display: grid;
   place-items: center;
-  font-size: 28px;
+  font-size: var(--text-2xl);
   font-weight: 600;
   pointer-events: none;
 }
@@ -230,7 +230,7 @@
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 40px;
+  font-size: var(--text-3xl);
   background: none;
   border: 0;
   color: #fff;

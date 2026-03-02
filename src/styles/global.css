@@ -85,11 +85,12 @@ a:hover {
 
 .section {
   padding: var(--spacing-lg) 0;
+  background: var(--color-background);
 }
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background: #a9bdff;
+  background: var(--color-background-2);
 }
 
 
@@ -166,6 +167,22 @@ a:hover {
 .btn-primary:hover {
   background: var(--color-primary-dark);
   transform: translateY(-0.5px);
+}
+
+.btn-secondary{
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-secondary:hover{
+  background: rgba(0,0,0,.04); /* o usa una variable si tienes */
+  transform: translateY(-0.5px);
+}
+/* Botones pequeños */
+.btn-sm{
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 480px) {
@@ -270,3 +287,10 @@ img {
   background: rgba(0,0,0,.06);
   color: rgba(0,0,0,.75);
 }
+
+
+ .button-mid{
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-sm);
+  }

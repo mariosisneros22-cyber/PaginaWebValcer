@@ -1,13 +1,14 @@
 :root {
   /* Colores */
   --color-primary: #323850;
-  --color-primary-dark: #1433e0;
-  --color-secondary: #4c3aec;
+  --color-primary-dark: #0044ff;
+  --color-secondary: #79a5f5;
   --color-text: #333;
   --color-text-light: #666;
   --color-text-lighter: #999;
-  --color-background: #ffffff;
-  --color-background-light: #f8f9fa;
+  --color-background: #fffffff5;
+  --color-background-2: #ffffff;
+  --color-background-light: #ffefcc;
   --color-border: #cfcfcf;
   
   /* Espaciados responsive */
@@ -21,14 +22,16 @@
   --text-xs: clamp(0.7rem, 1.5vw, 0.8rem);      /* Más pequeño */
   --text-sm: clamp(0.8rem, 2vw, 0.9rem);        /* Pequeño */
   --text-base: clamp(0.9rem, 2.5vw, 1rem);      /* Base - reducido */
+  --text-md: clamp(0.95rem, 2.8vw, 1.1rem);
   --text-lg: clamp(1rem, 3vw, 1.2rem);          /* Grande */
   --text-xl: clamp(1.2rem, 4vw, 1.5rem);        /* Extra grande */
   --text-2xl: clamp(1.5rem, 5vw, 2.5rem);       /* 2XL */
   --text-3xl: clamp(2rem, 6vw, 3.5rem);         /* 3XL */
+  --text-4xl: clamp(2.5rem, 7vw, 4.5rem);         /* 3XL */
   
   /* 🎨 FUENTE - AQUÍ CAMBIAS EL TIPO DE LETRA */
-  --font-primary: 'Inter', 'Roboto', system-ui, '-apple-system', 'sans-serif';
-  --font-secondary: 'Poppins', 'Montserrat', 'sans-serif';
+  --font-primary: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-secondary: 'Manrope', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Consolas', monospace;
   
   /* Anchos */
