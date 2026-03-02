@@ -28,3 +28,6 @@ vercel
 
 .vscode/
 
+
+# Local Netlify folder
+.netlify
