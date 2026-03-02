@@ -1,6 +1,6 @@
 import { c as createComponent, m as maybeRenderHead, a as addAttribute, r as renderComponent, b as renderScript, d as renderTemplate } from '../chunks/astro/server_DEPTrjPg.mjs';
 import 'piccolore';
-import { $ as $$Layout } from '../chunks/Layout_B3F6PsX_.mjs';
+import { $ as $$Layout } from '../chunks/Layout_DqsIHtQ9.mjs';
 import { $ as $$Button } from '../chunks/button_B7UJg7TY.mjs';
 /* empty css                                    */
 import 'clsx';

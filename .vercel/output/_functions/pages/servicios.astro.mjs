@@ -1,6 +1,6 @@
 import { c as createComponent, m as maybeRenderHead, r as renderComponent, d as renderTemplate, a as addAttribute } from '../chunks/astro/server_DEPTrjPg.mjs';
 import 'piccolore';
-import { s as serviciosRaw, p as proyectosRaw, $ as $$Layout } from '../chunks/Layout_B3F6PsX_.mjs';
+import { s as serviciosRaw, p as proyectosRaw, $ as $$Layout } from '../chunks/Layout_DqsIHtQ9.mjs';
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
 import { useState, useMemo, useEffect } from 'react';
 /* empty css                                     */

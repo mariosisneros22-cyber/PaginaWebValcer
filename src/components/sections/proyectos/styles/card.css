@@ -6,6 +6,8 @@
   text-decoration: none;
   color: inherit;
   background: rgba(255,255,255,.6);
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
 }
 
 

@@ -17,17 +17,7 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$2, $$props, $$slots);
   Astro2.self = $$Header;
   const currentPath = Astro2.url.pathname;
-  return renderTemplate`${maybeRenderHead()}<header class="header" data-astro-cid-3ef6ksr2> <nav class="nav" aria-label="Navegación principal" data-astro-cid-3ef6ksr2> <div class="logo" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2>Valcer</a> </div> <button class="menu-toggle" data-menu-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks" data-astro-cid-3ef6ksr2> <span data-astro-cid-3ef6ksr2></span> <span data-astro-cid-3ef6ksr2></span> <span data-astro-cid-3ef6ksr2></span> </button> <ul class="nav-links" data-nav-links id="navLinks" data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/"${addAttribute(currentPath === "/" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>
-Inicio
-</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/proyectos"${addAttribute(currentPath === "/proyectos" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>
-Proyectos
-</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/servicios"${addAttribute(currentPath === "/servicios" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>
-Servicios
-</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/nosotros"${addAttribute(currentPath === "/nosotros" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>
-Nosotros
-</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/contacto"${addAttribute(currentPath === "/contacto" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>
-Contacto
-</a> </li> </ul> </nav> </header>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/Header.astro?astro&type=script&index=0&lang.ts")}`;
+  return renderTemplate`${maybeRenderHead()}<header class="header" data-astro-cid-3ef6ksr2> <nav class="nav" aria-label="Navegacion principal" data-astro-cid-3ef6ksr2> <div class="logo" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2>Valcer</a> </div> <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks" data-astro-cid-3ef6ksr2> <span data-astro-cid-3ef6ksr2></span> <span data-astro-cid-3ef6ksr2></span> <span data-astro-cid-3ef6ksr2></span> </button> <ul class="nav-links" data-nav-links id="navLinks" aria-hidden="true" inert data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/"${addAttribute(currentPath === "/" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>Inicio</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/proyectos"${addAttribute(currentPath === "/proyectos" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>Proyectos</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/servicios"${addAttribute(currentPath === "/servicios" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>Servicios</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/nosotros"${addAttribute(currentPath === "/nosotros" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>Nosotros</a> </li> <li data-astro-cid-3ef6ksr2> <a href="/contacto"${addAttribute(currentPath === "/contacto" ? "active" : "", "class")} data-astro-cid-3ef6ksr2>Contacto</a> </li> </ul> </nav> <button class="nav-backdrop" data-nav-backdrop aria-hidden="true" tabindex="-1" data-astro-cid-3ef6ksr2></button> </header>  ${renderScript($$result, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/Header.astro?astro&type=script&index=0&lang.ts")}`;
 }, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/Header.astro", void 0);
 
 const serviciosRaw = [

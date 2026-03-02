@@ -94,6 +94,7 @@ export default function ProyectoExplorer({ projects }: Props) {
   const [mapReady, setMapReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [visibleCount, setVisibleCount] = useState(MOBILE_INITIAL_BATCH);
+  const [mapShouldInit, setMapShouldInit] = useState(false);
   // map refs
   const mapRef = useRef<MapLibreMap | null>(null);
   const mapElRef = useRef<HTMLDivElement | null>(null);
@@ -170,11 +171,36 @@ export default function ProyectoExplorer({ projects }: Props) {
     setVisibleCount(MOBILE_INITIAL_BATCH);
   }, [isMobile, filters]);
 
+  useEffect(() => {
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+    const g = globalThis as typeof globalThis & {
+      requestIdleCallback?: (callback: IdleRequestCallback, opts?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof g.requestIdleCallback === "function") {
+      idleId = g.requestIdleCallback(() => setMapShouldInit(true), { timeout: 1200 });
+    } else {
+      timeoutId = window.setTimeout(() => setMapShouldInit(true), 350);
+    }
+
+    return () => {
+      if (idleId !== null && typeof g.cancelIdleCallback === "function") {
+        g.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   // init map once
   useEffect(() => {
     let destroyed = false;
 
     (async () => {
+      if (!mapShouldInit) return;
       if (!mapElRef.current || mapRef.current) return;
 
       const maplibregl = (await import("maplibre-gl")).default;
@@ -349,7 +375,7 @@ export default function ProyectoExplorer({ projects }: Props) {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapShouldInit]);
 
 
 

@@ -1,8 +1,8 @@
 import { c as createComponent, d as renderTemplate, f as defineScriptVars, a as addAttribute, r as renderComponent, m as maybeRenderHead, e as createAstro, b as renderScript } from '../chunks/astro/server_DEPTrjPg.mjs';
 import 'piccolore';
 import { $ as $$Image } from '../chunks/_astro_assets_hQqkGHLl.mjs';
-import { $ as $$Layout } from '../chunks/Layout_B3F6PsX_.mjs';
-import { $ as $$RelatedProyecto } from '../chunks/RelatedProyecto_D3rJct1o.mjs';
+import { $ as $$Layout } from '../chunks/Layout_DqsIHtQ9.mjs';
+import { $ as $$RelatedProyecto } from '../chunks/RelatedProyecto_DUprCtGF.mjs';
 import { $ as $$Button } from '../chunks/button_B7UJg7TY.mjs';
 /* empty css                                 */
 import { h as heroImages, a as about, i as infoSliders } from '../chunks/indexImage_D4ymw4AB.mjs';

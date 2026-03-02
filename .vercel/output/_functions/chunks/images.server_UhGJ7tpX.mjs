@@ -143,7 +143,16 @@ function ProyectoCardView({
   const estadoKey = estadoToKey(project.estado);
   const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
   const Inner = /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx("div", { className: "thumb", children: project.coverUrl ? /* @__PURE__ */ jsx("img", { src: project.coverUrl, alt: project.nombre, loading: "lazy" }) : /* @__PURE__ */ jsx("div", { className: "thumbFallback" }) }),
+    /* @__PURE__ */ jsx("div", { className: "thumb", children: project.coverUrl ? /* @__PURE__ */ jsx(
+      "img",
+      {
+        src: project.coverUrl,
+        alt: project.nombre,
+        loading: "lazy",
+        decoding: "async",
+        fetchPriority: "low"
+      }
+    ) : /* @__PURE__ */ jsx("div", { className: "thumbFallback" }) }),
     /* @__PURE__ */ jsxs("div", { className: "body", children: [
       /* @__PURE__ */ jsx("h3", { className: "title", children: project.nombre }),
       /* @__PURE__ */ jsxs("p", { className: "meta metaLocation", children: [

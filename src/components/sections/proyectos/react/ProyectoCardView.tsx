@@ -31,7 +31,13 @@ export default function ProyectoCardView({
     <>
       <div className="thumb">
         {project.coverUrl ? (
-          <img src={project.coverUrl} alt={project.nombre} loading="lazy" />
+          <img
+            src={project.coverUrl}
+            alt={project.nombre}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+          />
         ) : (
           <div className="thumbFallback" />
         )}

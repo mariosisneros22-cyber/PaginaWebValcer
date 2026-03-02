@@ -1,11 +1,11 @@
 import { c as createComponent, r as renderComponent, d as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_DEPTrjPg.mjs';
 import 'piccolore';
-import { p as proyectosRaw, $ as $$Layout } from '../chunks/Layout_B3F6PsX_.mjs';
+import { p as proyectosRaw, $ as $$Layout } from '../chunks/Layout_DqsIHtQ9.mjs';
 import { M as proyectoHero } from '../chunks/proyectoHero_ByyPjilN.mjs';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 /* empty css                                 */
-import { p as parseFiltersFromUrl, g as getAvailableStates, c as getAvailableServicios, d as getAvailableDepartamentos, h as applyProjectFilters, j as buildProjectsQueryString, f as formatEstadoLabel, b as formatSimpleLabel, P as ProyectoCardView, a as assertValidProjects, r as resolveProjectAssetUrl } from '../chunks/images.server_CjXT5NVC.mjs';
+import { p as parseFiltersFromUrl, g as getAvailableStates, c as getAvailableServicios, d as getAvailableDepartamentos, h as applyProjectFilters, j as buildProjectsQueryString, f as formatEstadoLabel, b as formatSimpleLabel, P as ProyectoCardView, a as assertValidProjects, r as resolveProjectAssetUrl } from '../chunks/images.server_UhGJ7tpX.mjs';
 /* empty css                                  */
 import { $ as $$Button } from '../chunks/button_B7UJg7TY.mjs';
 export { renderers } from '../renderers.mjs';
@@ -56,6 +56,7 @@ function ProyectoExplorer({ projects }) {
   const [mapReady, setMapReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [visibleCount, setVisibleCount] = useState(MOBILE_INITIAL_BATCH);
+  const [mapShouldInit, setMapShouldInit] = useState(false);
   const mapRef = useRef(null);
   const mapElRef = useRef(null);
   const initialViewRef = useRef(null);
@@ -104,8 +105,27 @@ function ProyectoExplorer({ projects }) {
     setVisibleCount(MOBILE_INITIAL_BATCH);
   }, [isMobile, filters]);
   useEffect(() => {
+    let timeoutId = null;
+    let idleId = null;
+    const g = globalThis;
+    if (typeof g.requestIdleCallback === "function") {
+      idleId = g.requestIdleCallback(() => setMapShouldInit(true), { timeout: 1200 });
+    } else {
+      timeoutId = window.setTimeout(() => setMapShouldInit(true), 350);
+    }
+    return () => {
+      if (idleId !== null && typeof g.cancelIdleCallback === "function") {
+        g.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+  useEffect(() => {
     let destroyed = false;
     (async () => {
+      if (!mapShouldInit) return;
       if (!mapElRef.current || mapRef.current) return;
       const maplibregl = (await import('maplibre-gl')).default;
       if (destroyed) return;
@@ -244,7 +264,7 @@ function ProyectoExplorer({ projects }) {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [mapShouldInit]);
   useEffect(() => {
     if (!selectedId) return;
     const stillExists = filteredWithCoords.some((p) => p.id === selectedId);
@@ -526,7 +546,7 @@ const $$ProyectoExplorer = createComponent(($$result, $$props, $$slots) => {
     ...p,
     coverUrl: resolveProjectAssetUrl(p.portada)
   }));
-  return renderTemplate`${renderComponent($$result, "ProyectoExplorerReact", ProyectoExplorer, { "client:load": true, "projects": projectsWithCover, "client:component-hydration": "load", "client:component-path": "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/proyectos/react/ProyectoExplorerReact.tsx", "client:component-export": "default" })}`;
+  return renderTemplate`${renderComponent($$result, "ProyectoExplorerReact", ProyectoExplorer, { "client:visible": true, "projects": projectsWithCover, "client:component-hydration": "visible", "client:component-path": "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/proyectos/react/ProyectoExplorerReact.tsx", "client:component-export": "default" })}`;
 }, "D:/ttt/Paginaweb/LandingPage/super-shell/src/components/sections/proyectos/astro/ProyectoExplorer.astro", void 0);
 
 const $$Index = createComponent(($$result, $$props, $$slots) => {

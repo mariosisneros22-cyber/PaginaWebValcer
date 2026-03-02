@@ -1,7 +1,7 @@
 import { c as createComponent, r as renderComponent, d as renderTemplate, e as createAstro } from './astro/server_DEPTrjPg.mjs';
 import 'piccolore';
-import { p as proyectosRaw } from './Layout_B3F6PsX_.mjs';
-import { P as ProyectoCardView, i as isVisibleProject, r as resolveProjectAssetUrl } from './images.server_CjXT5NVC.mjs';
+import { p as proyectosRaw } from './Layout_DqsIHtQ9.mjs';
+import { P as ProyectoCardView, i as isVisibleProject, r as resolveProjectAssetUrl } from './images.server_UhGJ7tpX.mjs';
 import { jsxs, jsx } from 'react/jsx-runtime';
 /* empty css                         */
 

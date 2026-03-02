@@ -27,6 +27,8 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
 
   return { ...item, layout, side };
 });
+
+const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 ---
 
 <section class="timeline-section" data-timeline style={`--n:${scenes.length}; --tail:0.6;`}>
@@ -34,6 +36,48 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
     <header class="timeline-header">
       <h2 class="timeline-title">Conoce nuestra historia y trayectoria</h2>
     </header>
+
+    <nav class="timeline-mobile-nav" aria-label="Navegacion por años">
+      {mobileYears.map((year, idx) => (
+        <button
+          type="button"
+          class={`mobile-year-chip${idx === 0 ? " is-active" : ""}`}
+          data-mobile-year={year}
+          data-target={`mobile-item-${scenes.findIndex((s) => s.year === year)}`}
+        >
+          {year}
+        </button>
+      ))}
+    </nav>
+
+    <div class="timeline-mobile-list">
+      {scenes.map((item, index) => (
+        <details
+          class="timeline-mobile-item"
+          data-mobile-item
+          data-year={item.year}
+          id={`mobile-item-${index}`}
+          open={index === 0}
+        >
+          <summary>
+            <span class="mobile-item-year">{item.year}</span>
+            <span class="mobile-item-title">{item.layout === "outro" ? "Actualidad" : item.title}</span>
+          </summary>
+
+          <div class="mobile-item-body">
+            {item.layout === "outro" ? (
+              <p>{item.tagline ?? "Construyendo hoy, proyectando el manana."}</p>
+            ) : (
+              <p>{item.description}</p>
+            )}
+
+            {item.image ? (
+              <img src={item.image.src} alt={item.imageAlt ?? item.title} loading="lazy" />
+            ) : null}
+          </div>
+        </details>
+      ))}
+    </div>
 
     <div class="timeline-track" data-track>
       <div class="timeline-stage" data-stage>
@@ -94,11 +138,114 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
     z-index: 2;
   }
 
+  .timeline-mobile-nav,
+  .timeline-mobile-list{
+    display: none;
+  }
+
   @media (max-width:768px){
+    .timeline-title{
+      font-size: var(--text-2xl);
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-mobile-nav{
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px 0 10px;
+      margin-bottom: 12px;
+      position: sticky;
+      top: calc(var(--header-height) + 8px);
+      z-index: 25;
+      background: var(--color-background);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      scrollbar-width: none;
+    }
+
+    .timeline-mobile-nav::-webkit-scrollbar{
+      display: none;
+    }
+
+    .mobile-year-chip{
+      border: 1px solid rgba(0,0,0,.14);
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      padding: 6px 12px;
+      font-size: var(--text-sm);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .mobile-year-chip.is-active{
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .timeline-mobile-list{
+      display: grid;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .timeline-mobile-item{
+      border: 1px solid rgba(0,0,0,.1);
+      border-radius: 10px;
+      background: #fff;
+      overflow: clip;
+      scroll-margin-top: calc(var(--header-height) + 70px);
+    }
+
+    .timeline-mobile-item > summary{
+      list-style: none;
+      display: grid;
+      gap: 2px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .timeline-mobile-item > summary::-webkit-details-marker{
+      display: none;
+    }
+
+    .mobile-item-year{
+      font-size: var(--text-xs);
+      opacity: .75;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .mobile-item-title{
+      font-size: var(--text-base);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .mobile-item-body{
+      padding: 0 12px 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mobile-item-body p{
+      margin: 0;
+      font-size: var(--text-sm);
+      line-height: 1.55;
+    }
+
+    .mobile-item-body img{
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
     .timeline-track{ height:auto; }
     .timeline-stage{ position:static; height:auto; overflow:visible; }
     .timeline-axis{ display:none; }
-    .timeline-scenes{ position:static; }
+    .timeline-scenes{ display:none; }
   }
 </style>
 
@@ -117,31 +264,51 @@ const scenes: Scene[] = [...timelineData, outro].map((item, index) => {
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // =========================
-      // MÓVIL: lista + animación al entrar
+      // MÓVIL: timeline acordeon + chips de año
       // =========================
       if (isMobile) {
-        if (reduceMotion) return;
+        const chips = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-mobile-year]"));
+        const items = Array.from(root.querySelectorAll<HTMLElement>("[data-mobile-item]"));
+        if (chips.length === 0 || items.length === 0) return;
 
-        const items = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]"));
-        if (items.length === 0) return;
+        const setActiveYear = (year: string) => {
+          chips.forEach((chip) => {
+            chip.classList.toggle("is-active", chip.dataset.mobileYear === year);
+          });
+        };
 
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) {
-              if (e.isIntersecting) {
-                (e.target as HTMLElement).classList.add("in-view");
-                io.unobserve(e.target); // perf: solo una vez
-              }
-            }
-          },
-          { rootMargin: "0px 0px -10% 0px", threshold: 0.15 }
-        );
+        const onChipClick = (e: Event) => {
+          const btn = e.currentTarget as HTMLButtonElement;
+          const targetId = btn.dataset.target;
+          const year = btn.dataset.mobileYear;
+          if (!targetId || !year) return;
+
+          const target = root.querySelector<HTMLElement>(`#${targetId}`);
+          if (!target) return;
+
+          setActiveYear(year);
+          const details = target as HTMLDetailsElement;
+          details.open = true;
+          target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        };
+
+        chips.forEach((chip) => chip.addEventListener("click", onChipClick));
+
+        const io = new IntersectionObserver((entries) => {
+          const candidate = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+          const year = candidate?.target instanceof HTMLElement ? candidate.target.dataset.year : null;
+          if (year) setActiveYear(year);
+        }, { rootMargin: "-35% 0px -50% 0px", threshold: [0.2, 0.5, 0.8] });
 
         items.forEach((el) => io.observe(el));
 
         document.addEventListener(
           "astro:before-swap",
           () => {
+            chips.forEach((chip) => chip.removeEventListener("click", onChipClick));
             io.disconnect();
           },
           { once: true }
