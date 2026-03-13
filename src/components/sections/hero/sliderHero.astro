@@ -33,13 +33,13 @@ const { images, title, subtitle } = Astro.props;
       class="slide-btn prev" 
       data-slide-prev
       aria-label="Previous slide"
-    >‹</button>
+    ><img src="icons/arrow.svg" alt = ""></button>
     
     <button 
       class="slide-btn next" 
       data-slide-next
       aria-label="Next slide"
-    >›</button>
+    > <img src="icons/arrow.svg" alt = ""></button>
     
     <div class="slide-indicators" role="tablist">
       {images.map((_, index) => (
@@ -125,28 +125,51 @@ const { images, title, subtitle } = Astro.props;
   }
 
   .slide-btn {
-    color: white;
-    transition: background 0.3s;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(70, 70, 70, 0.5);
+    background: transparent;
     border: none;
-    font-size: 3rem;
-    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
     cursor: pointer;
     z-index: 10;
+    transition: transform 0.25s ease, opacity 0.25s ease;
   }
-  
-  .slide-btn:hover {
-    background: rgba(70, 70, 70, 0.8);
+
+  .slide-btn img {
+    width: 42px;
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    opacity: 0.95;
+  }
+
+  .slide-btn.next img {
+    transform: rotate(180deg);
+  }
+
+  .slide-btn:hover img {
+    opacity: 1;
+  }
+
+  .slide-btn.prev:hover img {
+    transform: translateX(-4px);
+  }
+
+  .slide-btn.next:hover img {
+    transform: rotate(180deg) translateX(-4px);
   }
 
   .slide-btn:focus-visible {
     outline: 2px solid white;
-    outline-offset: 2px;
+    outline-offset: 4px;
+    border-radius: 6px;
   }
-  
+
   .slide-btn.prev {
     left: 20px;
   }
@@ -201,10 +224,13 @@ const { images, title, subtitle } = Astro.props;
     }
     
     .slide-btn {
-      font-size: 2rem;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem;
     }
-    
+
+    .slide-btn img {
+      width: 34px;
+    }
+      
     .slide-indicators {
       bottom: 1rem;
     }
