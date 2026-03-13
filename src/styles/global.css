@@ -25,11 +25,26 @@ html {
 }
 
 body {
+  position: relative;
   font-family: var(--font-primary);
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-background);
   font-size: var(--text-base);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #f7f7f5;
+  background-image: url("/icons/logo/solo_logo.svg");
+  background-repeat: no-repeat;
+  background-position: right -8vw center;
+  background-size: min(48vw, 760px) auto;
+  opacity: 0.075;
 }
 
 /* === TIPOGRAFÍA === */
@@ -85,12 +100,20 @@ a:hover {
 
 .section {
   padding: var(--spacing-lg) 0;
-  background: var(--color-background);
+  background: rgba(255, 255, 255, 0.82);
 }
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background: var(--color-background-2);
+  background: rgba(249, 249, 247, 0.9);
+}
+
+@media (max-width: 900px) {
+  body::before {
+    background-position: right -20vw top 22vh;
+    background-size: min(72vw, 420px) auto;
+    opacity: 0.06;
+  }
 }
 
 
