@@ -226,17 +226,15 @@ const currentPath = Astro.url.pathname;
 </style>
 
 <script>
-  if (!window.__valcerHeader) {
-    window.__valcerHeader = { cleanup: null };
-  }
+  const headerStore = (window.__valcerHeader ??= { cleanup: null });
 
   function initHeader() {
-    window.__valcerHeader.cleanup?.();
+    headerStore.cleanup?.();
 
-    const header = document.querySelector('.header');
-    const menuToggle = document.querySelector('[data-menu-toggle]');
-    const navLinks = document.querySelector('[data-nav-links]');
-    const backdrop = document.querySelector('[data-nav-backdrop]');
+    const header = document.querySelector<HTMLElement>('.header');
+    const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const navLinks = document.querySelector<HTMLUListElement>('[data-nav-links]');
+    const backdrop = document.querySelector<HTMLButtonElement>('[data-nav-backdrop]');
     if (!header || !menuToggle || !navLinks || !backdrop) return;
 
     const signalController = new AbortController();
@@ -254,7 +252,7 @@ const currentPath = Astro.url.pathname;
       document.body.classList.remove('modal-open');
     };
 
-    const applyMenuState = (open) => {
+    const applyMenuState = (open: boolean) => {
       menuToggle.classList.toggle('active', open);
       navLinks.classList.toggle('active', open);
       backdrop.classList.toggle('active', open);
@@ -306,16 +304,16 @@ const currentPath = Astro.url.pathname;
     handleScroll();
     applyMenuState(false);
 
-    window.__valcerHeader.cleanup = () => {
+    headerStore.cleanup = () => {
       signalController.abort();
       closeMenu();
-      window.__valcerHeader.cleanup = null;
+      headerStore.cleanup = null;
     };
   }
 
   initHeader();
   document.addEventListener('astro:page-load', initHeader);
   document.addEventListener('astro:before-preparation', () => {
-    window.__valcerHeader.cleanup?.();
+    headerStore.cleanup?.();
   });
 </script>

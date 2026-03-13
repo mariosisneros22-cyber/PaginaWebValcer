@@ -6,5 +6,8 @@ declare global {
   interface Window {
     __valcerCopyInit?: boolean;
     __valcerToastTimer?: number;
+    __valcerHeader?: {
+      cleanup: (() => void) | null;
+    };
   }
 }
