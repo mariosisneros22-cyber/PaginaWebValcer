@@ -1,11 +1,15 @@
 ---
 const currentPath = Astro.url.pathname;
+const isActive = (path: string) =>
+  path === "/" ? currentPath === "/" : currentPath === path || currentPath.startsWith(`${path}/`);
 ---
 
 <header class="header">
   <nav class="nav" aria-label="Navegacion principal">
     <div class="logo">
-      <a href="/">Valcer</a>
+      <a href="/">
+        <img src="/icons/logo/logo_completo.svg" alt="Valcer" class="logo-img" />
+      </a>
     </div>
 
     <button
@@ -20,21 +24,21 @@ const currentPath = Astro.url.pathname;
       <span></span>
     </button>
 
-    <ul class="nav-links" data-nav-links id="navLinks" aria-hidden="true" inert>
+    <ul class="nav-links" data-nav-links id="navLinks">
       <li>
-        <a href="/" class={currentPath === '/' ? 'active' : ''}>Inicio</a>
+        <a href="/" class={isActive('/') ? 'active' : ''}>Inicio</a>
       </li>
       <li>
-        <a href="/proyectos" class={currentPath === '/proyectos' ? 'active' : ''}>Proyectos</a>
+        <a href="/nosotros" class={isActive('/nosotros') ? 'active' : ''}>Nosotros</a>
       </li>
       <li>
-        <a href="/servicios" class={currentPath === '/servicios' ? 'active' : ''}>Servicios</a>
+        <a href="/proyectos" class={isActive('/proyectos') ? 'active' : ''}>Proyectos</a>
       </li>
       <li>
-        <a href="/nosotros" class={currentPath === '/nosotros' ? 'active' : ''}>Nosotros</a>
+        <a href="/servicios" class={isActive('/servicios') ? 'active' : ''}>Servicios</a>
       </li>
       <li>
-        <a href="/contacto" class={currentPath === '/contacto' ? 'active' : ''}>Contacto</a>
+        <a href="/contacto" class={isActive('/contacto') ? 'active' : ''}>Contacto</a>
       </li>
     </ul>
   </nav>
@@ -42,6 +46,25 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <style>
+  .logo a {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-img {
+    height: 42px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+    transition: filter var(--transition-fast);
+    
+    /* convierte negro → blanco */
+    filter: brightness(0) invert(1);
+  }
+
+  .header.scrolled .logo-img {
+    filter: none;
+  }
   .header {
     position: fixed;
     top: 0;
@@ -166,6 +189,11 @@ const currentPath = Astro.url.pathname;
   }
 
   @media (max-width: 768px) {
+
+    .logo-img {
+      height: 36px;
+    }
+
     .menu-toggle {
       display: flex;
       z-index: 1001;

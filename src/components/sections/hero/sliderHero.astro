@@ -218,13 +218,15 @@ const { images, title, subtitle } = Astro.props;
 
 <script>
   function initSlider() {
-    const slider = document.querySelector('[data-hero-slider]');
+    const slider = document.querySelector<HTMLElement>('[data-hero-slider]');
     if (!slider) return;
 
     let currentSlide = 0;
     const slides = slider.querySelectorAll('.slide');
     const indicators = slider.querySelectorAll('.indicator');
     const totalSlides = slides.length;
+    const controller = new AbortController();
+    const { signal } = controller;
     
     if (totalSlides === 0) return;
     
@@ -265,17 +267,17 @@ const { images, title, subtitle } = Astro.props;
     }
 
     // Event listeners para botones
-    slider.querySelector('[data-slide-prev]')?.addEventListener('click', () => {
+    slider.querySelector<HTMLButtonElement>('[data-slide-prev]')?.addEventListener('click', () => {
       prevSlide();
       stopAutoSlide();
       startAutoSlide();
-    });
+    }, { signal });
 
-    slider.querySelector('[data-slide-next]')?.addEventListener('click', () => {
+    slider.querySelector<HTMLButtonElement>('[data-slide-next]')?.addEventListener('click', () => {
       nextSlide();
       stopAutoSlide();
       startAutoSlide();
-    });
+    }, { signal });
 
     // Event listeners para indicadores
     indicators.forEach((indicator, index) => {
@@ -284,12 +286,12 @@ const { images, title, subtitle } = Astro.props;
         showSlide(currentSlide);
         stopAutoSlide();
         startAutoSlide();
-      });
+      }, { signal });
     });
 
     // Pausar en hover
-    slider.addEventListener('mouseenter', stopAutoSlide);
-    slider.addEventListener('mouseleave', startAutoSlide);
+    slider.addEventListener('mouseenter', stopAutoSlide, { signal });
+    slider.addEventListener('mouseleave', startAutoSlide, { signal });
 
     // Pausar cuando tab está inactivo
     document.addEventListener('visibilitychange', () => {
@@ -298,12 +300,15 @@ const { images, title, subtitle } = Astro.props;
       } else {
         startAutoSlide();
       }
-    });
+    }, { signal });
 
     startAutoSlide();
 
     // Cleanup function
-    return () => stopAutoSlide();
+    return () => {
+      controller.abort();
+      stopAutoSlide();
+    };
   }
 
   // Ejecutar y guardar cleanup
