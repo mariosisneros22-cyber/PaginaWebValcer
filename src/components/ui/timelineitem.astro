@@ -93,7 +93,9 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
 
     max-width: 60ch;
 
-    background: white;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(42, 43, 111, .1);
+    box-shadow: 0 16px 34px rgba(42, 43, 111, .1);
     padding: 0.75rem 1rem;
     border-radius: 12px;
   }
@@ -155,7 +157,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     width:10px;
     height:10px;
     border-radius:999px;
-    background:#333;
+    background: var(--color-primary);
   }
 
   /* INTRO: contenido abajo centrado, sin media */
@@ -241,7 +243,8 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   .scene-year{
     line-height: 1;
     padding: 0.15em 0.25em;   /* placa */
-    background: white;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(42, 43, 111, .1);
     border-radius: 12px;
   }
 
@@ -256,7 +259,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     display: inline-block;
 
     /* ✅ base visible */
-    color: #999;
+    color: var(--color-text-lighter);
   }
 
   /* vertical apilado */
@@ -277,7 +280,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     color: transparent;
     -webkit-text-fill-color: transparent;
 
-    background-image: linear-gradient(#111, #111);
+    background-image: linear-gradient(var(--color-primary), var(--color-secondary));
     background-repeat: no-repeat;
 
     -webkit-background-clip: text;
@@ -338,18 +341,18 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   .scene[data-layout="split"][data-side="A"] .scene-media{
     -webkit-mask-image: linear-gradient(
       to right,
-      #000 0%,
-      #000 55%,
-      rgba(0,0,0,.85) 70%,
-      rgba(0,0,0,.35) 85%,
+      #05070d 0%,
+      #05070d 55%,
+      rgba(5,7,13,.85) 70%,
+      rgba(5,7,13,.35) 85%,
       transparent 100%
     );
     mask-image: linear-gradient(
       to right,
-      #000 0%,
-      #000 55%,
-      rgba(0,0,0,.85) 70%,
-      rgba(0,0,0,.35) 85%,
+      #05070d 0%,
+      #05070d 55%,
+      rgba(5,7,13,.85) 70%,
+      rgba(5,7,13,.35) 85%,
       transparent 100%
     );
   }
@@ -358,18 +361,18 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   .scene[data-layout="split"][data-side="B"] .scene-media{
     -webkit-mask-image: linear-gradient(
       to left,
-      #000 0%,
-      #000 55%,
-      rgba(0,0,0,.85) 70%,
-      rgba(0,0,0,.35) 85%,
+      #05070d 0%,
+      #05070d 55%,
+      rgba(5,7,13,.85) 70%,
+      rgba(5,7,13,.35) 85%,
       transparent 100%
     );
     mask-image: linear-gradient(
       to left,
-      #000 0%,
-      #000 55%,
-      rgba(0,0,0,.85) 70%,
-      rgba(0,0,0,.35) 85%,
+      #05070d 0%,
+      #05070d 55%,
+      rgba(5,7,13,.85) 70%,
+      rgba(5,7,13,.35) 85%,
       transparent 100%
     );
   }
@@ -464,7 +467,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     .year{
       font-size: var(--text-xl) !important;
       line-height: 1 !important;
-      color: #333 !important;
+      color: var(--color-primary) !important;
     }
 
     .year-vertical,

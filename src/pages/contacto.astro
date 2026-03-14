@@ -39,15 +39,15 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
   /* “Levanta” visual: paneles tipo card */
   :global(.contact-form),
   :global(.info-block) {
-    background: #fff;
-    border: 1px solid #ececec;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--color-border);
     border-radius: 14px;
     padding: 1.75rem;
-    box-shadow: 0 12px 34px rgba(0,0,0,.08);
+    box-shadow: var(--shadow-md);
   }
 
   :global(.contact-form) {
-    border-top: 4px solid rgba(0,0,0,.08); /* acento sutil sin colores */
+    border-top: 4px solid rgba(109, 186, 235, 0.55);
   }
 
   /* separación del mapa */
@@ -57,11 +57,11 @@ import ContactMap from '../components/sections/contacto/ContactMap.astro';
 
   /* card para el mapa */
   :global(.map-block) {
-    background: #fff;
-    border: 1px solid #e7e7e7;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--color-border);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    box-shadow: var(--shadow-md);
   }
 
   /* (luego veremos móvil, pero lo dejo) */

@@ -1,19 +1,19 @@
 .project-card {
   display: block;
-  border: 1px solid rgba(0,0,0,.05);
-  border-radius: 5px;
+  border: 1px solid rgba(42, 43, 111, .08);
+  border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  background: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.78);
   content-visibility: auto;
   contain-intrinsic-size: 320px;
 }
 
 
-.thumb { aspect-ratio: 16/10; background: rgba(0,0,0,.04); }
+.thumb { aspect-ratio: 16/10; background: rgba(109, 186, 235, .08); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; display:block; }
-.thumbFallback { width: 100%; height: 100%; background: rgba(0,0,0,.06); }
+.thumbFallback { width: 100%; height: 100%; background: rgba(42, 43, 111, .08); }
 
 .body { padding: 14px 14px 16px; }
 .title { margin: 0; font-size: 1.05rem; }
@@ -24,7 +24,7 @@
   font-size: .8rem;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
 }
 
 .desc { margin: 0; opacity: .85; font-size: .95rem; }
@@ -45,11 +45,11 @@
   line-height: 1;
   letter-spacing: inherit;
 
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
   border-radius: 10px;
   padding: 8px 10px;
 
-  background: white;
+  background: var(--color-white);
   color: inherit;
   text-decoration: none;
 
@@ -67,8 +67,8 @@
 
 
 .project-card.isActive{
-  outline: 2px solid rgba(0,0,0,.35);
-  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+  outline: 2px solid rgba(109, 186, 235, .55);
+  box-shadow: 0 16px 28px rgba(42, 43, 111, .14);
   transform: translateY(-1px);
 }
 
@@ -140,9 +140,9 @@
   .project-card.is-mobile-compact .mobileExpandBtn{
     display: inline-flex;
     align-self: flex-start;
-    border: 1px solid rgba(0,0,0,.16);
-    background: #fff;
-    color: #111;
+    border: 1px solid rgba(42, 43, 111, .16);
+    background: var(--color-white);
+    color: var(--color-primary);
     border-radius: 999px;
     padding: 5px 10px;
     font-size: var(--text-xs);

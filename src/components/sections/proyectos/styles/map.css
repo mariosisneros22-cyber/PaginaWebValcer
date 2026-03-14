@@ -1,9 +1,9 @@
 .mapWrap{
   position: relative;
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 5px;
+  border: 1px solid rgba(42, 43, 111, .08);
+  border-radius: 12px;
   overflow: hidden;
-  background: rgba(0,0,0,.03);
+  background: rgba(109, 186, 235, .06);
   margin: 10px 0 18px;
 }
 
@@ -11,8 +11,8 @@
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  border: 2px solid white;
-  background: black;
+  border: 2px solid var(--color-white);
+  background: var(--color-primary);
   cursor: pointer;
 }
 
@@ -26,7 +26,7 @@
   bottom: 12px;
   width: min(320px, calc(100% - 24px));
   border-radius: 14px;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
   background: rgba(255,255,255,.95);
   padding: 12px;
 }
@@ -52,7 +52,7 @@
   bottom: 12px;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
   background: rgba(255,255,255,.95);
   opacity: .9;
 }
@@ -64,7 +64,7 @@
   top: 12px;
   left: 12px;
   z-index: 5;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
   border-radius: 10px;
   padding: 8px 10px;
   background: rgba(255,255,255,.95);

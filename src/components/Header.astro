@@ -77,7 +77,9 @@ const isActive = (path: string) =>
   }
 
   .header.scrolled {
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(42, 43, 111, 0.08);
     box-shadow: var(--shadow-sm);
   }
 
@@ -175,13 +177,15 @@ const isActive = (path: string) =>
   }
 
   .nav-links a:hover {
-    color: var(--color-primary);
+    color: var(--color-secondary);
   }
 
   .nav-links a.active {
     color: white;
     font-weight: 600;
     text-decoration: underline;
+    text-decoration-color: rgba(109, 186, 235, 0.9);
+    text-underline-offset: 0.28em;
   }
 
   .nav-backdrop {
@@ -205,7 +209,9 @@ const isActive = (path: string) =>
       left: 0;
       width: 100%;
       height: calc(100vh - var(--header-height));
-      background: var(--color-background);
+      background:
+        linear-gradient(180deg, rgba(109, 186, 235, 0.12), rgba(255, 255, 255, 0.96)),
+        var(--color-background);
       flex-direction: column;
       gap: 0;
       padding: var(--spacing-md) 0;
@@ -224,7 +230,7 @@ const isActive = (path: string) =>
       position: fixed;
       inset: var(--header-height) 0 0 0;
       border: 0;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(12, 16, 40, 0.42);
       opacity: 0;
       pointer-events: none;
       transition: opacity var(--transition-normal);
@@ -249,6 +255,7 @@ const isActive = (path: string) =>
 
     .nav-links a.active {
       color: var(--color-primary);
+      text-decoration-color: rgba(42, 43, 111, 0.35);
     }
   }
 </style>

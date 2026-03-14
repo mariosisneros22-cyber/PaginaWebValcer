@@ -13,7 +13,7 @@
   cursor: pointer;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(42, 43, 111, 0.08);
   aspect-ratio: 4 / 3;
   background: transparent;
   text-align: left;
@@ -29,8 +29,8 @@
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
+  background: linear-gradient(180deg, rgba(16, 21, 52, 0.36), rgba(42, 43, 111, 0.72));
+  color: var(--color-white);
   display: grid;
   place-items: center;
   font-size: var(--text-2xl);
@@ -43,7 +43,7 @@
 .gallery-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(12, 16, 40, 0.9);
   z-index: 9999;
   display: grid;
   place-items: center;
@@ -153,7 +153,7 @@
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   animation: pulse 1s ease-in-out infinite;
 }
 
@@ -203,7 +203,7 @@
 
 .thumb-btn.active img {
   opacity: 1;
-  border-color: #fff;
+  border-color: var(--color-secondary);
   transform: scale(1.02);
 }
 
@@ -217,8 +217,8 @@
   height: 44px;
   border-radius: 50%;
   border: 0;
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
+  background: rgba(42, 43, 111, 0.4);
+  color: var(--color-white);
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -233,7 +233,7 @@
   font-size: var(--text-3xl);
   background: none;
   border: 0;
-  color: #fff;
+  color: var(--color-white);
   cursor: pointer;
   z-index: 10002;
 }

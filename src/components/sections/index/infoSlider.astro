@@ -81,15 +81,15 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
     position: absolute;
     inset: 0;
 
-    color: white;
+    color: var(--color-white);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
 
-    background: #000000;
+    background: linear-gradient(135deg, rgba(42, 43, 111, 0.98), rgba(24, 28, 77, 0.96));
     border-radius: 12px;
     padding: 2.5rem;
-    box-shadow: 0px 15px 40px rgba(0,0,0,0.05);
+    box-shadow: 0px 18px 44px rgba(42, 43, 111, 0.18);
 
     /* ✅ movimiento corto (menos brusco) */
     transform: translate3d(18px, 0, 0) scale(0.997);
@@ -188,7 +188,7 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   .indicator {
     width: 40px;
     height: 4px;
-    background: #e0e0e0;
+    background: rgba(42, 43, 111, 0.18);
     border: none;
     border-radius: 2px;
     cursor: pointer;
@@ -201,7 +201,7 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   }
 
   .indicator:hover:not(.active) {
-    background: #bdbdbd;
+    background: rgba(109, 186, 235, 0.38);
     transform: scaleY(1.5);
   }
 

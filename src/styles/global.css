@@ -39,12 +39,23 @@ body::before {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background-color: #f7f7f5;
+  background-color: var(--color-background);
   background-image: url("/icons/logo/solo_logo.svg");
   background-repeat: no-repeat;
   background-position: right -8vw center;
   background-size: min(48vw, 760px) auto;
-  opacity: 0.075;
+  opacity: 0.05;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(109, 186, 235, 0.18), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(42, 43, 111, 0.14), transparent 34%);
 }
 
 /* === TIPOGRAFÍA === */
@@ -87,7 +98,7 @@ a {
 }
 
 a:hover {
-  color: rgb(141, 141, 141);
+  color: var(--color-secondary-dark);
 }
 
 /* === CONTENEDORES === */
@@ -100,12 +111,14 @@ a:hover {
 
 .section {
   padding: var(--spacing-lg) 0;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.84);
 }
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background: rgba(249, 249, 247, 0.9);
+  background:
+    linear-gradient(180deg, rgba(109, 186, 235, 0.08), rgba(255, 255, 255, 0.82)),
+    rgba(245, 249, 253, 0.92);
 }
 
 @media (max-width: 900px) {
@@ -156,9 +169,10 @@ a:hover {
 
 /* === CARDS === */
 .card {
-  background: var(--color-background);
+  background: rgba(255, 255, 255, 0.9);
   padding: var(--spacing-md);
-  border-radius: 8px;
+  border: 1px solid rgba(42, 43, 111, 0.08);
+  border-radius: 12px;
   box-shadow: var(--shadow-md);
   transition: transform var(--transition-normal), 
               box-shadow var(--transition-normal);
@@ -184,22 +198,22 @@ a:hover {
 
 .btn-primary {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-white);
 }
 
 .btn-primary:hover {
-  background: var(--color-primary-dark);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary-dark));
   transform: translateY(-0.5px);
 }
 
 .btn-secondary{
-  background: transparent;
+  background: rgba(109, 186, 235, 0.1);
   color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  border: 1px solid rgba(42, 43, 111, 0.2);
 }
 
 .btn-secondary:hover{
-  background: rgba(0,0,0,.04); /* o usa una variable si tienes */
+  background: rgba(109, 186, 235, 0.18);
   transform: translateY(-0.5px);
 }
 /* Botones pequeños */
@@ -282,33 +296,38 @@ img {
   font-size: .8rem;
   font-weight: 600;
   width: fit-content;
-  border: 1px solid rgba(0,0,0,.12);
-  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(42, 43, 111, 0.12);
+  background: rgba(255,255,255,.82);
 }
 
 /* Estados normalizados */
 .estado-en_ejecucion{
-  background: rgba(0, 120, 255, .10);
-  color: rgb(0, 90, 200);
-  border-color: rgba(0, 120, 255, .22);
+  background: rgba(109, 186, 235, .18);
+  color: var(--color-primary);
+  border-color: rgba(42, 43, 111, .18);
 }
 
 .estado-finalizado{
-  background: rgba(0, 150, 80, .12);
-  color: rgb(0, 110, 60);
-  border-color: rgba(0, 150, 80, .22);
+  background: rgba(47, 143, 106, .12);
+  color: var(--color-success);
+  border-color: rgba(47, 143, 106, .22);
 }
 
 .estado-proyectado{
-  background: rgba(200, 140, 0, .15);
-  color: rgb(160, 110, 0);
-  border-color: rgba(200, 140, 0, .25);
+  background: rgba(185, 133, 36, .15);
+  color: var(--color-warning);
+  border-color: rgba(185, 133, 36, .25);
 }
 
 /* fallback si cae un estado no contemplado */
 .estado-unknown{
-  background: rgba(0,0,0,.06);
-  color: rgba(0,0,0,.75);
+  background: rgba(42, 43, 111, .06);
+  color: var(--color-text-light);
+}
+
+::selection {
+  background: rgba(109, 186, 235, 0.35);
+  color: var(--color-black);
 }
 
 

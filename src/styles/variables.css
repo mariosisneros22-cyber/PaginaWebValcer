@@ -1,15 +1,30 @@
 :root {
   /* Colores */
-  --color-primary: #323850;
-  --color-primary-dark: #0044ff;
-  --color-secondary: #79a5f5;
-  --color-text: #333;
-  --color-text-light: #666;
-  --color-text-lighter: #999;
-  --color-background: #fffffff5;
-  --color-background-2: #ffffff;
-  --color-background-light: #ffefcc;
-  --color-border: #cfcfcf;
+  --color-primary: #2a2b6f;
+  --color-primary-dark: #1d1f56;
+  --color-secondary: #6dbaeb;
+  --color-secondary-dark: #4f9fd5;
+  --color-accent-soft: #d9eefb;
+  --color-text: #17191f;
+  --color-text-light: #4f5870;
+  --color-text-lighter: #77829a;
+  --color-background: #fdfefe;
+  --color-background-2: #f5f9fd;
+  --color-background-light: #eaf4fb;
+  --color-surface: #ffffff;
+  --color-surface-tinted: #f0f6fc;
+  --color-surface-dark: #1f225a;
+  --color-border: #d6dfec;
+  --color-border-strong: #a9bcd6;
+  --color-black: #05070d;
+  --color-white: #ffffff;
+  --color-overlay: rgba(12, 16, 40, 0.5);
+  --color-success: #2f8f6a;
+  --color-success-soft: #e8f7f0;
+  --color-error: #c84c5c;
+  --color-error-soft: #fdecef;
+  --color-warning: #b98524;
+  --color-warning-soft: #fbf4e5;
   
   /* Espaciados responsive */
   --spacing-xs: clamp(0.5rem, 2vw, 1rem);
@@ -39,9 +54,9 @@
   --header-height: 60px;
   
   /* Sombras */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 8px 18px rgba(28, 37, 74, 0.08);
+  --shadow-md: 0 16px 32px rgba(28, 37, 74, 0.12);
+  --shadow-lg: 0 22px 48px rgba(28, 37, 74, 0.16);
   
   /* Transiciones */
   --transition-fast: 0.2s ease;

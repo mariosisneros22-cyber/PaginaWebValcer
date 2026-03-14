@@ -62,8 +62,8 @@ const { cards } = Astro.props;
     height: 420px;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(224, 224, 224, 0.2);
-    background: #000;
+    border: 1px solid rgba(109, 186, 235, 0.24);
+    background: var(--color-primary);
     /* Mejora rendimiento de animaciones */
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -103,7 +103,7 @@ const { cards } = Astro.props;
     margin: 0 0 auto 0;
     font-size: 1.3rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-white);
     text-align: left;
     max-width: 90%;
     
@@ -148,7 +148,7 @@ const { cards } = Astro.props;
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 16px 30px rgba(24, 28, 77, 0.28);
     }
   }
 

@@ -112,20 +112,19 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
   label {
     font-size: 0.9rem;
-    color: rgba(0,0,0,.72);
+    color: var(--color-text-light);
   }
 
   input,
   select,
   textarea {
     padding: 0.6rem 0.85rem;
-    border: 1px solid #dcdcdc;
     font-size: 0.95rem;
     line-height: 1.4;
     border-radius: 6px;
-
-    background: #fbfbfb;
-    border: 1px solid #e3e3e3;
+    color: var(--color-text);
+    background: rgba(240, 246, 252, 0.72);
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
   }
@@ -134,9 +133,9 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
   textarea:focus-visible,
   select:focus-visible {
     outline: none;
-    border-color: #bdbdbd;
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(0,0,0,.06);
+    border-color: var(--color-secondary-dark);
+    background: var(--color-white);
+    box-shadow: 0 0 0 4px rgba(109, 186, 235, .16);
   }
 
   textarea {
@@ -180,21 +179,21 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
   }
 
   .form-message.success .form-message-inner {
-    background: #e8f5e9;
-    color: #2e7d32;
-    border-left: 4px solid #2e7d32;
+    background: var(--color-success-soft);
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
   }
 
   .form-message.error .form-message-inner {
-    background: #fdecea;
-    color: #c62828;
-    border-left: 4px solid #c62828;
+    background: var(--color-error-soft);
+    color: var(--color-error);
+    border-left: 4px solid var(--color-error);
   }
 
   .form-message.loading .form-message-inner {
-    background: #f3f3f3;
-    color: #555;
-    border-left: 4px solid #999;
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+    border-left: 4px solid var(--color-warning);
   }
 
   .form-message.success,
@@ -206,7 +205,7 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 
   .contact-modal::backdrop {
-    background: rgba(0,0,0,.45);
+    background: var(--color-overlay);
   }
 
   .contact-modal {
@@ -223,11 +222,11 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
   }
 
   .modal-card {
-    background: #fff;
-    border: 1px solid #e7e7e7;
-    border-radius: 10px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
     padding: 1.25rem;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    box-shadow: var(--shadow-lg);
   }
 
   .modal-card h4 {

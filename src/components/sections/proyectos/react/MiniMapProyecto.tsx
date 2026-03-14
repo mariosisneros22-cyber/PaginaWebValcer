@@ -50,7 +50,7 @@ export default function MiniMapaProyecto({ lng, lat, zoom = 14 }: Props) {
 
       map.on("load", () => {
         map.setMaxBounds(PERU_BOUNDS);
-        new maplibregl.Marker({ color: "#111" }).setLngLat([lng, lat]).addTo(map);
+        new maplibregl.Marker({ color: "#2a2b6f" }).setLngLat([lng, lat]).addTo(map);
       });
     })();
 

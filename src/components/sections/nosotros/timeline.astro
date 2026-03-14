@@ -129,8 +129,8 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     transform: translateX(-50%);
   }
 
-  .axis-line{ background:#e5e5e5; }
-  .axis-progress{ background:#333; height: var(--line-progress, 0px); }
+  .axis-line{ background: rgba(42, 43, 111, .14); }
+  .axis-progress{ background: linear-gradient(to bottom, var(--color-secondary), var(--color-primary)); height: var(--line-progress, 0px); }
 
   .timeline-scenes{ 
     position:absolute; 
@@ -159,7 +159,7 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
       top: calc(var(--header-height) + 8px);
       z-index: 25;
       background: var(--color-background);
-      border-bottom: 1px solid rgba(0,0,0,.08);
+      border-bottom: 1px solid rgba(42, 43, 111, .08);
       scrollbar-width: none;
     }
 
@@ -168,10 +168,10 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     }
 
     .mobile-year-chip{
-      border: 1px solid rgba(0,0,0,.14);
+      border: 1px solid rgba(42, 43, 111, .14);
       border-radius: 999px;
-      background: #fff;
-      color: #111;
+      background: var(--color-white);
+      color: var(--color-primary);
       padding: 6px 12px;
       font-size: var(--text-sm);
       white-space: nowrap;
@@ -179,9 +179,9 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     }
 
     .mobile-year-chip.is-active{
-      background: #111;
-      color: #fff;
-      border-color: #111;
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-color: var(--color-primary);
     }
 
     .timeline-mobile-list{
@@ -191,9 +191,9 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     }
 
     .timeline-mobile-item{
-      border: 1px solid rgba(0,0,0,.1);
+      border: 1px solid rgba(42, 43, 111, .1);
       border-radius: 10px;
-      background: #fff;
+      background: rgba(255, 255, 255, .9);
       overflow: clip;
       scroll-margin-top: calc(var(--header-height) + 70px);
     }
