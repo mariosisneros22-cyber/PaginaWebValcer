@@ -202,7 +202,7 @@ a:hover {
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary-dark));
+  background: var(--color-primary-dark);
   transform: translateY(-0.5px);
 }
 
