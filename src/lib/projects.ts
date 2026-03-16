@@ -191,6 +191,17 @@ export function assertValidProjects(projects: Projecto[]): void {
   }
 }
 
+export function getUniqueProjectsBySlug<T extends Projecto>(projects: T[]): T[] {
+  const seen = new Set<string>();
+
+  return projects.filter((project) => {
+    const slug = (project.slug ?? "").trim();
+    if (!slug || seen.has(slug)) return false;
+    seen.add(slug);
+    return true;
+  });
+}
+
 export function estadoToKey(estado: string): string {
   return (estado ?? "")
     .toString()

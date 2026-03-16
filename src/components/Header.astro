@@ -163,16 +163,29 @@ const isActive = (path: string) =>
 
   .nav-links {
     display: flex;
+    align-items: center;
     list-style: none;
     gap: var(--spacing-md);
     margin: 0;
     padding: 0;
   }
 
+  .nav-links li {
+    display: flex;
+    align-items: center;
+  }
+
   .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     color: white;
     font-weight: 500;
     font-size: var(--text-base);
+    line-height: 1.1;
+    min-height: 2.5rem;
+    padding: 0.2rem 0;
     transition: color var(--transition-fast);
   }
 
@@ -183,9 +196,23 @@ const isActive = (path: string) =>
   .nav-links a.active {
     color: white;
     font-weight: 600;
-    text-decoration: underline;
-    text-decoration-color: rgba(109, 186, 235, 0.9);
-    text-underline-offset: 0.28em;
+    text-decoration: none;
+  }
+
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15rem;
+    height: 2px;
+    border-radius: 999px;
+    background: transparent;
+    transition: background var(--transition-fast);
+  }
+
+  .nav-links a.active::after {
+    background: rgba(109, 186, 235, 0.9);
   }
 
   .nav-backdrop {
@@ -243,6 +270,7 @@ const isActive = (path: string) =>
     }
 
     .nav-links li {
+      display: block;
       border-bottom: 1px solid var(--color-border);
     }
 
@@ -251,11 +279,21 @@ const isActive = (path: string) =>
       padding: var(--spacing-sm) var(--spacing-md);
       font-size: var(--text-lg);
       color: var(--color-text);
+      min-height: auto;
     }
 
     .nav-links a.active {
       color: var(--color-primary);
-      text-decoration-color: rgba(42, 43, 111, 0.35);
+    }
+
+    .nav-links a::after {
+      left: var(--spacing-md);
+      right: var(--spacing-md);
+      bottom: 0.55rem;
+    }
+
+    .nav-links a.active::after {
+      background: rgba(42, 43, 111, 0.35);
     }
   }
 </style>

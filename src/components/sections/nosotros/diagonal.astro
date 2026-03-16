@@ -1,5 +1,7 @@
 ---
-type Img = { src: string; alt?: string };
+import { Image } from "astro:assets";
+
+type Img = { src: ImageMetadata; alt?: string };
 
 interface Props {
   images: Img[];
@@ -15,9 +17,18 @@ const imgs = (images ?? []).slice(0, 4);
     <button
       type="button"
       class={`lamella ${i === 0 ? "is-active" : ""}`}
-      style={`background-image:url('${img.src}')`}
       aria-label={img.alt ?? `Imagen ${i + 1}`}
-    />
+    >
+      <Image
+        src={img.src}
+        alt={img.alt ?? `Imagen ${i + 1}`}
+        loading={i === 0 ? "eager" : "lazy"}
+        decoding="async"
+        widths={[480, 720, 960, 1280]}
+        sizes="(max-width: 768px) 50vw, 25vw"
+        quality={72}
+      />
+    </button>
   ))}
 </div>
 
@@ -42,12 +53,10 @@ const imgs = (images ?? []).slice(0, 4);
 
   .lamella{
     flex: 1 1 0;
+    position: relative;
     border: 0;
     padding: 0;
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    overflow: hidden;
 
     cursor: pointer;
 
@@ -55,6 +64,13 @@ const imgs = (images ?? []).slice(0, 4);
 
     transition: flex .35s cubic-bezier(.4,0,.2,1), filter .25s ease;
     filter: saturate(.9) contrast(.95) brightness(.95);
+  }
+
+  .lamella :global(img){
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .lamella + .lamella{
@@ -97,6 +113,9 @@ const imgs = (images ?? []).slice(0, 4);
 <script>
   document.addEventListener('astro:page-load', () => {
     document.querySelectorAll<HTMLElement>('[data-lamellas]').forEach((root) => {
+      if (root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+
       const items = root.querySelectorAll<HTMLButtonElement>('.lamella');
       if (!items.length) return;
 

@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Button from '../components/ui/button.astro';
 
 import Timeline from '../components/sections/nosotros/timeline.astro'
 
@@ -13,6 +12,7 @@ import {valores} from '../utils/valores'
 import { heroImages } from '../utils/indexImage';
 
 import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
+import ProjectCta from '../components/sections/shared/ProjectCta.astro';
 ---
 
 <Layout title="Valcer - Nosotros" heroTitle="Nosotros" heroImage={nosotrosHero}>
@@ -48,14 +48,7 @@ import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
 
   <Timeline />
 
-  <!-- CTA -->
-  <section class="section-2">
-    <div class="container cta-content">
-      <h2>¿Tienes un proyecto en mente?</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <Button href="/contacto">CONTACTAR</Button>
-    </div>
-  </section>
+  <ProjectCta />
 </Layout>
 
 <style>
@@ -67,22 +60,9 @@ import NosotrosSplit from '../components/sections/nosotros/nosotrosSplit.astro';
     gap: 0;
     margin-top: 18px;
 
-    /* ✅ cinta centrada (no full container) */
     max-width: 980px;
     margin-left: auto;
     margin-right: auto;
-  }
-  .cta-content{
-    text-align: center;
-  }
-
-  .cta-content h2{
-    font-size: var(--text-3xl);
-    font-weight: 700;
-  }
-
-  .cta-content p{
-    font-size: var(--text-xl)
   }
 </style>
 

@@ -25,6 +25,12 @@ const { images, titleImage, subtitle, primaryButton, secondaryButton } = Astro.p
           src={image} 
           alt={`Slide ${index + 1}`} 
           loading={index === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchpriority={index === 0 ? "high" : "auto"}
+          format="avif"
+          widths={[768, 1024, 1440, 1920]}
+          sizes="100vw"
+          quality={70}
         />
       </div>
     ))}

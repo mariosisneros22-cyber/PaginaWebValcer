@@ -30,8 +30,9 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
       <!--About us -->
       <div class ="about-us">
         <div class="about-us-content">
-          <h3>Sobre Nosotros</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <h3 class="section-heading">Sobre <span class="text-highlight">Nosotros</span></h3>
+          <p class="section-copy section-copy--lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="section-copy">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
           
         </div>
         
@@ -72,7 +73,7 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 
     <div class="container section-content">
 
-      <h2 class="valor-titulo">Nuestro enfoque en cada proyecto</h2>
+      <h2 class="valor-titulo">Nuestro enfoque en cada <span class="text-highlight">proyecto</span></h2>
 
       <p class="valor-subtitulo">
         Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
@@ -113,7 +114,9 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   <section class="section-2">
     <div class="container">
       <div class="proyectos-ht">
-        <h2 class="proyectos-titulo">Proyectos destacados</h2>
+        <div>
+          <h2 class="proyectos-titulo">Proyectos destacados</h2>
+        </div>
         <Button href="/proyectos">Leer más</Button>
       </div>
 
@@ -150,6 +153,11 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   .about-us-content{
     flex: 3;
     min-width: 0;
+    padding: clamp(1.4rem, 2.5vw, 2.35rem);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .about-us-image{
@@ -158,25 +166,19 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   }
 
   .about-us-content h3 {
-    font-size: var(--text-3xl);
-    margin-bottom: var(--spacing-md);
-    letter-spacing: -0.5px;
-    font-weight: 700;
+    max-width: 9ch;
     margin-bottom: 1rem;
   }
 
   .about-us-content p {
-    line-height: 1.6;
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-md);
-    line-height: 2;
-    font-size: var(--text-lg);
+    margin-bottom: 0.9rem;
   }
 
   .about-us-image {
     overflow: hidden;
     aspect-ratio: 4 / 3;
-    border-radius: 8px;
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
   }
 
   .about-us-image :global(img) {
@@ -261,8 +263,8 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 
   .valor-titulo {
     text-align: center;
-    font-size: var(--text-3xl);
-    letter-spacing: -0.5px;
+    max-width: 13ch;
+    margin-inline: auto;
   }
   .valor-index {
     display: inline-flex;
@@ -289,11 +291,17 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   .valor-item {
     text-align: center;
     padding: var(--spacing-md);
-    transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(109, 186, 235, 0.08));
+    backdrop-filter: blur(6px);
+    transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
   }
 
   .valor-item:hover {
     transform: translateY(-8px);
+    border-color: rgba(109, 186, 235, 0.3);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(109, 186, 235, 0.14));
   }
 
   .valor-grid-3 {
@@ -345,20 +353,14 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
   }
 
   .proyectos-titulo {
-    margin: -0.5rem;
-    letter-spacing: -0.5px;
-    font-size: var(--text-3xl);
-    font-weight: 600;
+    margin: 0;
   }
 
   /* Clientes */
   .clientes-titulo {
     text-align: left;
     margin-bottom: var(--spacing-lg);
-    letter-spacing: -0.5px;
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    
+    max-width: 12ch;
   }
 
   @media (prefers-reduced-motion: reduce) {

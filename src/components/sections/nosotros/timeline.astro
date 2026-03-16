@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import TimelineItem from "../../ui/timelineitem.astro";
 import { timelineDataSorted as timelineData } from "../../../utils/timeline";
 import type { TimelineItemData, TimelineLayout } from "../../../utils/timeline";
@@ -37,6 +38,17 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
       <h2 class="timeline-title">Conoce nuestra historia y trayectoria</h2>
     </header>
 
+    <button
+      type="button"
+      class="timeline-jump"
+      data-timeline-jump
+      aria-label="Ir al final del timeline"
+      title="Ir al final"
+      hidden
+    >
+      <img src="/icons/arrow.svg" alt="" aria-hidden="true" />
+    </button>
+
     <nav class="timeline-mobile-nav" aria-label="Navegacion por años">
       {mobileYears.map((year, idx) => (
         <button
@@ -72,7 +84,15 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
             )}
 
             {item.image ? (
-              <img src={item.image.src} alt={item.imageAlt ?? item.title} loading="lazy" />
+              <Image
+                src={item.image}
+                alt={item.imageAlt ?? item.title}
+                loading="lazy"
+                decoding="async"
+                widths={[480, 720, 960]}
+                sizes="100vw"
+                quality={72}
+              />
             ) : null}
           </div>
         </details>
@@ -97,6 +117,14 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 </section>
 
 <style>
+  .timeline-section{
+    position: relative;
+  }
+
+  .timeline-section .container{
+    position: relative;
+  }
+
   .timeline-track{ 
     height: calc((var(--n) + var(--tail,0)) * 100vh); 
   }
@@ -104,6 +132,51 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
   .timeline-title{
     font-size: var(--text-3xl);
     font-weight: 700;
+  }
+
+  .timeline-jump{
+    position: fixed;
+    right: clamp(16px, 3vw, 28px);
+    bottom: 24px;
+    z-index: 30;
+    width: 54px;
+    height: 54px;
+    border: 1px solid rgba(42, 43, 111, .12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 14px 26px rgba(42, 43, 111, .14);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+
+  .timeline-jump[hidden]{
+    display: none;
+  }
+
+  .timeline-jump:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px rgba(42, 43, 111, .18);
+    background: var(--color-white);
+  }
+
+  .timeline-jump:focus-visible{
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  .timeline-jump img{
+    width: 28px;
+    height: 28px;
+    transform: rotate(-90deg);
+    opacity: .92;
+    transition: transform .28s ease, opacity .2s ease;
+  }
+
+  .timeline-jump.is-up img{
+    transform: rotate(90deg);
   }
 
   .timeline-stage{
@@ -144,6 +217,21 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
   }
 
   @media (max-width:768px){
+    .timeline-jump{
+      position: fixed;
+      margin-left: 0;
+      margin-bottom: 0;
+      right: 16px;
+      bottom: 12px;
+      width: 46px;
+      height: 46px;
+    }
+
+    .timeline-jump img{
+      width: 24px;
+      height: 24px;
+    }
+
     .timeline-title{
       font-size: var(--text-2xl);
       margin-bottom: 0.75rem;
@@ -267,9 +355,32 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
       // MÓVIL: timeline acordeon + chips de año
       // =========================
       if (isMobile) {
+        const jumpButton = root.querySelector<HTMLButtonElement>("[data-timeline-jump]");
         const chips = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-mobile-year]"));
         const items = Array.from(root.querySelectorAll<HTMLElement>("[data-mobile-item]"));
         if (chips.length === 0 || items.length === 0) return;
+
+        let timelineVisible = false;
+
+        const updateTimelineVisibility = () => {
+          const rect = root.getBoundingClientRect();
+          timelineVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
+        };
+
+        const syncJumpState = () => {
+          if (!jumpButton) return;
+
+          jumpButton.hidden = !timelineVisible;
+          if (!timelineVisible) return;
+
+          const lastItem = items[items.length - 1];
+          const lastRect = lastItem?.getBoundingClientRect();
+          const isAtBottom = !!lastRect && lastRect.top <= window.innerHeight * 0.45;
+
+          jumpButton.classList.toggle("is-up", isAtBottom);
+          jumpButton.setAttribute("aria-label", isAtBottom ? "Volver al inicio del timeline" : "Ir al final del timeline");
+          jumpButton.setAttribute("title", isAtBottom ? "Volver arriba" : "Ir al final");
+        };
 
         const setActiveYear = (year: string) => {
           chips.forEach((chip) => {
@@ -292,7 +403,17 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
           target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
         };
 
+        const onJumpClick = () => {
+          if (!jumpButton) return;
+          const goUp = jumpButton.classList.contains("is-up");
+          const target = goUp ? items[0] : items[items.length - 1];
+          if (!target) return;
+          (target as HTMLDetailsElement).open = true;
+          target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: goUp ? "start" : "end" });
+        };
+
         chips.forEach((chip) => chip.addEventListener("click", onChipClick));
+        jumpButton?.addEventListener("click", onJumpClick);
 
         const io = new IntersectionObserver((entries) => {
           const candidate = entries
@@ -301,15 +422,28 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 
           const year = candidate?.target instanceof HTMLElement ? candidate.target.dataset.year : null;
           if (year) setActiveYear(year);
+          updateTimelineVisibility();
+          syncJumpState();
         }, { rootMargin: "-35% 0px -50% 0px", threshold: [0.2, 0.5, 0.8] });
 
         items.forEach((el) => io.observe(el));
+
+        const onWindowScroll = () => {
+          updateTimelineVisibility();
+          syncJumpState();
+        };
+
+        window.addEventListener("scroll", onWindowScroll, { passive: true });
+        updateTimelineVisibility();
+        syncJumpState();
 
         document.addEventListener(
           "astro:before-swap",
           () => {
             chips.forEach((chip) => chip.removeEventListener("click", onChipClick));
+            jumpButton?.removeEventListener("click", onJumpClick);
             io.disconnect();
+            window.removeEventListener("scroll", onWindowScroll);
           },
           { once: true }
         );
@@ -324,6 +458,7 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 
       const track = root.querySelector<HTMLElement>("[data-track]");
       const stage = root.querySelector<HTMLElement>("[data-stage]");
+      const jumpButton = root.querySelector<HTMLButtonElement>("[data-timeline-jump]");
       const scenes = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]"));
       if (!track || !stage || scenes.length === 0) return;
 
@@ -331,6 +466,12 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
       let activeIndex = -1;
       let usable = stage.getBoundingClientRect().height * 0.76;
       let lastRaw = 0;
+      let timelineVisible = false;
+
+      const updateTimelineVisibility = () => {
+        const rect = root.getBoundingClientRect();
+        timelineVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
+      };
 
       const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
@@ -403,18 +544,55 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 
       const onResize = () => {
         recalc();
+        updateTimelineVisibility();
         schedule();
       };
 
+      const syncJumpState = () => {
+        if (!jumpButton) return;
+
+        jumpButton.hidden = !timelineVisible;
+        if (!timelineVisible) return;
+
+        const last = scenes.length - 1;
+        const isAtBottom = last > 0 ? lastRaw >= Math.max(0, last - 0.15) : lastRaw > 0;
+
+        jumpButton.classList.toggle("is-up", isAtBottom);
+        jumpButton.setAttribute("aria-label", isAtBottom ? "Volver al inicio del timeline" : "Ir al final del timeline");
+        jumpButton.setAttribute("title", isAtBottom ? "Volver arriba" : "Ir al final");
+      };
+
+      const onJumpClick = () => {
+        const top = window.scrollY + track.getBoundingClientRect().top;
+        const isUp = jumpButton?.classList.contains("is-up");
+        const target = isUp
+          ? top
+          : Math.max(top + track.offsetHeight - window.innerHeight, top);
+        window.scrollTo({
+          top: target,
+          behavior: reduceMotion ? "auto" : "smooth",
+        });
+      };
+
+      const onWindowScroll = () => {
+        updateTimelineVisibility();
+        schedule();
+        syncJumpState();
+      };
+
       schedule();
-      window.addEventListener("scroll", schedule, { passive: true });
+      updateTimelineVisibility();
+      window.addEventListener("scroll", onWindowScroll, { passive: true });
       window.addEventListener("resize", onResize, { passive: true });
+      jumpButton?.addEventListener("click", onJumpClick);
+      syncJumpState();
 
       document.addEventListener(
         "astro:before-swap",
         () => {
-          window.removeEventListener("scroll", schedule);
+          window.removeEventListener("scroll", onWindowScroll);
           window.removeEventListener("resize", onResize);
+          jumpButton?.removeEventListener("click", onJumpClick);
           if (raf) cancelAnimationFrame(raf);
         },
         { once: true }
