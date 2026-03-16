@@ -10,11 +10,22 @@ import Button from '../components/ui/button.astro';
 
 import Carrusel from '../components/sections/index/carrusel.astro';
 
-import {serviceTabs} from '../utils/exportContent.ts'
 import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
 
 import { clients } from "../utils/clients";
-import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
+import serviciosRaw from '../data/servicios.json';
+
+type InicioServicio = {
+  id: string;
+  title: string;
+  tagline: string;
+};
+
+const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((service) => ({
+  id: service.id,
+  title: service.title.replaceAll('\n', ' '),
+  description: service.tagline,
+}));
 ---
 
 <Layout title="Valcer - Inicio">
@@ -46,8 +57,30 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
     </div>
   </section>
 
-  <!-- Servicios Interactivos -->
-  <ServiceIntro   buttonHref="/servicios" buttonLabel="Ver nuestros servicios"/>
+  <!-- Servicios -->
+  <section class="section-2 services-brief">
+    <div class="container services-brief__wrap">
+      <div class="services-brief__intro">
+        <h2 class="services-brief__title">Capacidades para ejecutar, supervisar y sostener proyectos con criterio técnico.</h2>
+        <p class="services-brief__copy">
+          En vez de listar todo aquí, resumimos las cuatro líneas que articulan nuestra operación. El detalle completo queda en la página de servicios.
+        </p>
+        <Button href="/servicios">Ver nuestros servicios</Button>
+      </div>
+
+      <div class="services-brief__list">
+        {serviceHighlights.map((service, index) => (
+          <a class="services-brief__item" href={`/servicios?tab=${encodeURIComponent(service.id)}`}>
+            <span class="services-brief__index">0{index + 1}</span>
+            <div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <!-- Valor Diferencial -->
   <section class="section section-video">
@@ -205,6 +238,99 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 
     .about-us-image {
       aspect-ratio: 4 / 3;
+    }
+  }
+
+  .services-brief__wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .services-brief__title {
+    max-width: 15ch;
+    margin-bottom: 1rem;
+  }
+
+  .services-brief__copy {
+    margin-bottom: 1.25rem;
+    font-size: var(--text-lg);
+    line-height: 1.75;
+  }
+
+  .services-brief__list {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .services-brief__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(42, 43, 111, 0.1);
+    color: inherit;
+    text-decoration: none;
+    transition: transform .18s ease, border-color .18s ease;
+  }
+
+  .services-brief__item:first-child {
+    padding-top: 0.1rem;
+  }
+
+  .services-brief__item:hover {
+    transform: translateX(4px);
+    border-color: rgba(42, 43, 111, 0.22);
+  }
+
+  .services-brief__item:hover .services-brief__index {
+    background: rgba(109, 186, 235, 0.22);
+  }
+
+  .services-brief__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: rgba(109, 186, 235, 0.12);
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+
+  .services-brief__item h3 {
+    margin-bottom: 0.45rem;
+    font-size: var(--text-lg);
+  }
+
+  .services-brief__item p {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 900px) {
+    .services-brief__wrap {
+      grid-template-columns: 1fr;
+    }
+
+    .services-brief__title {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .services-brief__copy {
+      font-size: var(--text-base);
+    }
+
+    .services-brief__item {
+      gap: 0.85rem;
     }
   }
 
