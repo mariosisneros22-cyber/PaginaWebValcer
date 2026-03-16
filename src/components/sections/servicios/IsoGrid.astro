@@ -12,9 +12,36 @@ type IsoItem = {
 };
 
 const iso = isoRaw as IsoItem[];
+const isoThemes: Record<string, { tone: string; eyebrow: string; icon: string }> = {
+  "9001:2015": {
+    tone: "quality",
+    eyebrow: "Calidad",
+    icon: "QC",
+  },
+  "14001:2015": {
+    tone: "environment",
+    eyebrow: "Ambiente",
+    icon: "AM",
+  },
+  "37001:2016": {
+    tone: "ethics",
+    eyebrow: "Integridad",
+    icon: "ET",
+  },
+  "45001:2018": {
+    tone: "safety",
+    eyebrow: "Seguridad",
+    icon: "SS",
+  },
+  "50001:2018": {
+    tone: "energy",
+    eyebrow: "Energia",
+    icon: "EN",
+  },
+};
 ---
 
-<section class="section" id="iso">
+<section class="section iso-section" id="iso">
   <div class="container">
     <header class="iso-head">
       <h2>Certificaciones ISO</h2>
@@ -24,39 +51,53 @@ const iso = isoRaw as IsoItem[];
     </header>
 
     <div class="iso-grid" role="list">
-      {iso.map((item) => (
-        <article class="iso-card" role="listitem" aria-label={`ISO ${item.number}`}>
-          <div class="iso-top">
-            <div class="iso-label">
-              <span class="iso-label__text">ISO</span>
-              <span class="iso-number">{item.number}</span>
+      {iso.map((item) => {
+        const theme = isoThemes[item.number] ?? {
+          tone: "default",
+          eyebrow: "Norma",
+          icon: "ISO",
+        };
+
+        return (
+          <article class={`iso-card iso-card--${theme.tone}`} role="listitem" aria-label={`ISO ${item.number}`}>
+            <div class="iso-top">
+              <div class="iso-label">
+                <span class="iso-icon" aria-hidden="true">{theme.icon}</span>
+                <span class="iso-eyebrow">{theme.eyebrow}</span>
+                <span class="iso-label__text">ISO</span>
+                <span class="iso-number">{item.number}</span>
+              </div>
+
+              {item.status && (
+                <span class={`iso-badge iso-badge--${item.status}`}>
+                  {item.status === "vigente" ? "Vigente" : "En proceso"}
+                </span>
+              )}
             </div>
 
-            {item.status && (
-              <span class={`iso-badge iso-badge--${item.status}`}>
-                {item.status === "vigente" ? "Vigente" : "En proceso"}
-              </span>
-            )}
-          </div>
+            <div class="iso-body">
+              <h3 class="iso-title">{item.title}</h3>
+              <p class="iso-scope">{item.scope}</p>
+              {typeof item.year === "number" && <p class="iso-year">Versión {item.year}</p>}
+            </div>
 
-          <div class="iso-body">
-            <h3 class="iso-title">{item.title}</h3>
-            <p class="iso-scope">{item.scope}</p>
-            {typeof item.year === "number" && <p class="iso-year">Año: {item.year}</p>}
-          </div>
-
-          <div class="iso-foot">
-            {item.certificate ? (
-              <a class="iso-link" href={item.certificate} target="_blank" rel="noopener">
-                Ver certificado
-              </a>
-            ) : (
-              <span class="iso-muted">Certificado disponible a solicitud</span>
-            )}
-          </div>
-        </article>
-      ))}
+            <div class="iso-foot">
+              {item.certificate ? (
+                <a class="iso-link" href={item.certificate} target="_blank" rel="noopener">
+                  Ver certificado
+                </a>
+              ) : (
+                <span class="iso-muted">Certificado disponible a solicitud</span>
+              )}
+            </div>
+          </article>
+        );
+      })}
     </div>
+
+    <p class="iso-note">
+      Estas certificaciones respaldan procedimientos aplicados en obra, operación y mantenimiento, y la documentación puede revisarse según el alcance de cada proyecto.
+    </p>
   </div>
 </section>
 

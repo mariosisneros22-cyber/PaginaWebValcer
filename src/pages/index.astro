@@ -144,11 +144,14 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   </section>
 
   <!-- Proyectos Destacados -->
-  <section class="section-2">
+  <section class="section-2 section-featured-projects">
     <div class="container">
       <div class="proyectos-ht">
-        <div>
+        <div class="proyectos-copy">
           <h2 class="proyectos-titulo">Proyectos destacados</h2>
+          <p class="proyectos-subtitulo">
+            Mantenemos un proyecto principal en foco y una selección complementaria para mostrar distintas escalas, servicios y contextos de ejecución.
+          </p>
         </div>
         <Button href="/proyectos">Leer más</Button>
       </div>
@@ -469,17 +472,62 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   }
 
   /* proyectos destacados */
+  .section-featured-projects {
+    position: relative;
+  }
+
+  .section-featured-projects::before {
+    content: "";
+    position: absolute;
+    inset: 2rem 0 auto;
+    height: min(26vw, 260px);
+    background:
+      radial-gradient(circle at top left, rgba(109, 186, 235, 0.18), transparent 58%),
+      linear-gradient(180deg, rgba(42, 43, 111, 0.05), transparent 92%);
+    pointer-events: none;
+  }
+
   .proyectos-ht {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
     margin-bottom: var(--spacing-lg);
     flex-wrap: wrap;
     gap: var(--spacing-md);
+    position: relative;
+    z-index: 1;
+  }
+
+  .proyectos-copy {
+    max-width: 52rem;
   }
 
   .proyectos-titulo {
     margin: 0;
+  }
+
+  .proyectos-subtitulo {
+    max-width: 64ch;
+    margin: 0.85rem 0 0;
+    color: rgba(24, 29, 62, 0.8);
+    line-height: 1.75;
+    font-size: var(--text-base);
+  }
+
+  @media (max-width: 768px) {
+    .section-featured-projects::before {
+      inset: 1rem 0 auto;
+      height: 180px;
+    }
+
+    .proyectos-ht {
+      align-items: start;
+    }
+
+    .proyectos-subtitulo {
+      font-size: var(--text-sm);
+      line-height: 1.7;
+    }
   }
 
   /* Clientes */
