@@ -18,6 +18,7 @@ export type Projecto = {
   portada: string;
   galeria?: { src: string; alt?: string }[];
   visible?: boolean;
+  monto?: number;
 };
 
 export type ProjectFilters = {
@@ -172,6 +173,18 @@ export function formatEstadoLabel(estado: string): string {
 
 export function formatSimpleLabel(value: string): string {
   return titleCase(normalizeText(value));
+}
+
+const montoFormatter = new Intl.NumberFormat("es-PE", {
+  style: "currency",
+  currency: "PEN",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatMonto(value: number | null | undefined): string {
+  if (typeof value !== "number" || Number.isNaN(value)) return "";
+  return montoFormatter.format(value);
 }
 
 export function assertValidProjects(projects: Projecto[]): void {

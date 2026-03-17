@@ -18,6 +18,12 @@
 .body { padding: 14px 14px 16px; }
 .title { margin: 0; font-size: 1.05rem; }
 .meta { margin: 6px 0 10px; opacity: .75; font-size: .95rem; }
+.metaMonto {
+  margin: -2px 0 12px;
+  opacity: 1;
+  color: var(--color-primary);
+  font-weight: 700;
+}
 
 .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
 .badge, .tag {
@@ -126,6 +132,11 @@
 
   .project-card.is-mobile-compact .metaLocation{
     margin-bottom: 8px;
+  }
+
+  .project-card.is-mobile-compact .metaMonto{
+    margin: -2px 0 10px;
+    font-size: var(--text-sm);
   }
 
   .project-card.is-mobile-compact .mobileDetails{

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "../styles/card.css"
 
 import type { Projecto } from "../../../../lib/projects";
-import { estadoToKey,formatEstadoLabel, formatSimpleLabel } from "../../../../lib/projects";
+import { estadoToKey,formatEstadoLabel, formatMonto, formatSimpleLabel } from "../../../../lib/projects";
 type ProjectWithCover = Projecto & { coverUrl: string };
 
 type Props = {
@@ -50,6 +50,10 @@ export default function ProyectoCardView({
           {project.ubicacion?.distrito ? `${project.ubicacion.distrito}, ` : ""}
           {project.ubicacion?.departamento}
         </p>
+
+        {typeof project.monto === "number" ? (
+          <p className="meta metaMonto">Monto: {formatMonto(project.monto)}</p>
+        ) : null}
 
         <div className={`mobileDetails${isExpanded ? " is-expanded" : ""}`}>
           <p className="meta metaClient">{project.cliente}</p>

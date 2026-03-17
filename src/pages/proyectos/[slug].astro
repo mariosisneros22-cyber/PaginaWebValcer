@@ -4,10 +4,11 @@ export const prerender = true;
 import MiniMapProyecto from "../../components/sections/proyectos/react/MiniMapProyecto.tsx"
 import Layout from "../../layouts/Layout.astro";
 import { Image , getImage} from "astro:assets";
+import proyectoHero from "../../assets/images/proyecto/proyectoHero.jpg";
 
 import proyectos from "../../data/proyectos.json";
-import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel, formatSimpleLabel, getUniqueProjectsBySlug } from "../../lib/projects";
-import { getProjectImageOrThrow } from "../../utils/proyectoImages";
+import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel, formatMonto, formatSimpleLabel, getUniqueProjectsBySlug } from "../../lib/projects";
+import { getProjectImageFromPath } from "../../utils/proyectoImages";
 
 import RelatedProyecto from "../../components/sections/proyectos/astro/RelatedProyecto.astro";
 
@@ -30,11 +31,13 @@ if (!proyecto || !isVisibleProject(proyecto)) {
 
 
 const estadoKey = estadoToKey(proyecto.estado);
-const portada = getProjectImageOrThrow(proyecto.portada);
+const portada = getProjectImageFromPath(proyecto.portada) ?? proyectoHero;
 
 const galeria = await Promise.all(
-  (proyecto.galeria ?? []).map(async (g) => {
-    const srcMeta = getProjectImageOrThrow(g.src);
+  (proyecto.galeria ?? [])
+    .filter((g) => !!getProjectImageFromPath(g.src))
+    .map(async (g) => {
+    const srcMeta = getProjectImageFromPath(g.src)!;
     const alt = g.alt ?? proyecto.nombre;
 
     // Thumb real para la columna de miniaturas
@@ -136,6 +139,13 @@ const title = `Valcer - ${proyecto.nombre}`;
             <span class="tech-label">Fin</span>
             <span class="tech-value">
               {proyecto.fecha_fin ?? "En ejecución"}
+            </span>
+          </div>
+
+          <div class="tech-item">
+            <span class="tech-label">Monto</span>
+            <span class="tech-value">
+              {typeof proyecto.monto === "number" ? formatMonto(proyecto.monto) : "No disponible"}
             </span>
           </div>
 
