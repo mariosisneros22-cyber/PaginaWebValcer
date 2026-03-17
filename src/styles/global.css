@@ -148,7 +148,7 @@ a:hover {
 .section-2 {
   padding: var(--spacing-lg) 0;
   background:
-    linear-gradient(180deg, rgba(109, 186, 235, 0.08), rgba(255, 255, 255, 0.82)),
+    linear-gradient(180deg, rgba(109, 186, 235, 0.12), rgba(255, 255, 255, 0.82)),
     rgba(245, 249, 253, 0.92);
 }
 
@@ -158,10 +158,10 @@ a:hover {
   gap: 0.55rem;
   margin-bottom: 0.9rem;
   padding: 0.45rem 0.9rem;
-  border: 1px solid rgba(42, 43, 111, 0.12);
+  border: 1px solid rgba(109, 186, 235, 0.3);
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(109, 186, 235, 0.16), rgba(255, 255, 255, 0.88));
-  color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(109, 186, 235, 0.22), rgba(255, 255, 255, 0.88));
+  color: var(--color-secondary-dark);
   font-size: var(--text-xs);
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -188,7 +188,7 @@ a:hover {
 .text-highlight {
   display: inline;
   padding: 0 0.2em;
-  background: linear-gradient(180deg, transparent 40%, rgba(109, 186, 235, 0.3) 40%);
+  background: linear-gradient(180deg, transparent 38%, rgba(109, 186, 235, 0.42) 38%);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -285,13 +285,13 @@ a:hover {
 }
 
 .btn-secondary{
-  background: rgba(109, 186, 235, 0.1);
-  color: var(--color-primary);
-  border: 1px solid rgba(42, 43, 111, 0.2);
+  background: rgba(109, 186, 235, 0.16);
+  color: var(--color-secondary-dark);
+  border: 1px solid rgba(109, 186, 235, 0.34);
 }
 
 .btn-secondary:hover{
-  background: rgba(109, 186, 235, 0.18);
+  background: rgba(109, 186, 235, 0.26);
   transform: translateY(-0.5px);
 }
 
@@ -369,14 +369,14 @@ img {
   font-size: 0.8rem;
   font-weight: 600;
   width: fit-content;
-  border: 1px solid rgba(42, 43, 111, 0.12);
-  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(109, 186, 235, 0.2);
+  background: rgba(109,186,235,.08);
 }
 
 .estado-en_ejecucion{
-  background: rgba(109, 186, 235, .18);
-  color: var(--color-primary);
-  border-color: rgba(42, 43, 111, .18);
+  background: rgba(109, 186, 235, .24);
+  color: var(--color-secondary-dark);
+  border-color: rgba(109, 186, 235, .32);
 }
 
 .estado-finalizado{

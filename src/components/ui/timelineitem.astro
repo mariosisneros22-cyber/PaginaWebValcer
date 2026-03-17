@@ -106,8 +106,8 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   .scene-content,
   .scene-media{
     opacity: 0;
-    transform: translate3d(var(--enter-x, 0px), var(--enter-y, 12px), 0);
-    transition: opacity 1.0s ease, transform 1.0s ease;
+    transform: translate3d(0, var(--enter-y, -30px), 0);
+    transition: opacity 0.7s ease, transform 0.8s ease;
     will-change: auto;
   }
 
@@ -116,23 +116,36 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   .scene.is-active .scene-media{
     opacity: 1;
     transform: translate3d(0,0,0);
-    transition-delay: 400ms;
+    transition-delay: 120ms;
     will-change: opacity, transform;
   }
 
-  /* Intro / Outro: solo vertical */
-  .scene[data-layout="intro"] .scene-content,
-  .scene[data-layout="outro"] .scene-content{
-    --enter-x: 0px;
+  /* El slide anterior baja y se desvanece, como si dejara paso al nuevo */
+  .scene.is-prev .scene-content,
+  .scene.is-prev .scene-media{
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+    transition-delay: 0ms;
   }
 
-  /* Split A: imagen izquierda, texto derecha */
-  .scene[data-layout="split"][data-side="A"] .scene-media{ --enter-x: -24px; --enter-y: 0px; }
-  .scene[data-layout="split"][data-side="A"] .scene-content{ --enter-x:  24px; --enter-y: 0px; }
+  :global([data-scroll-dir="up"]) .scene-content,
+  :global([data-scroll-dir="up"]) .scene-media{
+    transform: translate3d(0, 34px, 0);
+  }
 
-  /* Split B: texto izquierda, imagen derecha */
-  .scene[data-layout="split"][data-side="B"] .scene-content{ --enter-x: -24px; --enter-y: 0px; }
-  .scene[data-layout="split"][data-side="B"] .scene-media{   --enter-x:  24px; --enter-y: 0px; }
+  :global([data-scroll-dir="up"]) .scene.is-prev .scene-content,
+  :global([data-scroll-dir="up"]) .scene.is-prev .scene-media{
+    transform: translate3d(0, -36px, 0);
+  }
+
+  /* Todas las escenas entran de arriba hacia abajo como diapositivas */
+  .scene[data-layout="intro"] .scene-content,
+  .scene[data-layout="outro"] .scene-content,
+  .scene[data-layout="split"] .scene-content,
+  .scene[data-layout="split"] .scene-media{
+    --enter-x: 0px;
+    --enter-y: -34px;
+  }
 
 
   /* Marker en columna central, centrado vertical */
@@ -145,7 +158,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     display:flex;
     flex-direction: column;   /* año arriba, dot abajo */
     align-items:center;
-    gap: 10px;
+    gap: 16px;
 
     pointer-events:none;
   }
@@ -155,7 +168,8 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     width:10px;
     height:10px;
     border-radius:999px;
-    background: var(--color-primary);
+    background: var(--color-secondary);
+    box-shadow: 0 0 0 6px rgba(109, 186, 235, 0.12);
   }
 
   /* INTRO: contenido abajo centrado, sin media */
@@ -242,24 +256,29 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   /* AÑO */
   .scene-year{
     line-height: 1;
-    padding: 0;
-    background: transparent;
+    padding: 0.3rem 0.4rem;
+    background: var(--color-background);
     border: 0;
     border-radius: 0;
+    transform: translateY(-8px);
+    position: relative;
+    z-index: 1;
   }
 
 
   /* tipografía común */
   .year{
     font-weight: 700;
-    font-size: clamp(5rem, 6vw, 6rem);
+    font-size: clamp(3.4rem, 4.2vw, 4.6rem);
     line-height: 1;
 
     position: relative;
     display: inline-block;
 
     /* ✅ base visible */
-    color: var(--color-text-lighter);
+    color: rgba(42, 43, 111, 0.28);
+    letter-spacing: -0.04em;
+    transition: transform 0.35s ease;
   }
 
   /* vertical apilado */
@@ -267,6 +286,8 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     white-space: pre-line;
     text-align: center;
   }
+
+
 
   /* overlay: el “relleno” */
   .year::after{
@@ -280,7 +301,7 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
     color: transparent;
     -webkit-text-fill-color: transparent;
 
-    background-image: linear-gradient(var(--color-primary), var(--color-primary));
+    background-image: linear-gradient(var(--color-secondary), var(--color-secondary));
     background-repeat: no-repeat;
 
     -webkit-background-clip: text;
@@ -298,7 +319,11 @@ const { index, year, title, description, image, imageAlt, layout, side, tagline 
   /* relleno vertical (abajo→arriba) */
   .year-vertical::after{
     background-size: 100% calc(var(--fill, 0) * 100%);
-    background-position: 0 100%;
+    background-position: 0 0;
+  }
+
+  .scene.is-active .year{
+    transform: scale(1.02);
   }
 
 

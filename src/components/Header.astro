@@ -171,21 +171,23 @@ const isActive = (path: string) =>
   }
 
   .nav-links li {
-    display: flex;
-    align-items: center;
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 
   .nav-links a {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     color: white;
     font-weight: 500;
     font-size: var(--text-base);
-    line-height: 1.1;
+    line-height: 1;
     min-height: 2.5rem;
-    padding: 0.2rem 0;
+    padding: 0.35rem 0;
+    white-space: nowrap;
     transition: color var(--transition-fast);
   }
 
@@ -271,6 +273,7 @@ const isActive = (path: string) =>
 
     .nav-links li {
       display: block;
+      width: 100%;
       border-bottom: 1px solid var(--color-border);
     }
 
@@ -284,16 +287,12 @@ const isActive = (path: string) =>
 
     .nav-links a.active {
       color: var(--color-primary);
+      font-weight: 700;
+      background: rgba(109, 186, 235, 0.12);
     }
 
     .nav-links a::after {
-      left: var(--spacing-md);
-      right: var(--spacing-md);
-      bottom: 0.55rem;
-    }
-
-    .nav-links a.active::after {
-      background: rgba(42, 43, 111, 0.35);
+      display: none;
     }
   }
 </style>

@@ -1,15 +1,29 @@
-// src/utils/proyectoImages.ts
-// Resuelve imágenes de proyectos (cover / cualquier archivo) basado en el string del JSON.
-// Ejemplo JSON: "portada": "proj_001/cover.webp"
+import type { ImageMetadata } from "astro";
 
-export const projectImages = import.meta.glob(
-  "/src/assets/images/proyecto/**/*.{jpg,jpeg,png,webp}",
+type ProjectImageModule = { default: ImageMetadata };
+
+const projectImages = import.meta.glob<ProjectImageModule>(
+  "/src/assets/images/proyecto/**/*.{jpg,jpeg,png,webp,avif}",
   { eager: true }
-) as Record<string, { default: ImageMetadata }>;
+);
+
+function toProjectImageKey(pathFromJson: string): string {
+  return `/src/assets/images/proyecto/${pathFromJson}`;
+}
 
 export function getProjectImageFromPath(pathFromJson: string): ImageMetadata | null {
-  // pathFromJson: "proj_001/cover.webp"
-  const full = `/src/assets/images/proyecto/${pathFromJson}`;
-  const entry = projectImages[full];
+  const entry = projectImages[toProjectImageKey(pathFromJson)];
   return entry?.default ?? null;
+}
+
+export function getProjectImageOrThrow(pathFromJson: string): ImageMetadata {
+  const image = getProjectImageFromPath(pathFromJson);
+  if (!image) {
+    throw new Error(`Imagen no encontrada: ${toProjectImageKey(pathFromJson)}`);
+  }
+  return image;
+}
+
+export function getProjectImageUrlFromPath(pathFromJson: string): string {
+  return getProjectImageFromPath(pathFromJson)?.src ?? "";
 }

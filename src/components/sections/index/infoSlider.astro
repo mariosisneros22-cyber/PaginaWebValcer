@@ -363,14 +363,9 @@ const sliderId = `slider-${Math.random().toString(36).slice(2, 9)}`;
   }
 
   // Ejecutar inmediatamente si el DOM está listo
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAboutSlider);
-  } else {
-    initAboutSlider();
-  }
+  initAboutSlider();
   
   // Re-inicializar en navegación de Astro
-  document.addEventListener('astro:page-load', initAboutSlider);
 
   // Cleanup antes de navegación
   document.addEventListener('astro:before-preparation', () => {

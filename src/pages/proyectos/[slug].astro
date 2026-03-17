@@ -4,10 +4,10 @@ export const prerender = true;
 import MiniMapProyecto from "../../components/sections/proyectos/react/MiniMapProyecto.tsx"
 import Layout from "../../layouts/Layout.astro";
 import { Image , getImage} from "astro:assets";
-import type { ImageMetadata } from "astro";
 
 import proyectos from "../../data/proyectos.json";
 import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel, formatSimpleLabel, getUniqueProjectsBySlug } from "../../lib/projects";
+import { getProjectImageOrThrow } from "../../utils/proyectoImages";
 
 import RelatedProyecto from "../../components/sections/proyectos/astro/RelatedProyecto.astro";
 
@@ -30,26 +30,11 @@ if (!proyecto || !isVisibleProject(proyecto)) {
 
 
 const estadoKey = estadoToKey(proyecto.estado);
-
-type ImgModule = { default: ImageMetadata };
-
-const imgs = import.meta.glob<ImgModule>(
-  "../../assets/images/proyecto/**/*.{png,jpg,jpeg,webp,avif}",
-  { eager: true }
-);
-
-function resolveImg(relPath: string): ImageMetadata {
-  const key = `../../assets/images/proyecto/${relPath}`;
-  const mod = imgs[key];
-  if (!mod) throw new Error(`Imagen no encontrada: ${key}`);
-  return mod.default;
-}
-
-const portada = resolveImg(proyecto.portada);
+const portada = getProjectImageOrThrow(proyecto.portada);
 
 const galeria = await Promise.all(
   (proyecto.galeria ?? []).map(async (g) => {
-    const srcMeta = resolveImg(g.src);
+    const srcMeta = getProjectImageOrThrow(g.src);
     const alt = g.alt ?? proyecto.nombre;
 
     // Thumb real para la columna de miniaturas

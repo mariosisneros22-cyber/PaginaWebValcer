@@ -158,8 +158,9 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
 
   .timeline-jump:hover{
     transform: translateY(-2px);
-    box-shadow: 0 18px 32px rgba(42, 43, 111, .18);
+    box-shadow: 0 18px 32px rgba(42, 43, 111, .14);
     background: var(--color-white);
+    border-color: rgba(109, 186, 235, .36);
   }
 
   .timeline-jump:focus-visible{
@@ -203,7 +204,7 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
   }
 
   .axis-line{ background: rgba(42, 43, 111, .14); }
-  .axis-progress{ background: var(--color-primary); height: var(--line-progress, 0px); }
+  .axis-progress{ background: var(--color-secondary); height: var(--line-progress, 0px); }
 
   .timeline-scenes{ 
     position:absolute; 
@@ -256,10 +257,10 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     }
 
     .mobile-year-chip{
-      border: 1px solid rgba(42, 43, 111, .14);
+      border: 1px solid rgba(109, 186, 235, .22);
       border-radius: 999px;
       background: var(--color-white);
-      color: var(--color-primary);
+      color: var(--color-secondary-dark);
       padding: 6px 12px;
       font-size: var(--text-sm);
       white-space: nowrap;
@@ -267,9 +268,9 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
     }
 
     .mobile-year-chip.is-active{
-      background: var(--color-primary);
-      color: var(--color-white);
-      border-color: var(--color-primary);
+      background: var(--color-secondary);
+      color: var(--color-primary-dark);
+      border-color: var(--color-secondary);
     }
 
     .timeline-mobile-list{
@@ -466,6 +467,7 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
       let activeIndex = -1;
       let usable = stage.getBoundingClientRect().height * 0.76;
       let lastRaw = 0;
+      let prevRaw = 0;
       let timelineVisible = false;
 
       const updateTimelineVisibility = () => {
@@ -521,6 +523,9 @@ const mobileYears = Array.from(new Set(scenes.map((s) => s.year)));
         const scrolled = clamp(-trackRect.top, 0, trackRect.height - vh);
         const raw = scrolled / vh;
 
+        const scrollDir = raw < prevRaw ? "up" : "down";
+        root.setAttribute("data-scroll-dir", scrollDir);
+        prevRaw = raw;
         lastRaw = raw;
 
         const last = scenes.length - 1;

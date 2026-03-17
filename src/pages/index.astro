@@ -557,10 +557,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       (navigator as any).connection?.saveData === true;
 
     // No cargar video en conexiones lentas o con ahorro de datos
-    if (prefersReducedData) {
-      console.log('Video no cargado: ahorro de datos activado');
-      return;
-    }
+    if (prefersReducedData) return;
 
     // Usar Intersection Observer para cargar solo cuando sea visible
     const observer = new IntersectionObserver(
@@ -594,11 +591,5 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     observer.observe(video);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVideoLazyLoad);
-  } else {
-    initVideoLazyLoad();
-  }
-
-  document.addEventListener('astro:page-load', initVideoLazyLoad);
+  initVideoLazyLoad();
 </script>

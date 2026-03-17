@@ -107,7 +107,10 @@ export default function ServiciosSplitReact({
               aria-controls={`svc-panel-${s.id}`}
               onClick={() => setActiveId(s.id)} // ✅ opcional: toggle (0 o 1 abierto)
             >
-              {s.title.replaceAll("\n", " ")}
+              <span className="services-folders__tabTitle">{s.title.replaceAll("\n", " ")}</span>
+              <span className="services-folders__tabMeta">
+                {(projectsByService[s.id] ?? []).length} proyectos
+              </span>
             </button>
           );
         })}
@@ -141,6 +144,19 @@ export default function ServiciosSplitReact({
                   <li key={it}>{it}</li>
                 ))}
               </ul>
+
+              {!!(projectsByService[active?.id ?? ""] ?? []).length && (
+                <div className="services-folders__related">
+                  <span className="services-folders__relatedLabel">Proyectos vinculados</span>
+                  <div className="services-folders__relatedList">
+                    {(projectsByService[active?.id ?? ""] ?? []).map((project) => (
+                      <span key={project.id} className="services-folders__relatedItem">
+                        {project.nombre}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="services-folders__ctaRow">
                 <a
