@@ -477,14 +477,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   }
 
   .section-featured-projects::before {
-    content: "";
-    position: absolute;
-    inset: 2rem 0 auto;
-    height: min(26vw, 260px);
-    background:
-      radial-gradient(circle at top left, rgba(109, 186, 235, 0.18), transparent 58%),
-      linear-gradient(180deg, rgba(42, 43, 111, 0.05), transparent 92%);
-    pointer-events: none;
+    display: none;
   }
 
   .proyectos-ht {

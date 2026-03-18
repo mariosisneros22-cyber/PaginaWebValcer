@@ -461,15 +461,7 @@ export default function ProyectoGallery({ images }: Props) {
             tabIndex={-1}
           >
             <button className="gallery-close" onClick={close} aria-label="Volver" type="button">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M15 18L9 12L15 6"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img src="/icons/back-button.svg" alt="" aria-hidden="true" />
             </button>
 
             <button

@@ -88,7 +88,10 @@ const title = `Valcer - ${proyecto.nombre}`;
 
 <Layout title={title} heroTitle={proyecto.nombre} heroImage={portada}>
   <section class="proyecto-container">
-    <a class="proyecto-back" href={`/proyectos${backQuery}`} data-proyectos-back>Volver a proyectos</a>
+    <a class="proyecto-back" href={`/proyectos${backQuery}`} data-proyectos-back>
+      <img src="/icons/back-button.svg" alt="" aria-hidden="true" />
+      <span>Volver a proyectos</span>
+    </a>
 
     {/* MAPA FULL */}
     <section class="proyecto-mapwide">
@@ -224,6 +227,31 @@ const title = `Valcer - ${proyecto.nombre}`;
     font-size: var(--text-sm);
     opacity: .8;
   }
+  .proyecto-back{
+    gap:6px;
+    padding:4px 0;
+    border-radius:0;
+    background:transparent;
+    transition: transform .2s ease, opacity .2s ease;
+    color: var(--color-text-light);
+  }
+
+  .proyecto-back:hover{
+    background:transparent;
+    opacity:.86;
+  }
+
+  .proyecto-back::before{
+    content:none;
+  }
+
+  .proyecto-back img{
+    width: 0.95em;
+    height: 0.95em;
+    flex:0 0 auto;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(15%) saturate(589%) hue-rotate(182deg) brightness(93%) contrast(89%);
+  }
+
   .proyecto-fotos{
     margin-top: 28px;
   }

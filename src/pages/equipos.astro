@@ -1,0 +1,468 @@
+---
+import Layout from "../layouts/Layout.astro";
+import proyectoHero from "../assets/images/proyecto/proyectoHero.jpg";
+import proyectoUno from "../assets/images/proyecto/proyecto-1.jpg";
+import proyectoDos from "../assets/images/proyecto/proyecto-2.jpg";
+import proyectoTres from "../assets/images/proyecto/proyecto-3.jpg";
+import ProjectCta from "../components/sections/shared/ProjectCta.astro";
+
+import equiposRaw from "../data/equipos.json";
+
+type Equipo = {
+  id: string;
+  slug: string;
+  nombre: string;
+  categoria: "linea-blanca" | "linea-amarilla" | "equipos-menores";
+  marca: string;
+  modelo: string;
+  anio: number;
+  estado: string;
+  descripcion: string;
+  capacidad: string;
+  ubicacion: string;
+  portada?: string;
+  galeria?: { src: string; alt?: string }[];
+  visible?: boolean;
+};
+
+const equipos = (equiposRaw as Equipo[]).filter((equipo) => equipo.visible !== false);
+
+const categoryMeta = {
+  "linea-blanca": {
+    id: "linea-blanca",
+    title: "Linea Blanca",
+    kicker: "Transporte y soporte de obra",
+    description:
+      "Unidades para movilizacion, abastecimiento, traslado de materiales y continuidad operativa en rutas y frentes de trabajo.",
+    image: proyectoUno,
+    accent: "var(--equipos-white)",
+  },
+  "linea-amarilla": {
+    id: "linea-amarilla",
+    title: "Linea Amarilla",
+    kicker: "Movimiento de tierras y produccion",
+    description:
+      "Maquinaria principal para excavacion, carga, conformacion y rendimiento sostenido en operaciones de campo.",
+    image: proyectoDos,
+    accent: "var(--equipos-yellow)",
+  },
+  "equipos-menores": {
+    id: "equipos-menores",
+    title: "Equipos Menores",
+    kicker: "Apoyo fino y partidas de precision",
+    description:
+      "Equipos de respuesta rapida para vaciados, cortes, acabados y tareas especializadas que completan la operacion.",
+    image: proyectoTres,
+    accent: "var(--equipos-minor)",
+  },
+} as const;
+
+const sections = (Object.keys(categoryMeta) as Array<keyof typeof categoryMeta>).map((key) => ({
+  ...categoryMeta[key],
+  items: equipos.filter((equipo) => equipo.categoria === key),
+}));
+
+const totalEquipos = equipos.length;
+const totalCategorias = sections.length;
+const totalOperativos = equipos.filter((equipo) => equipo.estado === "operativo").length;
+---
+
+<Layout title="Valcer - Equipos" heroTitle="Equipos" heroImage={proyectoHero}>
+  <section class="equipos-intro">
+    <div class="container equipos-intro__wrap">
+      <div class="equipos-intro__copy">
+        <span class="section-eyebrow">Flota y capacidad operativa</span>
+        <h2>Equipos organizados por tipo de operacion.</h2>
+        <p>
+          Agrupamos la flota en linea blanca, linea amarilla y equipos menores para que la
+          consulta sea mas simple y sea facil ubicar que unidad acompana cada etapa de obra.
+        </p>
+      </div>
+
+      <div class="equipos-kpis" aria-label="Resumen de equipos">
+        <article style="--kpi-accent: var(--equipos-white);">
+          <strong>{totalEquipos}</strong>
+          <span>equipos visibles</span>
+        </article>
+        <article style="--kpi-accent: var(--equipos-yellow);">
+          <strong>{totalCategorias}</strong>
+          <span>lineas organizadas</span>
+        </article>
+        <article style="--kpi-accent: var(--equipos-minor);">
+          <strong>{totalOperativos}</strong>
+          <span>en estado operativo</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="equipos-nav">
+    <div class="container equipos-nav__wrap">
+      {sections.map((section, index) => (
+        <a href={`#${section.id}`} class="equipos-nav__chip" style={`--chip-accent:${section.accent}`}>
+          <span>0{index + 1}</span>
+          <strong>{section.title}</strong>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {sections.map((section, index) => (
+    <section id={section.id} class={`equipos-band equipos-band--${section.id}`}>
+      <div class="container equipos-band__grid">
+        <div class="equipos-band__hero">
+          <span class="equipos-band__index">0{index + 1}</span>
+          <p class="equipos-band__kicker">{section.kicker}</p>
+          <h2>{section.title}</h2>
+          <p>{section.description}</p>
+          <img src={section.image.src} alt={section.title} loading="lazy" />
+        </div>
+
+        <div class="equipos-cards">
+          {section.items.map((equipo) => (
+            <article class="equipo-card">
+              <div class="equipo-card__top">
+                <span class={`equipo-badge equipo-badge--${equipo.categoria}`}>{equipo.estado}</span>
+                <span class="equipo-year">{equipo.anio}</span>
+              </div>
+
+              <div class="equipo-card__body">
+                <h3>{equipo.nombre}</h3>
+                <p>{equipo.descripcion}</p>
+              </div>
+
+              <dl class="equipo-specs">
+                <div>
+                  <dt>Marca</dt>
+                  <dd>{equipo.marca}</dd>
+                </div>
+                <div>
+                  <dt>Modelo</dt>
+                  <dd>{equipo.modelo}</dd>
+                </div>
+                <div>
+                  <dt>Capacidad</dt>
+                  <dd>{equipo.capacidad}</dd>
+                </div>
+                <div>
+                  <dt>Ubicacion</dt>
+                  <dd>{equipo.ubicacion}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <ProjectCta
+    title="Necesitas una unidad para tu siguiente frente de trabajo?"
+    description="Podemos ayudarte a revisar que equipo encaja mejor segun tipo de obra, capacidad y contexto operativo."
+    buttonLabel="Solicitar informacion"
+    buttonHref="/contacto"
+    sectionClass="section"
+  />
+</Layout>
+
+<style>
+  :root {
+    --equipos-white: #dbe8f2;
+    --equipos-yellow: #f5c84c;
+    --equipos-minor: #7dc4b8;
+    --equipos-ink: #141838;
+  }
+
+  .equipos-intro {
+    padding: var(--spacing-md) 0 var(--spacing-sm);
+  }
+
+  .equipos-intro__wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: clamp(1.2rem, 4vw, 2.4rem);
+    align-items: start;
+  }
+
+  .equipos-intro__copy h2 {
+    max-width: 12ch;
+    margin-bottom: 1rem;
+    color: var(--equipos-ink);
+  }
+
+  .equipos-intro__copy p {
+    max-width: 65ch;
+    line-height: 1.8;
+    color: rgba(20, 24, 56, 0.78);
+    margin-bottom: 0;
+  }
+
+  .equipos-kpis {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .equipos-kpis article {
+    padding: 0.85rem 0 0.85rem 1rem;
+    border-radius: 0;
+    border: 0;
+    border-left: 5px solid var(--kpi-accent);
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .equipos-kpis strong {
+    display: block;
+    font-size: clamp(1.8rem, 3vw, 2.35rem);
+    line-height: 1;
+    color: var(--equipos-ink);
+  }
+
+  .equipos-kpis span {
+    display: block;
+    margin-top: 0.35rem;
+    color: rgba(20, 24, 56, 0.62);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--text-xs);
+  }
+
+  .equipos-nav {
+    padding: 0 0 var(--spacing-md);
+  }
+
+  .equipos-nav__wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+
+  .equipos-nav__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.95rem 1.1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--equipos-ink);
+    border: 1px solid rgba(42, 43, 111, 0.1);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--chip-accent) 32%, white), rgba(255, 255, 255, 0.94));
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+
+  .equipos-nav__chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(24, 32, 81, 0.1);
+  }
+
+  .equipos-nav__chip span {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(20, 24, 56, 0.1);
+    font-weight: 800;
+    font-size: var(--text-sm);
+  }
+
+  .equipos-band {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .equipos-band--linea-blanca {
+    background:
+      linear-gradient(180deg, rgba(219, 232, 242, 0.52), rgba(255, 255, 255, 0.9));
+  }
+
+  .equipos-band--linea-amarilla {
+    background:
+      linear-gradient(180deg, rgba(245, 200, 76, 0.2), rgba(255, 248, 228, 0.9));
+  }
+
+  .equipos-band--equipos-menores {
+    background:
+      linear-gradient(180deg, rgba(125, 196, 184, 0.18), rgba(244, 250, 248, 0.94));
+  }
+
+  .equipos-band__grid {
+    display: grid;
+    grid-template-columns: minmax(270px, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(1.4rem, 4vw, 2.6rem);
+    align-items: start;
+  }
+
+  .equipos-band__hero {
+    position: sticky;
+    top: calc(var(--header-height) + 1.2rem);
+    padding: clamp(1.25rem, 3vw, 1.8rem);
+    border-radius: 28px;
+    background: rgba(20, 24, 56, 0.94);
+    color: #fff;
+    overflow: hidden;
+    box-shadow: 0 24px 50px rgba(20, 24, 56, 0.22);
+  }
+
+  .equipos-band__hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -10% -18% auto;
+    width: 210px;
+    height: 210px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    filter: blur(4px);
+  }
+
+  .equipos-band__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .equipos-band__kicker {
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .equipos-band__hero h2 {
+    color: #fff;
+    margin-bottom: 0.9rem;
+  }
+
+  .equipos-band__hero p {
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.75;
+  }
+
+  .equipos-band__hero img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-top: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .equipos-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .equipo-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 1.2rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(42, 43, 111, 0.08);
+    box-shadow: 0 14px 34px rgba(24, 32, 81, 0.08);
+  }
+
+  .equipo-card__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .equipo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--equipos-ink);
+  }
+
+  .equipo-badge--linea-blanca {
+    background: rgba(219, 232, 242, 0.9);
+  }
+
+  .equipo-badge--linea-amarilla {
+    background: rgba(245, 200, 76, 0.78);
+  }
+
+  .equipo-badge--equipos-menores {
+    background: rgba(125, 196, 184, 0.42);
+  }
+
+  .equipo-year {
+    color: rgba(20, 24, 56, 0.54);
+    font-weight: 700;
+    font-size: var(--text-sm);
+  }
+
+  .equipo-card__body h3 {
+    margin-bottom: 0.65rem;
+    font-size: var(--text-lg);
+  }
+
+  .equipo-card__body p {
+    color: rgba(20, 24, 56, 0.76);
+    line-height: 1.7;
+  }
+
+  .equipo-specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(42, 43, 111, 0.08);
+  }
+
+  .equipo-specs dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(20, 24, 56, 0.52);
+    margin-bottom: 0.28rem;
+  }
+
+  .equipo-specs dd {
+    margin: 0;
+    font-weight: 700;
+    color: var(--equipos-ink);
+  }
+
+  @media (max-width: 960px) {
+    .equipos-intro__wrap,
+    .equipos-band__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .equipos-band__hero {
+      position: static;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .equipos-cards,
+    .equipo-specs {
+      grid-template-columns: 1fr;
+    }
+
+    .equipos-nav__wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
