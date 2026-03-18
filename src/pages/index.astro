@@ -1,4 +1,4 @@
----
+﻿---
 import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
@@ -11,6 +11,7 @@ import Button from '../components/ui/button.astro';
 import Carrusel from '../components/sections/index/carrusel.astro';
 
 import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
+import serviceHero from '../assets/images/servicios/servicioHero.jpg';
 
 import { clients } from "../utils/clients";
 import serviciosRaw from '../data/servicios.json';
@@ -61,18 +62,28 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   <section class="section-2 services-brief">
     <div class="container services-brief__wrap">
       <div class="services-brief__intro">
-        <h2 class="services-brief__title">Capacidades para ejecutar, supervisar y sostener proyectos con criterio técnico.</h2>
-        <p class="services-brief__copy">
-          En vez de listar todo aquí, resumimos las cuatro líneas que articulan nuestra operación. El detalle completo queda en la página de servicios.
-        </p>
-        <Button href="/servicios">Ver nuestros servicios</Button>
+        <h2 class="services-brief__title">Servicios</h2>
+        <div class="services-brief__media surface-callout">
+          <Image
+            src={serviceHero}
+            alt="Equipo y operaciones de servicios"
+            loading="lazy"
+            width={900}
+            height={1100}
+            quality={85}
+            densities={[1, 2]}
+          />
+        </div>
+        <div class="services-brief__actions">
+          <Button href="/servicios">Ver nuestros servicios</Button>
+        </div>
       </div>
 
       <div class="services-brief__list">
         {serviceHighlights.map((service, index) => (
           <a class="services-brief__item" href={`/servicios?tab=${encodeURIComponent(service.id)}`}>
             <span class="services-brief__index">0{index + 1}</span>
-            <div>
+            <div class="services-brief__item-content">
               <h3>{service.title}</h3>
               <p>{service.description}</p>
             </div>
@@ -109,7 +120,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       <h2 class="valor-titulo">Nuestro enfoque en cada <span class="text-highlight">proyecto</span></h2>
 
       <p class="valor-subtitulo">
-        Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
+        Un proceso estructurado que garantiza planificaciÃ³n tÃ©cnica, ejecuciÃ³n controlada y entrega conforme a especificaciones.
       </p>
 
       <div class="valor-grid valor-grid-3">
@@ -118,7 +129,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <h3>Planificamos</h3>
           <p>
             Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
-            asegurando claridad operativa desde el primer día.
+            asegurando claridad operativa desde el primer dÃ­a.
           </p>
         </div>
 
@@ -126,8 +137,8 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <div class="valor-index">02</div>
           <h3>Ejecutamos</h3>
           <p>
-            Supervisión en campo, coordinación técnica y control continuo
-            para mantener calidad y seguridad durante toda la intervención.
+            SupervisiÃ³n en campo, coordinaciÃ³n tÃ©cnica y control continuo
+            para mantener calidad y seguridad durante toda la intervenciÃ³n.
           </p>
         </div>
 
@@ -135,7 +146,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <div class="valor-index">03</div>
           <h3>Garantizamos</h3>
           <p>
-            Validación final, documentación técnica y entrega estructurada
+            ValidaciÃ³n final, documentaciÃ³n tÃ©cnica y entrega estructurada
             conforme a requerimientos del cliente.
           </p>
         </div>
@@ -150,10 +161,10 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
         <div class="proyectos-copy">
           <h2 class="proyectos-titulo">Proyectos destacados</h2>
           <p class="proyectos-subtitulo">
-            Mantenemos un proyecto principal en foco y una selección complementaria para mostrar distintas escalas, servicios y contextos de ejecución.
+            Mantenemos un proyecto principal en foco y una selecciÃ³n complementaria para mostrar distintas escalas, servicios y contextos de ejecuciÃ³n.
           </p>
         </div>
-        <Button href="/proyectos">Leer más</Button>
+        <Button href="/proyectos">Leer mÃ¡s</Button>
       </div>
 
       <RelatedProyecto
@@ -246,25 +257,47 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   .services-brief__wrap {
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
     gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: start;
+    align-items: stretch;
+  }
+
+  .services-brief__intro {
+    display: grid;
+    gap: 0.9rem;
+    align-self: stretch;
   }
 
   .services-brief__title {
-    max-width: 15ch;
-    margin-bottom: 1rem;
+    margin: 0;
   }
 
-  .services-brief__copy {
-    margin-bottom: 1.25rem;
-    font-size: var(--text-lg);
-    line-height: 1.75;
+  .services-brief__media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(42, 43, 111, 0.06);
+    box-shadow: 0 14px 28px rgba(17, 24, 39, 0.05);
+  }
+
+  .services-brief__media :global(img) {
+    width: 100%;
+    height: clamp(360px, 44vw, 520px);
+    object-fit: cover;
+    display: block;
+  }
+
+  .services-brief__actions {
+    display: flex;
+    justify-content: flex-start;
   }
 
   .services-brief__list {
     display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
     gap: 0.9rem;
+    height: 100%;
   }
 
   .services-brief__item {
@@ -279,6 +312,12 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     transition: transform .18s ease, border-color .18s ease;
   }
 
+  .services-brief__item-content {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(42, 43, 111, 0.12);
+    transition: border-color .18s ease;
+  }
+
   .services-brief__item:first-child {
     padding-top: 0.1rem;
   }
@@ -288,8 +327,13 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     border-color: rgba(42, 43, 111, 0.22);
   }
 
+  .services-brief__item:hover .services-brief__item-content {
+    border-left-color: rgba(42, 43, 111, 0.28);
+  }
+
   .services-brief__item:hover .services-brief__index {
-    background: rgba(109, 186, 235, 0.22);
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(42, 43, 111, 0.24);
   }
 
   .services-brief__index {
@@ -299,7 +343,8 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     min-width: 42px;
     height: 42px;
     border-radius: 999px;
-    background: rgba(109, 186, 235, 0.12);
+    background: #fff;
+    border: 1px solid rgba(42, 43, 111, 0.12);
     color: var(--color-primary);
     font-size: var(--text-sm);
     font-weight: 800;
@@ -322,18 +367,23 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       grid-template-columns: 1fr;
     }
 
-    .services-brief__title {
-      max-width: none;
+    .services-brief__list {
+      grid-template-rows: none;
+      height: auto;
+    }
+
+    .services-brief__media :global(img) {
+      height: clamp(280px, 56vw, 420px);
     }
   }
 
   @media (max-width: 640px) {
-    .services-brief__copy {
-      font-size: var(--text-base);
-    }
-
     .services-brief__item {
       gap: 0.85rem;
+    }
+
+    .services-brief__item-content {
+      padding-left: 0.85rem;
     }
   }
 
@@ -557,7 +607,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Cargar video solo cuando esté cerca del viewport
+            // Cargar video solo cuando estÃ© cerca del viewport
             const sources = video.querySelectorAll('source');
             sources.forEach(source => {
               const src = source.getAttribute('src');
@@ -586,3 +636,4 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   initVideoLazyLoad();
 </script>
+

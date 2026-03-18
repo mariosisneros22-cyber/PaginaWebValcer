@@ -6,28 +6,41 @@ interface Client {
   logo: ImageMetadata;
 }
 
-interface Props{
+interface Props {
   clients: Client[];
 }
 
 const { clients } = Astro.props;
 ---
 
+<div class="clientes-grid-wrapper">
+  <div class="clientes-grid-intro">
+    <p class="clientes-grid-kicker">Empresas que han confiado en nosotros</p>
+    <p class="clientes-grid-copy">
+      Mostramos toda la cartera en una vista abierta para que cada marca tenga presencia real y no dependa del tiempo del carrusel.
+    </p>
+  </div>
 
-<div class="carrusel-wrapper">
-  <div class="carrusel-track">
+  <div
+    class="clientes-grid"
+    role="list"
+    aria-label={`Listado de ${clients.length} clientes`}
+  >
     {clients.map((client) => (
-      <div class="cliente-logo">
+      <div
+        class="cliente-logo"
+        role="listitem"
+      >
         <div class="logo-box">
-          <Image 
-            src={client.logo} 
-            alt={client.name} 
+          <Image
+            src={client.logo}
+            alt={client.name}
             loading="lazy"
             decoding="async"
             width={180}
             height={180}
             quality={70}
-            sizes="(max-width: 768px) 140px, 180px"
+            sizes="(max-width: 768px) 45vw, (max-width: 1200px) 18vw, 180px"
             densities={[1, 2]}
           />
         </div>
@@ -37,66 +50,66 @@ const { clients } = Astro.props;
 </div>
 
 <style>
-  .carrusel-wrapper {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 10%,
-      black 90%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 10%,
-      black 90%,
-      transparent 100%
-    );
+  .clientes-grid-wrapper {
+    display: grid;
+    gap: clamp(1.25rem, 2vw, 1.75rem);
   }
 
-  .carrusel-track {
+  .clientes-grid-intro {
     display: flex;
-    width: max-content; /* ✅ importante */
-    gap: var(--spacing-md, 1.5rem);
-    animation: scroll-infinite 60s linear infinite;
-    will-change: transform;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 0.8rem 1.5rem;
   }
 
-  .carrusel-wrapper:hover .carrusel-track {
-    animation-play-state: paused;
+  .clientes-grid-kicker {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .clientes-grid-copy {
+    max-width: 60ch;
+    margin: 0;
+    color: rgba(24, 29, 62, 0.74);
+    line-height: 1.7;
+  }
+
+  .clientes-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(0.75rem, 1.7vw, 1rem);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.35rem;
+    scrollbar-width: thin;
   }
 
   .cliente-logo {
-    flex-shrink: 0;
-    width: clamp(120px, 12vw, 180px);
-    height: clamp(120px, 12vw, 180px);
+    flex: 0 0 clamp(132px, 11vw, 168px);
+    min-height: clamp(92px, 11vw, 128px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.82);
-    border: 0;
-    border-radius: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 255, 0.9));
+    border: 1px solid rgba(42, 43, 111, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(17, 24, 39, 0.05);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
   }
 
   .logo-box {
     width: 100%;
     height: 100%;
-    padding: 1.2rem;
+    padding: clamp(1rem, 2vw, 1.25rem);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  .logo-box img {
-    opacity: 0.75;
-    transition: opacity 0.25s ease;
-    /* evita filter si notas jank: quítalo */
-  }
-
-  .cliente-logo:hover img { opacity: 1; }
 
   .logo-box :global(img) {
     width: 100%;
@@ -104,76 +117,44 @@ const { clients } = Astro.props;
     object-fit: contain;
     object-position: center;
     filter: grayscale(100%);
-    opacity: 0.65;
+    opacity: 0.72;
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .cliente-logo:hover {
+    transform: translateY(-3px);
+    border-color: rgba(42, 43, 111, 0.18);
+    box-shadow: 0 18px 32px rgba(17, 24, 39, 0.08);
   }
 
   .cliente-logo:hover :global(img) {
     filter: grayscale(0%);
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
-  
+
   @media (prefers-reduced-motion: reduce) {
-    .carrusel-track { animation: none; transform: none; }
-  }
-  
-  @keyframes scroll-infinite {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
+    .cliente-logo,
+    .logo-box :global(img) {
+      transition: none;
     }
   }
 
   @media (max-width: 768px) {
-    .cliente-logo {
-      width: clamp(100px, 15vw, 140px);
-      height: clamp(100px, 15vw, 140px);
+    .clientes-grid-intro {
+      align-items: start;
     }
 
-    .logo-box {
-      padding: 1rem;
+    .clientes-grid-copy {
+      font-size: var(--text-sm);
+      line-height: 1.65;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .clientes-grid {
+      gap: 0.7rem;
+      padding-bottom: 0.25rem;
     }
   }
 </style>
-
-<script>
-  function initCarrusel() {
-    document.querySelectorAll('.carrusel-track').forEach((track) => {
-      // ✅ idempotente: no volver a clonar si ya se hizo
-      if (track.getAttribute('data-initialized') === 'true') return;
-      track.setAttribute('data-initialized', 'true');
-
-      const originals = Array.from(track.children);
-      if (originals.length === 0) return;
-
-      // Medir cuánto necesitamos duplicar para cubrir al menos 2 pantallas
-      const wrapper = track.closest('.carrusel-wrapper');
-      const targetWidth = (wrapper?.clientWidth ?? window.innerWidth) * 2;
-
-      // Clonar hasta exceder targetWidth (máximo límite por seguridad)
-      let guard = 0;
-      while (track.scrollWidth < targetWidth && guard < 10) {
-        originals.forEach((item) => {
-          track.appendChild(item.cloneNode(true));
-        });
-        guard++;
-      }
-
-      // ✅ Duplicación final exacta 1 vez para loop perfecto (2 copias)
-      originals.forEach((item) => {
-        track.appendChild(item.cloneNode(true));
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCarrusel, { once: true });
-  } else {
-    initCarrusel();
-  }
-
-  document.addEventListener('astro:page-load', initCarrusel);
-</script>
