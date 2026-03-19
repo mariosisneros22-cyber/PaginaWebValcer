@@ -142,15 +142,13 @@ a:hover {
 
 .section {
   padding: var(--spacing-lg) 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 253, 0.94));
-  color: var(--color-text);
+  background: var(--color-secondary);
+  color: var(--color-white);
 }
 
 .section-2 {
   padding: var(--spacing-lg) 0;
-  background:
-    linear-gradient(180deg, rgba(109, 186, 235, 0.08), rgba(255, 255, 255, 0.96)),
-    rgba(245, 249, 253, 0.94);
+  background: var(--color-primary);
   color: var(--color-text);
 }
 

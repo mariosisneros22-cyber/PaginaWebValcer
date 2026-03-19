@@ -22,10 +22,16 @@ type InicioServicio = {
   tagline: string;
 };
 
-const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((service) => ({
+const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((service, index) => ({
   id: service.id,
   title: service.title.replaceAll('\n', ' '),
   description: service.tagline,
+  icon: [
+    '/icons/services/construccion.svg',
+    '/icons/services/helmet.svg',
+    '/icons/services/mineria.svg',
+    '/icons/services/tractor.svg',
+  ][index] ?? '/icons/services/construccion.svg',
 }));
 ---
 
@@ -42,55 +48,55 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     <Slider slider={infoSliders} />
   </section>
 
-  <section class="section about-home-section">
+  <section class="section about-home-section" style={`--about-bg: url(${about.src})`}>
     <div class = "container containerabout">
       <!--About us -->
       <div class ="about-us">
-        <div class="about-us-content">
+        <div class="about-us-copy">
           <p class="section-copy section-copy--lead">Ejecutamos proyectos con criterio tecnico, capacidad operativa y una manera de trabajar que pone orden desde el primer dia.</p>
           <p class="section-copy">Detras de cada obra hay una empresa que coordina, responde y sostiene el proceso completo con seriedad. En nuestra historia, equipo y enfoque esta la diferencia que hace que un proyecto avance con confianza.</p>
 
           <div class="about-us-actions">
-            <Button href="/nosotros">Ir a nosotros</Button>
+            <Button href="/nosotros" class="about-us-button">Conocenos</Button>
           </div>
         </div>
-        
-        <div class = "about-us-image"> 
-          <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
-        </div>
+
+        <h3 class="about-us-title">Sobre <span>Nosotros</span></h3>
       </div>
 
     </div>
   </section>
 
   <!-- Servicios -->
-  <section class="section-2 services-brief">
-    <div class="container services-brief__wrap">
-      <div class="services-brief__intro">
-        <h2 class="services-brief__title">Servicios</h2>
-        <div class="services-brief__media surface-callout">
-          <Image
-            src={serviceHero}
-            alt="Equipo y operaciones de servicios"
-            loading="lazy"
-            width={900}
-            height={1100}
-            quality={85}
-            densities={[1, 2]}
-          />
-        </div>
-        <div class="services-brief__actions">
-          <Button href="/servicios">Ver nuestros servicios</Button>
-        </div>
-      </div>
+  <section class="section services-brief">
+    <div class="container">
+      <div class="services-diamonds">
+        {serviceHighlights.map((service) => (
+          <a
+            class="service-diamond"
+            href={`/servicios?tab=${encodeURIComponent(service.id)}`}
+            aria-label={`Ver más sobre ${service.title}`}
+          >
+            <div class="service-diamond__inner">
+              <div class="service-diamond__face service-diamond__face--front">
+                <div class="service-diamond__content">
+                  <div class="service-diamond__icon-wrap" aria-hidden="true">
+                    <img
+                      src={service.icon}
+                      alt=""
+                      class="service-diamond__icon"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="service-diamond__title">{service.title}</div>
+                </div>
+              </div>
 
-      <div class="services-brief__list">
-        {serviceHighlights.map((service, index) => (
-          <a class="services-brief__item" href={`/servicios?tab=${encodeURIComponent(service.id)}`}>
-            <span class="services-brief__index">0{index + 1}</span>
-            <div class="services-brief__item-content">
-              <h3>{service.title}</h3>
-              <p>{service.description}</p>
+              <div class="service-diamond__face service-diamond__face--back">
+                <div class="service-diamond__content">
+                  <div class="service-diamond__cta">Ver más</div>
+                </div>
+              </div>
             </div>
           </a>
         ))}
@@ -134,7 +140,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <h3>Planificamos</h3>
           <p>
             Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
-            asegurando claridad operativa desde el primer dÃ­a.
+            asegurando claridad operativa desde el primer dia.
           </p>
         </div>
 
@@ -190,7 +196,11 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
 <style>
   .about-home-section {
-    background: transparent;
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(12, 18, 38, 0.5), rgba(12, 18, 38, 0.8)),
+      var(--about-bg) center/cover no-repeat;
   }
 
   .index-slider-band {
@@ -207,207 +217,275 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   .about-us {
     display: flex;
-    align-items: stretch;
-    gap: var(--spacing-lg);
+    justify-content: flex-start;
+    align-items: end;
+    gap: clamp(0.45rem, 1vw, 0.85rem);
+    min-height: clamp(300px, 32vw, 420px);
+    padding: clamp(1rem, 2vw, 1.6rem);
+    overflow: hidden;
+    border-radius: 32px;
   }
 
-  .about-us-content{
-    flex: 3;
+  .about-us-copy{
+    flex: 0 1 32rem;
     min-width: 0;
-    padding: clamp(1.4rem, 2.5vw, 2.35rem);
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
+    max-width: 32rem;
+    padding: 0;
   }
 
-  .about-us-image{
-    flex:2;
-    min-width: 0;
+  .about-us-title {
+    flex: 0 1 11ch;
+    margin: 0;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 5.2vw, 4.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 0.7);
   }
 
-  .about-us-content h3 {
-    max-width: 9ch;
-    margin-bottom: 1rem;
+  .about-us-title span {
+    display: block;
+    color: var(--color-secondary);
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 0.7);
   }
 
-  .about-us-content p {
+  .about-us-copy p {
     margin-bottom: 0.9rem;
+    max-width: 54ch;
+    color: var(--color-white);
+  }
+
+  .about-us-copy .section-copy--lead {
+    font-size: clamp(1.02rem, 1.4vw, 1.14rem);
+    color: var(--color-white);
   }
 
   .about-us-actions {
     display: flex;
     justify-content: flex-start;
-    margin-top: 0.4rem;
+    margin-top: 1rem;
   }
 
-  .about-us-image {
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-    border-radius: 24px;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .about-us-image :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    border: 1px solid var(--color-border);
+  .about-us-actions :global(.about-us-button) {
+    border: 1px solid rgba(255, 255, 255, 0.42);
   }
 
 
   @media (max-width: 768px) {
     .about-us {
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .about-us-content,
-    .about-us-image {
-      flex: 1;
-      width: 100%;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      min-height: auto;
+      gap: 0.75rem;
+      padding: 1rem;
     }
 
     .about-us-actions {
       justify-content: flex-start;
     }
 
-    .about-us-image {
-      aspect-ratio: 4 / 3;
+    .about-us-copy {
+      max-width: 100%;
+    }
+
+    .about-us-title {
+      text-align: left;
     }
   }
 
-  .services-brief__wrap {
-    display: grid;
-    grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: stretch;
-  }
-
-  .services-brief__intro {
-    display: grid;
-    gap: 0.9rem;
-    align-self: stretch;
-  }
-
-  .services-brief__title {
-    margin: 0;
-  }
-
-  .services-brief__media {
-    position: relative;
+  .services-brief {
     overflow: hidden;
-    border-radius: 16px;
-    background: #fff;
-    border: 1px solid rgba(42, 43, 111, 0.06);
-    box-shadow: 0 14px 28px rgba(17, 24, 39, 0.05);
   }
 
-  .services-brief__media :global(img) {
-    width: 100%;
-    height: clamp(360px, 44vw, 520px);
-    object-fit: cover;
-    display: block;
-  }
+  .services-diamonds {
+    --offset-x-1: 300px;
+    --offset-x-2: 100px;
+    --offset-x-3: -100px;
+    --offset-x-4: -300px;
 
-  .services-brief__actions {
-    display: flex;
-    justify-content: flex-start;
-  }
+    --offset-y-1: 0px;
+    --offset-y-2: 200px;
+    --offset-y-3: 0px;
+    --offset-y-4: 200px;
 
-  .services-brief__list {
     display: grid;
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    gap: 0.9rem;
-    height: 100%;
-  }
-
-  .services-brief__item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.75rem);
+    justify-items: center;
     align-items: start;
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(42, 43, 111, 0.1);
-    color: inherit;
+    padding-block: 1.5rem 4rem;
+  }
+
+  .services-diamonds .service-diamond:nth-child(1) {
+    margin-left: var(--offset-x-1);
+    margin-top: var(--offset-y-1);
+  }
+
+  .services-diamonds .service-diamond:nth-child(2) {
+    margin-left: var(--offset-x-2);
+    margin-top: var(--offset-y-2);
+  }
+
+  .services-diamonds .service-diamond:nth-child(3) {
+    margin-left: var(--offset-x-3);
+    margin-top: var(--offset-y-3);
+  }
+
+  .services-diamonds .service-diamond:nth-child(4) {
+    margin-left: var(--offset-x-4);
+    margin-top: var(--offset-y-4);
+  }
+  .service-diamond {
+    --diamond-size: clamp(180px, 18vw, 240px);
+
+    position: relative;
+    display: block;
+    width: var(--diamond-size);
+    height: var(--diamond-size);
     text-decoration: none;
-    transition: transform .18s ease, border-color .18s ease;
+    perspective: 1200px;
   }
 
-  .services-brief__item-content {
-    padding-left: 1rem;
-    border-left: 2px solid rgba(42, 43, 111, 0.12);
-    transition: border-color .18s ease;
+  .service-diamond__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s ease;
   }
 
-  .services-brief__item:first-child {
-    padding-top: 0.1rem;
+  .service-diamond:hover .service-diamond__inner,
+  .service-diamond:focus-visible .service-diamond__inner {
+    transform: rotateY(180deg);
   }
 
-  .services-brief__item:hover {
-    transform: translateX(4px);
-    border-color: rgba(42, 43, 111, 0.22);
-  }
-
-  .services-brief__item:hover .services-brief__item-content {
-    border-left-color: rgba(42, 43, 111, 0.28);
-  }
-
-  .services-brief__item:hover .services-brief__index {
-    background: rgba(255, 255, 255, 0.98);
-    border-color: rgba(42, 43, 111, 0.24);
-  }
-
-  .services-brief__index {
-    display: inline-flex;
+  .service-diamond__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 42px;
-    height: 42px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid rgba(42, 43, 111, 0.12);
-    color: var(--color-primary);
-    font-size: var(--text-sm);
-    font-weight: 800;
-    letter-spacing: 0.06em;
+    overflow: hidden;
+    border-radius: 24px;
+    backface-visibility: hidden;
+    
+    transform: rotate(45deg);
   }
 
-  .services-brief__item h3 {
-    margin-bottom: 0.45rem;
-    font-size: var(--text-lg);
+  .service-diamond__face--front {
+    background: white;
+    border: 1px solid rgba(42, 43, 111, 0.1);
+    box-shadow: 0 16px 32px rgba(28, 37, 74, 0.12);
+  }
+    
+  .service-diamond__face--front::after {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 5px solid var(--color-primary-dark);
+    pointer-events: none;
+    border-radius: 10px;
+  }
+  .service-diamond__face--back {
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transform: rotate(45deg) rotateY(180deg);
+    box-shadow: 0 16px 32px rgba(10, 10, 10, 0.22);
   }
 
-  .services-brief__item p {
-    margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.65;
+  .service-diamond__face--back::after {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 5px solid var(--color-secondary-dark);
+    pointer-events: none;
+    border-radius: 10px;
   }
 
-  @media (max-width: 900px) {
-    .services-brief__wrap {
-      grid-template-columns: 1fr;
+  .service-diamond__content {
+    width: 72%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    text-align: center;
+    transform: rotate(-45deg);
+  }
+
+  .service-diamond__icon-wrap {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .service-diamond__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(16%) sepia(17%) saturate(2670%) hue-rotate(202deg) brightness(93%) contrast(92%);
+  }
+
+  .service-diamond__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 12ch;
+    font-family: var(--font-secondary);
+    font-size: clamp(0.88rem, 0.3vw + 0.82rem, 1rem);
+    font-weight: 650;
+    line-height: 1.25;
+    color: var(--color-primary-dark);
+  }
+
+  .service-diamond__cta {
+    font-family: var(--font-secondary);
+    font-size: var(--text-md);
+    font-weight: 650;
+    color: var(--color-white);
+    transform: rotate(90deg)
+  }
+
+  .service-diamond:focus-visible {
+    outline: none;
+  }
+
+  .service-diamond:focus-visible .service-diamond__face--front,
+  .service-diamond:focus-visible .service-diamond__face--back {
+    box-shadow:
+      0 0 0 3px rgba(109, 186, 235, 0.28),
+      0 16px 32px rgba(28, 37, 74, 0.12);
+  }
+
+  @media (max-width: 1100px) {
+    .services-diamonds {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 2rem;
     }
 
-    .services-brief__list {
-      grid-template-rows: none;
-      height: auto;
-    }
-
-    .services-brief__media :global(img) {
-      height: clamp(280px, 56vw, 420px);
+    .services-diamonds .service-diamond:nth-child(1),
+    .services-diamonds .service-diamond:nth-child(2),
+    .services-diamonds .service-diamond:nth-child(3),
+    .services-diamonds .service-diamond:nth-child(4) {
+      margin-top: 0;
+      margin-left: 0;
     }
   }
 
   @media (max-width: 640px) {
-    .services-brief__item {
-      gap: 0.85rem;
+    .services-diamonds {
+      grid-template-columns: 1fr;
     }
 
-    .services-brief__item-content {
-      padding-left: 0.85rem;
+    .service-diamond {
+      --diamond-size: 160px;
     }
   }
 
