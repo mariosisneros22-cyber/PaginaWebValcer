@@ -10,7 +10,7 @@ import Button from '../components/ui/button.astro';
 
 import Carrusel from '../components/sections/index/carrusel.astro';
 
-import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
+import { heroImages, about, infoSliders } from '../data/homepage';
 import serviceHero from '../assets/images/servicios/servicioHero.jpg';
 
 import { clients } from "../utils/clients";
@@ -36,24 +36,29 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     subtitle="Tu empresa de confianza"
     primaryButton={{ label: "Nosotros", href: "/nosotros" }}
     secondaryButton={{ label: "Contacto", href: "/contacto" }}
-  />    
-  <section class = "section-2">
+  />
+
+  <section class="index-slider-band">
+    <Slider slider={infoSliders} />
+  </section>
+
+  <section class="section about-home-section">
     <div class = "container containerabout">
       <!--About us -->
       <div class ="about-us">
         <div class="about-us-content">
-          <h3 class="section-heading">Sobre <span class="text-highlight">Nosotros</span></h3>
-          <p class="section-copy section-copy--lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p class="section-copy">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          
+          <p class="section-copy section-copy--lead">Ejecutamos proyectos con criterio tecnico, capacidad operativa y una manera de trabajar que pone orden desde el primer dia.</p>
+          <p class="section-copy">Detras de cada obra hay una empresa que coordina, responde y sostiene el proceso completo con seriedad. En nuestra historia, equipo y enfoque esta la diferencia que hace que un proyecto avance con confianza.</p>
+
+          <div class="about-us-actions">
+            <Button href="/nosotros">Ir a nosotros</Button>
+          </div>
         </div>
         
         <div class = "about-us-image"> 
           <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
         </div>
       </div>
-
-      <Slider slider={infoSliders} />
 
     </div>
   </section>
@@ -184,6 +189,15 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 </Layout>
 
 <style>
+  .about-home-section {
+    background: transparent;
+  }
+
+  .index-slider-band {
+    position: relative;
+    z-index: 1;
+  }
+
   /* about us */
   .containerabout{
     display: flex;
@@ -221,6 +235,12 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     margin-bottom: 0.9rem;
   }
 
+  .about-us-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.4rem;
+  }
+
   .about-us-image {
     overflow: hidden;
     aspect-ratio: 4 / 3;
@@ -248,6 +268,10 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     .about-us-image {
       flex: 1;
       width: 100%;
+    }
+
+    .about-us-actions {
+      justify-content: flex-start;
     }
 
     .about-us-image {
