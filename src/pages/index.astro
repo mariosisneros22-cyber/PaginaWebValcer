@@ -11,7 +11,6 @@ import Button from '../components/ui/button.astro';
 import Carrusel from '../components/sections/index/carrusel.astro';
 
 import { heroImages, about, infoSliders } from '../data/homepage';
-import serviceHero from '../assets/images/servicios/servicioHero.jpg';
 
 import { clients } from "../utils/clients";
 import serviciosRaw from '../data/servicios.json';
@@ -25,12 +24,11 @@ type InicioServicio = {
 const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((service, index) => ({
   id: service.id,
   title: service.title.replaceAll('\n', ' '),
-  description: service.tagline,
   icon: [
     '/icons/services/construccion.svg',
     '/icons/services/helmet.svg',
-    '/icons/services/mineria.svg',
     '/icons/services/tractor.svg',
+    '/icons/services/mineria.svg',
   ][index] ?? '/icons/services/construccion.svg',
 }));
 ---
@@ -49,27 +47,32 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   </section>
 
   <section class="section about-home-section" style={`--about-bg: url(${about.src})`}>
-    <div class = "container containerabout">
-      <!--About us -->
-      <div class ="about-us">
+    <div class="container containerabout">
+      <div class="about-us">
         <div class="about-us-copy">
-          <p class="section-copy section-copy--lead">Ejecutamos proyectos con criterio tecnico, capacidad operativa y una manera de trabajar que pone orden desde el primer dia.</p>
-          <p class="section-copy">Detras de cada obra hay una empresa que coordina, responde y sostiene el proceso completo con seriedad. En nuestra historia, equipo y enfoque esta la diferencia que hace que un proyecto avance con confianza.</p>
+          <p class="section-copy section-copy--lead">
+            Ejecutamos proyectos con criterio técnico, capacidad operativa y una manera de trabajar que pone orden desde el primer día.
+          </p>
+          <p class="section-copy">
+            Detrás de cada obra hay una empresa que coordina, responde y sostiene el proceso completo con seriedad. En nuestra historia, equipo y enfoque está la diferencia que hace que un proyecto avance con confianza.
+          </p>
 
           <div class="about-us-actions">
-            <Button href="/nosotros" class="about-us-button">Conocenos</Button>
+            <Button href="/nosotros" class="about-us-button">Conócenos</Button>
           </div>
         </div>
 
         <h3 class="about-us-title">Sobre <span>Nosotros</span></h3>
       </div>
-
     </div>
   </section>
 
-  <!-- Servicios -->
   <section class="section services-brief">
-    <div class="container">
+    <div class="container services-layout">
+      <h2 class="section-title section-title--left">
+        Nuestros <span>Servicios</span>
+      </h2>
+
       <div class="services-diamonds">
         {serviceHighlights.map((service) => (
           <a
@@ -104,7 +107,6 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     </div>
   </section>
 
-  <!-- Valor Diferencial -->
   <section class="section section-video">
     <video
       class="section-video-bg"
@@ -114,24 +116,19 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       playsinline
       preload="none"
     >
-      <source
-        src="/videos/fondo-video.mp4"
-        type="video/mp4"
-      />
-      <source
-        src="/videos/fondo-video.webm"
-        type="video/webm"
-      />
+      <source src="/videos/fondo-video.mp4" type="video/mp4" />
+      <source src="/videos/fondo-video.webm" type="video/webm" />
     </video>
 
     <div class="section-overlay"></div>
 
     <div class="container section-content">
-
-      <h2 class="valor-titulo">Nuestro enfoque en cada <span class="text-highlight">proyecto</span></h2>
+      <h2 class="valor-titulo">
+        Nuestro enfoque en cada <span class="text-highlight">proyecto</span>
+      </h2>
 
       <p class="valor-subtitulo">
-        Un proceso estructurado que garantiza planificaciÃ³n tÃ©cnica, ejecuciÃ³n controlada y entrega conforme a especificaciones.
+        Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
       </p>
 
       <div class="valor-grid valor-grid-3">
@@ -140,7 +137,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <h3>Planificamos</h3>
           <p>
             Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
-            asegurando claridad operativa desde el primer dia.
+            asegurando claridad operativa desde el primer día.
           </p>
         </div>
 
@@ -148,8 +145,8 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <div class="valor-index">02</div>
           <h3>Ejecutamos</h3>
           <p>
-            SupervisiÃ³n en campo, coordinaciÃ³n tÃ©cnica y control continuo
-            para mantener calidad y seguridad durante toda la intervenciÃ³n.
+            Supervisión en campo, coordinación técnica y control continuo
+            para mantener calidad y seguridad durante toda la intervención.
           </p>
         </div>
 
@@ -157,7 +154,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
           <div class="valor-index">03</div>
           <h3>Garantizamos</h3>
           <p>
-            ValidaciÃ³n final, documentaciÃ³n tÃ©cnica y entrega estructurada
+            Validación final, documentación técnica y entrega estructurada
             conforme a requerimientos del cliente.
           </p>
         </div>
@@ -165,17 +162,16 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     </div>
   </section>
 
-  <!-- Proyectos Destacados -->
   <section class="section-2 section-featured-projects">
     <div class="container">
       <div class="proyectos-ht">
         <div class="proyectos-copy">
           <h2 class="proyectos-titulo">Proyectos destacados</h2>
           <p class="proyectos-subtitulo">
-            Mantenemos un proyecto principal en foco y una selecciÃ³n complementaria para mostrar distintas escalas, servicios y contextos de ejecuciÃ³n.
+            Mantenemos un proyecto principal en foco y una selección complementaria para mostrar distintas escalas, servicios y contextos de ejecución.
           </p>
         </div>
-        <Button href="/proyectos">Leer mÃ¡s</Button>
+        <Button href="/proyectos">Leer más</Button>
       </div>
 
       <RelatedProyecto
@@ -185,10 +181,9 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     </div>
   </section>
 
-  <!-- Nuestros Clientes -->
   <section class="section">
     <div class="container">
-      <h2 class="clientes-titulo">Nuestros Clientes</h2>
+      <h2 class="clientes-titulo">Nuestros clientes</h2>
       <Carrusel clients={clients} />
     </div>
   </section>
@@ -218,7 +213,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   .about-us {
     display: flex;
     justify-content: flex-start;
-    align-items: end;
+    align-items: flex-end;
     gap: clamp(0.45rem, 1vw, 0.85rem);
     min-height: clamp(300px, 32vw, 420px);
     padding: clamp(1rem, 2vw, 1.6rem);
@@ -297,20 +292,63 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     }
   }
 
+  .services-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+  }
+  .services-layout .section-title {
+    flex: 0 0 220px; /* controla ancho del título */
+
+  }
+  .services-layout .services-diamonds {
+    flex: 1;
+  }
+  .section-title {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 5.2vw, 4.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 1);
+  }
+  .services-brief .section-title {
+    margin-bottom: var(--spacing-lg);
+    max-width: 12ch;
+  }
+  .section-title span {
+    display: block;
+    color: var(--color-secondary);
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 1);
+  }
+
+  /* variantes */
+  .section-title--right {
+    text-align: right;
+  }
+
+  .section-title--left {
+    text-align: left;
+  }
+
   .services-brief {
     overflow: hidden;
   }
 
   .services-diamonds {
-    --offset-x-1: 300px;
-    --offset-x-2: 100px;
-    --offset-x-3: -100px;
-    --offset-x-4: -300px;
+    --offset-x-1: 0px;
+    --offset-x-2: 0px;
+    --offset-x-3: 0px;
+    --offset-x-4: 0px;
 
     --offset-y-1: 0px;
-    --offset-y-2: 200px;
+    --offset-y-2: 170px;
     --offset-y-3: 0px;
-    --offset-y-4: 200px;
+    --offset-y-4: 170px;
 
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -340,7 +378,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     margin-top: var(--offset-y-4);
   }
   .service-diamond {
-    --diamond-size: clamp(180px, 18vw, 240px);
+    --diamond-size: clamp(180px, 16vw, 220px);
 
     position: relative;
     display: block;
@@ -380,6 +418,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     background: white;
     border: 1px solid rgba(42, 43, 111, 0.1);
     box-shadow: 0 16px 32px rgba(28, 37, 74, 0.12);
+    filter: drop-shadow(10px 5px 0 rgba(0, 0, 0, 0.8));
   }
     
   .service-diamond__face--front::after {
@@ -395,6 +434,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     border: 1px solid rgba(255, 255, 255, 0.08);
     transform: rotate(45deg) rotateY(180deg);
     box-shadow: 0 16px 32px rgba(10, 10, 10, 0.22);
+    filter: drop-shadow(-10px 5px 0 rgba(255, 255, 255, 1));
   }
 
   .service-diamond__face--back::after {
@@ -691,46 +731,34 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 </style>
 
 <script>
-  // Lazy load video optimizado
   function initVideoLazyLoad() {
     const video = document.querySelector<HTMLVideoElement>('.section-video-bg');
     if (!video) return;
 
-    // Detectar si el usuario prefiere datos reducidos
-    const prefersReducedData = 
-      'connection' in navigator && 
-      (navigator as any).connection?.saveData === true;
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean };
+    }).connection;
 
-    // No cargar video en conexiones lentas o con ahorro de datos
+    const prefersReducedData = connection?.saveData === true;
+
     if (prefersReducedData) return;
 
-    // Usar Intersection Observer para cargar solo cuando sea visible
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Cargar video solo cuando estÃ© cerca del viewport
-            const sources = video.querySelectorAll('source');
-            sources.forEach(source => {
-              const src = source.getAttribute('src');
-              if (src && !source.hasAttribute('data-loaded')) {
-                source.setAttribute('data-loaded', 'true');
-              }
-            });
+        const entry = entries[0];
+        if (!entry?.isIntersecting) return;
 
-            video.load();
-            
-            video.addEventListener('loadeddata', () => {
-              video.setAttribute('data-loaded', 'true');
-            }, { once: true });
+        video.load();
 
-            observer.disconnect();
-          }
-        });
+        video.addEventListener(
+          'loadeddata',
+          () => video.setAttribute('data-loaded', 'true'),
+          { once: true }
+        );
+
+        observer.disconnect();
       },
-      {
-        rootMargin: '200px' // Comenzar a cargar 200px antes
-      }
+      { rootMargin: '200px' }
     );
 
     observer.observe(video);
@@ -738,4 +766,3 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   initVideoLazyLoad();
 </script>
-
