@@ -48,7 +48,7 @@ export default function RelatedProyectoReact({
           return (
             <div className="magGrid">
               <ProyectoCardView
-                className="isFeatured"
+                className="isFeatured isCurtain"
                 project={featured}
                 href={`/proyectos/${featured.slug}${safeQuery}`}
                 showServicios={false}
@@ -57,7 +57,7 @@ export default function RelatedProyectoReact({
                 {secondary.map((p) => (
                   <ProyectoCardView
                     key={p.id}
-                    className="isSecondary"
+                    className="isSecondary isCurtain"
                     project={p}
                     href={`/proyectos/${p.slug}${safeQuery}`}
                     showServicios={false}

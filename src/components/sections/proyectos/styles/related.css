@@ -25,6 +25,7 @@
   grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.82fr);
   gap: 10px;
   align-items: stretch;
+  min-height: clamp(420px, 42vw, 560px);
 }
 
 .related--mag .magSide {
@@ -34,135 +35,6 @@
   height: 100%;
 }
 
-.related--mag .project-card.isFeatured {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  border: 1px solid rgba(42, 43, 111, 0.12);
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(248, 251, 254, 0.98), rgba(241, 247, 252, 0.94));
-  box-shadow: 0 10px 22px rgba(26, 32, 74, 0.06);
-}
-
-.related--mag .project-card.isFeatured .thumb {
-  position: relative;
-  flex: 0 0 auto;
-  aspect-ratio: auto;
-  height: clamp(190px, 24vw, 280px);
-}
-
-.related--mag .project-card.isFeatured .thumb::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 38%;
-  background: linear-gradient(180deg, transparent, rgba(12, 17, 46, 0.22));
-  pointer-events: none;
-}
-
-.related--mag .project-card.isFeatured .thumb img,
-.related--mag .project-card.isFeatured .thumbFallback {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.related--mag .project-card.isFeatured .body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 1.1rem 1.1rem 1.15rem;
-}
-
-.related--mag .project-card.isFeatured .title {
-  font-size: clamp(1.18rem, 1.8vw, 1.5rem);
-  line-height: 1.16;
-}
-
-.related--mag .project-card.isFeatured .meta {
-  margin: 0;
-  font-size: 0.98rem;
-}
-
-.related--mag .project-card.isFeatured .metaLocation {
-  font-weight: 600;
-  color: rgba(22, 29, 68, 0.8);
-}
-
-.related--mag .project-card.isFeatured .metaClient {
-  color: rgba(22, 29, 68, 0.68);
-}
-
-.related--mag .project-card.isFeatured .badges {
-  margin-top: auto;
-  margin-bottom: 0;
-}
-
-.related--mag .project-card.isSecondary {
-  display: grid;
-  grid-template-columns: 112px 1fr;
-  align-items: stretch;
-  min-height: 0;
-  border-radius: 10px;
-  overflow: hidden;
-  background: rgba(248, 251, 254, 0.96);
-  box-shadow: 0 8px 16px rgba(32, 39, 87, 0.05);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-}
-
-.related--mag .project-card.isSecondary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(32, 39, 87, 0.08);
-}
-
-.related--mag .project-card.isSecondary .thumb {
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-  background: rgba(221, 234, 244, 0.72);
-}
-
-.related--mag .project-card.isSecondary .thumb img,
-.related--mag .project-card.isSecondary .thumbFallback {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.related--mag .project-card.isSecondary .body {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 10px 12px;
-}
-
-.related--mag .project-card.isSecondary .title {
-  font-size: 1rem;
-  line-height: 1.24;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.related--mag .project-card.isSecondary .meta {
-  margin: 4px 0 0;
-  font-size: 0.92rem;
-}
-
-.related--mag .project-card.isSecondary .metaClient,
-.related--mag .project-card.isSecondary .badges {
-  display: none;
-}
 
 .relatedGrid {
   display: grid;
@@ -183,19 +55,6 @@
     gap: 12px;
   }
 
-  .related--mag .project-card.isSecondary {
-    grid-template-columns: 1fr;
-  }
-
-  .related--mag .project-card.isSecondary .thumb {
-    aspect-ratio: 16 / 10;
-    height: auto;
-    min-height: 0;
-  }
-
-  .related--mag .project-card.isFeatured .thumb {
-    height: clamp(180px, 46vw, 250px);
-  }
 }
 
 @media (max-width: 560px) {
@@ -211,7 +70,142 @@
     border-radius: 10px;
   }
 
-  .related--mag .project-card.isFeatured .body {
-    padding: 1rem;
-  }
+}
+
+.related--mag .project-card.isCurtain {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  padding: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.related--mag .project-card.isCurtain .thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(221, 234, 244, 0.72);
+}
+
+.related--mag .project-card.isCurtain .thumb img,
+.related--mag .project-card.isCurtain .thumbFallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.related--mag .project-card.isCurtain .overlayInfo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 1rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: rgba(12, 17, 46, 0.58);
+}
+
+.related--mag .project-card.isCurtain .infoTitle {
+  margin: 0 0 0.35rem;
+  color: white;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.related--mag .project-card.isCurtain.isFeatured .infoTitle {
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+}
+
+.related--mag .project-card.isCurtain .overlayInfo .meta {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.92rem;
+  opacity: 1;
+}
+
+.related--mag .project-card.isCurtain.isFeatured .overlayInfo .meta {
+  font-size: 0.98rem;
+}
+
+.related--mag .project-card.isCurtain .curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+}
+
+.related--mag .project-card.isCurtain .curtainHalf {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: rgba(12, 17, 46, 0.48);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 200s ease 0.5s;
+}
+
+.related--mag .project-card.isCurtain .curtainPanel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  color: white;
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
+  padding: 0.8rem 1rem;
+}
+
+.related--mag .project-card.isCurtain .curtainHalf--left .curtainPanel {
+  left: 12%;
+  right: 0;
+  justify-content: flex-end;
+  border-left: 2px solid white;
+  text-align: right;
+}
+
+.related--mag .project-card.isCurtain .curtainHalf--right .curtainPanel {
+  right: 12%;
+  left: 0;
+  justify-content: flex-start;
+  border-right: 2px solid white;
+  text-align: left;
+}
+
+.related--mag .project-card.isCurtain .curtainPanel span {
+  display: block;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  color: white;
+}
+
+.related--mag .project-card.isCurtain.isFeatured .curtainPanel span {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+}
+
+.related--mag .project-card.isCurtain.isSecondary .curtainPanel span {
+  font-size: 0.95rem;
+}
+
+.related--mag .project-card.isCurtain:hover .curtainHalf--left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.related--mag .project-card.isCurtain:hover .curtainHalf--right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.related--mag .project-card.isCurtain:hover .overlayInfo {
+  opacity: 1;
 }

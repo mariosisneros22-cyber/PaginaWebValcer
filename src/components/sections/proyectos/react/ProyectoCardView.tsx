@@ -27,7 +27,78 @@ export default function ProyectoCardView({
   const cls = `project-card${mobileCompact ? " is-mobile-compact" : ""}${className ? ` ${className}` : ""}`;
   const estadoKey = estadoToKey(project.estado);  
   const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
-  const Inner = (
+
+  const words = project.nombre.toUpperCase().split(" ");
+  const mid = Math.ceil(words.length / 2);
+  const leftText = words.slice(0, mid).join(" ");
+  const rightText = words.slice(mid).join(" ");
+
+  const isFeatured = className?.includes("isFeatured");
+  const isSecondary = className?.includes("isSecondary");
+  const isCurtain = className?.includes("isCurtain");
+  
+  const Inner = isCurtain ? (
+    <>
+      <div className="thumb">
+        {project.coverUrl ? (
+          <img
+            src={project.coverUrl}
+            alt={project.nombre}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+          />
+        ) : (
+          <div className="thumbFallback" />
+        )}
+      </div>
+
+      <div className="overlayInfo">
+        <h3 className="infoTitle">{project.nombre}</h3>
+
+        <p className="meta">
+          {project.ubicacion?.distrito ? `${project.ubicacion.distrito}, ` : ""}
+          {project.ubicacion?.departamento}
+        </p>
+
+        {isFeatured ? (
+          <>
+            <p className="meta">{project.cliente}</p>
+            <p className="meta">{formatEstadoLabel(estadoKey)}</p>
+            {typeof project.monto === "number" ? (
+              <p className="meta">Monto: {formatMonto(project.monto)}</p>
+            ) : null}
+            {project.fecha_inicio ? (
+              <p className="meta">Inicio: {project.fecha_inicio}</p>
+            ) : null}
+          </>
+        ) : null}
+
+        {isSecondary ? (
+          <>
+            <p className="meta">{formatEstadoLabel(estadoKey)}</p>
+            {typeof project.monto === "number" ? (
+              <p className="meta">Monto: {formatMonto(project.monto)}</p>
+            ) : null}
+          </>
+        ) : null}
+      </div>
+
+      <div className="curtain">
+        <div className="curtainHalf curtainHalf--left">
+          <div className="curtainPanel">
+            <span>{leftText}</span>
+          </div>
+        </div>
+
+        <div className="curtainHalf curtainHalf--right">
+          <div className="curtainPanel">
+            <span>{rightText}</span>
+          </div>
+        </div>
+      </div>
+    </>
+  ) : (
     <>
       <div className="thumb">
         {project.coverUrl ? (
