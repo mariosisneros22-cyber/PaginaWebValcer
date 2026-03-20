@@ -9,8 +9,8 @@ export type Projecto = {
     departamento: string;
     provincia?: string;
     distrito?: string;
-    lat?: number;
-    lng?: number;
+    lat?: number | null;
+    lng?: number | null;
   };
   fecha_inicio?: number | string;
   fecha_fin?: number | string | null;

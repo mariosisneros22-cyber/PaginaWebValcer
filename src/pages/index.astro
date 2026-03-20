@@ -113,13 +113,12 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   <section class="section-2 section-featured-projects">
     <div class="container">
       <div class="proyectos-ht">
-        <div class="proyectos-copy">
-          <h2 class="proyectos-titulo">Proyectos destacados</h2>
-          <p class="proyectos-subtitulo">
-            Mantenemos un proyecto principal en foco y una selección complementaria para mostrar distintas escalas, servicios y contextos de ejecución.
-          </p>
-        </div>
-        <Button href="/proyectos">Leer más</Button>
+
+        <h2 class="section-title section-title--left proyectos-titulo">
+          Proyectos <span>destacados</span>
+        </h2>
+        <Button href="/proyectos" class="btn-third">Conocer más proyectos</Button>
+
       </div>
 
       <RelatedProyecto
@@ -502,6 +501,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   }
 
   .proyectos-titulo {
+    max-width: 12ch;
     margin: 0;
   }
 
@@ -512,6 +512,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     line-height: 1.75;
     font-size: var(--text-base);
   }
+
 
   @media (max-width: 768px) {
     .section-featured-projects::before {
