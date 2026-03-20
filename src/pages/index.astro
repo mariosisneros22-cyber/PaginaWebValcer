@@ -9,6 +9,7 @@ import SliderHero from '../components/sections/hero/sliderHero.astro';
 import Button from '../components/ui/button.astro';
 
 import Carrusel from '../components/sections/index/carrusel.astro';
+import EnfoqueSection from '../components/sections/index/EnfoqueSection.astro';
 
 import { heroImages, about, infoSliders } from '../data/homepage';
 
@@ -107,60 +108,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     </div>
   </section>
 
-  <section class="section section-video">
-    <video
-      class="section-video-bg"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="none"
-    >
-      <source src="/videos/fondo-video.mp4" type="video/mp4" />
-      <source src="/videos/fondo-video.webm" type="video/webm" />
-    </video>
-
-    <div class="section-overlay"></div>
-
-    <div class="container section-content">
-      <h2 class="valor-titulo">
-        Nuestro enfoque en cada <span class="text-highlight">proyecto</span>
-      </h2>
-
-      <p class="valor-subtitulo">
-        Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
-      </p>
-
-      <div class="valor-grid valor-grid-3">
-        <div class="valor-item">
-          <div class="valor-index">01</div>
-          <h3>Planificamos</h3>
-          <p>
-            Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
-            asegurando claridad operativa desde el primer día.
-          </p>
-        </div>
-
-        <div class="valor-item">
-          <div class="valor-index">02</div>
-          <h3>Ejecutamos</h3>
-          <p>
-            Supervisión en campo, coordinación técnica y control continuo
-            para mantener calidad y seguridad durante toda la intervención.
-          </p>
-        </div>
-
-        <div class="valor-item">
-          <div class="valor-index">03</div>
-          <h3>Garantizamos</h3>
-          <p>
-            Validación final, documentación técnica y entrega estructurada
-            conforme a requerimientos del cliente.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <EnfoqueSection />
 
   <section class="section-2 section-featured-projects">
     <div class="container">
@@ -175,7 +123,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
       </div>
 
       <RelatedProyecto
-        ids={["proj_001", "proj_002", "proj_005", "proj_004"]}
+        ids={["proj_002", "proj_003", "proj_004", "proj_005"]}
         limit={4}
       />
     </div>
@@ -529,140 +477,6 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     }
   }
 
-  /* valor diferencial */
-
-  .section-video {
-    position: relative;
-    overflow: hidden;
-    min-height: 500px;
-  }
-
-  .video-poster {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #36408f 0%, #2a2b6f 58%, #1d1f56 100%);
-    z-index: 0;
-  }
-
-  .section-video-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 1s ease-in;
-  }
-
-  .section-video-bg[data-loaded="true"] {
-    opacity: 1;
-  }
-
-  .section-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(20, 24, 58, 0.9) 0%,
-      rgba(42, 43, 111, 0.76) 48%,
-      rgba(18, 22, 52, 0.9) 100%
-    );
-    z-index: 1;
-  }
-
-  .section-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  .section-video h2,
-  .section-video h3,
-  .section-video p {
-    color: var(--color-white);
-  }
-
-  .valor-titulo {
-    text-align: center;
-    max-width: 13ch;
-    margin-inline: auto;
-  }
-  .valor-index {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(109, 186, 235, 0.34);
-    background: rgba(109, 186, 235, 0.14);
-    color: rgba(255,255,255,0.92);
-    font-size: var(--text-md);
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-  }
-
-  .valor-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
-  }
-
-  .valor-item {
-    text-align: center;
-    padding: var(--spacing-md);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(109, 186, 235, 0.08));
-    backdrop-filter: blur(6px);
-    transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  }
-
-  .valor-item:hover {
-    transform: translateY(-8px);
-    border-color: rgba(109, 186, 235, 0.3);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(109, 186, 235, 0.14));
-  }
-
-  .valor-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .valor-subtitulo {
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto var(--spacing-lg);
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.7;
-    font-size: var(--text-lg);
-  }
-
-  .valor-item h3 {
-    font-weight: 700;
-    margin-bottom: var(--spacing-xs);
-    font-size: var(--text-xl);
-  }
-
-  .valor-item p {
-    font-size: var(--text-base);
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  @media (max-width: 900px) {
-    .valor-grid-3 {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .valor-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
   /* proyectos destacados */
   .section-featured-projects {
     position: relative;
@@ -722,47 +536,4 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
     max-width: 12ch;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .section-video-bg,
-    .valor-item {
-      transition: none;
-    }
-  }
 </style>
-
-<script>
-  function initVideoLazyLoad() {
-    const video = document.querySelector<HTMLVideoElement>('.section-video-bg');
-    if (!video) return;
-
-    const connection = (navigator as Navigator & {
-      connection?: { saveData?: boolean };
-    }).connection;
-
-    const prefersReducedData = connection?.saveData === true;
-
-    if (prefersReducedData) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry?.isIntersecting) return;
-
-        video.load();
-
-        video.addEventListener(
-          'loadeddata',
-          () => video.setAttribute('data-loaded', 'true'),
-          { once: true }
-        );
-
-        observer.disconnect();
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(video);
-  }
-
-  initVideoLazyLoad();
-</script>

@@ -1,0 +1,438 @@
+---
+import peruMap from '../../../assets/peru.svg?raw';
+import proyectos from '../../../data/proyectos.json';
+
+type ProyectoMin = {
+  visible: boolean;
+  ubicacion: {
+    departamento: string;
+  };
+};
+
+const data = proyectos as ProyectoMin[];
+
+const conteoPorDepartamento = data
+  .filter((p) => p.visible)
+  .reduce<Record<string, number>>((acc, p) => {
+    const dep = p.ubicacion?.departamento?.trim();
+    if (!dep) return acc;
+
+    acc[dep] = (acc[dep] || 0) + 1;
+    return acc;
+  }, {});
+
+const svgToDepartamento: Record<string, string> = {
+  'PE-ANC': 'Ancash',
+  'PE-APU': 'Apurimac',
+  'PE-ARE': 'Arequipa',
+  'PE-CUS': 'Cusco',
+  'PE-HUV': 'Huancavelica',
+  'PE-JUN': 'Junin',
+  'PE-LIM': 'Lima',
+  'PE-LOR': 'Loreto',
+  'PE-PAS': 'Pasco',
+  'PE-SAM': 'San Martin',
+};
+---
+
+<section class="section section-video" data-enfoque-section>
+  <video
+    class="section-video-bg"
+    data-enfoque-video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="none"
+  >
+    <source src="/videos/fondo-video.mp4" type="video/mp4" />
+    <source src="/videos/fondo-video.webm" type="video/webm" />
+  </video>
+
+  <div class="section-overlay"></div>
+
+  <div class="container section-content">
+    <div class="mapa-layout">
+      <div class="mapa-col">
+        <div class="mapa-wrap" set:html={peruMap}></div>
+      </div>
+
+      <div class="info-col">
+        <div class="info-head">
+          <h2 class="valor-titulo">
+            Lugares Donde<span>Trabajamos</span>
+          </h2>
+          <p class="valor-resumen">
+            Presencia en distintos departamentos del país.
+          </p>
+        </div>
+
+        <div class="info-card" data-mapa-card>
+          <div class="info-card__empty">
+            Selecciona un departamento
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-video {
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  .section-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+  }
+
+  .section-video-bg[data-loaded='true'] {
+    opacity: 1;
+  }
+
+  .section-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+    z-index: 1;
+  }
+
+  .section-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .mapa-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 420px);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+
+  .mapa-col {
+    min-width: 0;
+  }
+
+  .mapa-wrap {
+    margin-top: 0;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    min-width: 0;
+  }
+
+  .info-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .valor-titulo {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 5.2vw, 4.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(90, 90, 90, 0.5);
+  }
+
+  .valor-titulo span {
+    display: block;
+    color: var(--color-secondary);
+    text-shadow: 0.05em 0.1em 0 rgba(90, 90, 90, 0.5);
+  }
+
+  .valor-resumen {
+    margin: 0;
+    max-width: 42rem;
+    text-align: left;
+    color: rgba(24, 29, 62, 0.82);
+    line-height: 1.7;
+    font-size: var(--text-base);
+  }
+
+  .info-card {
+    min-height: 260px;
+    padding: 1.4rem 1.4rem 1.6rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 16px 32px rgba(24, 29, 62, 0.05);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .mapa-wrap :global(#PE-ANC),
+  .mapa-wrap :global(#PE-APU),
+  .mapa-wrap :global(#PE-ARE),
+  .mapa-wrap :global(#PE-CUS),
+  .mapa-wrap :global(#PE-HUV),
+  .mapa-wrap :global(#PE-JUN),
+  .mapa-wrap :global(#PE-LIM),
+  .mapa-wrap :global(#PE-LOR),
+  .mapa-wrap :global(#PE-PAS),
+  .mapa-wrap :global(#PE-SAM) {
+    fill: var(--color-secondary);
+    cursor: pointer;
+  }
+
+  .mapa-wrap :global(#PE-ANC:hover),
+  .mapa-wrap :global(#PE-APU:hover),
+  .mapa-wrap :global(#PE-ARE:hover),
+  .mapa-wrap :global(#PE-CUS:hover),
+  .mapa-wrap :global(#PE-HUV:hover),
+  .mapa-wrap :global(#PE-JUN:hover),
+  .mapa-wrap :global(#PE-LIM:hover),
+  .mapa-wrap :global(#PE-LOR:hover),
+  .mapa-wrap :global(#PE-PAS:hover),
+  .mapa-wrap :global(#PE-SAM:hover) {
+    fill: var(--color-primary);
+    transform: translateY(-8px);
+    filter: drop-shadow(0 10px 14px rgba(20, 24, 58, 0.2));
+  }
+
+  .mapa-wrap :global(#PE-ANC.active),
+  .mapa-wrap :global(#PE-APU.active),
+  .mapa-wrap :global(#PE-ARE.active),
+  .mapa-wrap :global(#PE-CUS.active),
+  .mapa-wrap :global(#PE-HUV.active),
+  .mapa-wrap :global(#PE-JUN.active),
+  .mapa-wrap :global(#PE-LIM.active),
+  .mapa-wrap :global(#PE-LOR.active),
+  .mapa-wrap :global(#PE-PAS.active),
+  .mapa-wrap :global(#PE-SAM.active) {
+    fill: var(--color-primary-dark) !important;
+    transform: translateY(-10px);
+    filter: drop-shadow(0 12px 16px rgba(20, 24, 58, 0.28));
+  }
+
+  .mapa-wrap :global(path) {
+    opacity: 0.9; 
+    transition:
+      fill 0.25s ease,
+      transform 0.25s ease,
+      filter 0.25s ease,
+      stroke 0.25s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  :global(.info-card__empty) {
+    text-align: center;
+    color: var(--color-white);
+    font-size: var(--text-lg);
+  }
+
+  :global(.info-card__body) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;     
+    text-align: center;
+  }
+
+  :global(.info-card__title) {
+    margin: 0;
+    text-align: center;
+    color: white;
+    font-size: clamp(2.4rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    font-weight: 700;
+    text-shadow: 0.08em 0.08em 0 var(--color-secondary);
+  }
+
+  :global(.info-card__eyebrow) {
+    margin-top: 1rem;
+    text-align: center;
+    color: var(--color-white);
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+    line-height: 1.3;
+    font-weight: 500;
+    text-shadow: 0.06em 0.06em 0 var(--color-secondary);
+  }
+
+  :global(.info-card__desc) {
+    margin: 0.9rem 0 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.65;
+    font-size: var(--text-base);
+    max-width: 26rem;
+  }
+
+  :global(.info-card__footer) {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-top: 1.25rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-video-bg {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .mapa-layout {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .info-col {
+      order: -1;
+    }
+
+    .valor-resumen {
+      text-align: left;
+    }
+  }
+</style>
+
+<script define:vars={{ conteoPorDepartamento, svgToDepartamento }}>
+  function initEnfoqueVideoLazyLoad(signal) {
+    const section = document.querySelector('[data-enfoque-section]');
+    const video = section?.querySelector('[data-enfoque-video]');
+
+    if (!section || !video) return () => {};
+
+    const connection = navigator.connection;
+    if (connection && connection.saveData === true) return () => {};
+
+    if (video.readyState >= 2) {
+      video.setAttribute('data-loaded', 'true');
+      return () => {};
+    }
+
+    const handleLoadedData = () => video.setAttribute('data-loaded', 'true');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry || !entry.isIntersecting) return;
+
+        video.addEventListener('loadeddata', handleLoadedData, {
+          once: true,
+          signal,
+        });
+        video.load();
+
+        observer.disconnect();
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }
+
+  function initMapaDepartamentos(signal) {
+    const ids = [
+      'PE-ANC',
+      'PE-APU',
+      'PE-ARE',
+      'PE-CUS',
+      'PE-HUV',
+      'PE-JUN',
+      'PE-LIM',
+      'PE-LOR',
+      'PE-PAS',
+      'PE-SAM',
+    ];
+
+    const departamentos = ids
+      .map((id) => document.querySelector(`#${id}`))
+      .filter(Boolean);
+
+    const card = document.querySelector('[data-mapa-card]');
+
+    departamentos.forEach((departamento) => {
+      departamento.addEventListener('click', () => {
+        departamentos.forEach((item) => item.classList.remove('active'));
+        departamento.classList.add('active');
+
+        const svgId = departamento.id;
+        const nombreDepartamento = svgToDepartamento[svgId];
+        const total = nombreDepartamento
+          ? conteoPorDepartamento[nombreDepartamento] || 0
+          : 0;
+
+        if (!card) return;
+
+        if (!nombreDepartamento) {
+          card.innerHTML = `
+            <div class="info-card__empty">
+              Departamento no configurado.
+            </div>
+          `;
+          return;
+        }
+
+        card.innerHTML = `
+          <div class="info-card__body">
+            <h3 class="info-card__title">${nombreDepartamento}</h3>
+            <div class="info-card__eyebrow">
+              ${total} proyecto${total === 1 ? '' : 's'}
+            </div>
+          </div>
+
+          <div class="info-card__footer">
+            <a href="/proyectos?dpto=${encodeURIComponent(nombreDepartamento)}" class="btn btn-primary">
+              Ver proyectos
+            </a>
+          </div>
+        `;
+      }, { signal });
+    });
+  }
+
+  let cleanupEnfoque;
+
+  function initEnfoqueSection() {
+    cleanupEnfoque?.();
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    const cleanupVideo = initEnfoqueVideoLazyLoad(signal);
+    initMapaDepartamentos(signal);
+
+    cleanupEnfoque = () => {
+      controller.abort();
+      cleanupVideo?.();
+      cleanupEnfoque = undefined;
+    };
+  }
+
+  initEnfoqueSection();
+  document.addEventListener('astro:page-load', initEnfoqueSection);
+  document.addEventListener('astro:before-preparation', () => {
+    cleanupEnfoque?.();
+  });
+</script>
