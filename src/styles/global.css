@@ -152,6 +152,12 @@ a:hover {
   color: var(--color-text);
 }
 
+.section-white {
+  padding: var(--spacing-lg) 0;
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
 .section :is(h1, h2, h3, h4, h5, h6) {
   color: var(--color-primary-dark);
 }

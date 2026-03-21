@@ -35,7 +35,6 @@
   height: 100%;
 }
 
-
 .relatedGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -54,7 +53,6 @@
   .related--mag .magSide {
     gap: 12px;
   }
-
 }
 
 @media (max-width: 560px) {
@@ -69,7 +67,6 @@
   .related--mag .project-card.isFeatured {
     border-radius: 10px;
   }
-
 }
 
 .related--mag .project-card.isCurtain {
@@ -79,133 +76,260 @@
   padding: 0;
   min-height: 0;
   height: 100%;
+  background: #000;
 }
 
-.related--mag .project-card.isCurtain .thumb {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(221, 234, 244, 0.72);
-}
-
-.related--mag .project-card.isCurtain .thumb img,
-.related--mag .project-card.isCurtain .thumbFallback {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.related--mag .project-card.isCurtain .overlayInfo {
+/* CAPA TRASERA */
+.related--mag .project-card.isCurtain .doorBackInfo {
   position: absolute;
   inset: 0;
   z-index: 1;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.9rem, 1.6vw, 1.4rem);
+  background: var(--color-secondary);
+  color: var(--color-white);
+  opacity: 0;
+  transition: opacity 0.28s ease 0.15s;
+  text-align: center;
+}
+
+.related--mag .project-card.isCurtain .doorBackInfoInner {
+  width: min(80%, 100%);
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 1rem;
-  color: white;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  background: rgba(12, 17, 46, 0.58);
+  gap: 0.7rem;
+  overflow: hidden;
 }
 
-.related--mag .project-card.isCurtain .infoTitle {
-  margin: 0 0 0.35rem;
-  color: white;
-  font-size: 1rem;
-  line-height: 1.15;
-}
-
-.related--mag .project-card.isCurtain.isFeatured .infoTitle {
-  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-}
-
-.related--mag .project-card.isCurtain .overlayInfo .meta {
+.related--mag .project-card.isCurtain .doorBackInfo__eyebrow {
   margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  overflow-wrap: break-word;
+}
+
+.related--mag .project-card.isCurtain .doorBackInfo__title {
+  margin: 0;
+  font-family: var(--font-secondary);
+  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+  line-height: 1.05;
+  color: var(--color-white);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.related--mag .project-card.isCurtain .doorBackInfo__lead {
+  margin: 0;
+  font-size: clamp(1rem, 0.6vw + 0.9rem, 1.12rem);
+  font-weight: 600;
+  line-height: 1.35;
   color: rgba(255, 255, 255, 0.92);
-  font-size: 0.92rem;
-  opacity: 1;
+  overflow-wrap: break-word;
 }
 
-.related--mag .project-card.isCurtain.isFeatured .overlayInfo .meta {
-  font-size: 0.98rem;
+.related--mag .project-card.isCurtain .doorBackInfo__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.2rem;
+  width: 100%;
 }
 
-.related--mag .project-card.isCurtain .curtain {
+.related--mag .project-card.isCurtain .doorBackInfo__grid--compact {
+  grid-template-columns: 1fr;
+}
+
+.related--mag .project-card.isCurtain .doorBackInfo__meta {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(0.92rem, 0.32vw + 0.88rem, 1.02rem);
+  font-weight: 600;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.related--mag .project-card.isCurtain .doorBackInfo__meta--status {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-white);
+}
+
+/* FEATURED */
+.related--mag .project-card.isCurtain.isFeatured .doorBackInfoInner {
+  width: min(78%, 100%);
+  gap: 0.8rem;
+}
+
+.related--mag .project-card.isCurtain.isFeatured .doorBackInfo__title {
+  font-size: clamp(1.3rem, 1.7vw, 1.9rem);
+}
+
+.related--mag .project-card.isCurtain.isFeatured .doorBackInfo__meta {
+  font-size: clamp(0.98rem, 0.36vw + 0.92rem, 1.06rem);
+}
+
+/* SECONDARY */
+.related--mag .project-card.isCurtain.isSecondary .doorBackInfoInner {
+  width: min(88%, 100%);
+  gap: 0.4rem;
+}
+
+.related--mag .project-card.isCurtain.isSecondary .doorBackInfo__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.related--mag .project-card.isCurtain.isSecondary .doorBackInfo__title {
+  font-size: clamp(0.92rem, 0.85vw, 1.05rem);
+  line-height: 1.05;
+}
+
+.related--mag .project-card.isCurtain.isSecondary .doorBackInfo__lead {
+  font-size: 0.85rem;
+  line-height: 1.25;
+}
+
+.related--mag .project-card.isCurtain.isSecondary .doorBackInfo__meta {
+  padding: 0.55rem 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+/* CAPA FRONTAL */
+.related--mag .project-card.isCurtain .doorFront {
   position: absolute;
   inset: 0;
   z-index: 2;
   display: flex;
 }
 
-.related--mag .project-card.isCurtain .curtainHalf {
-  flex: 1;
+.related--mag .project-card.isCurtain .doorFront__half {
   position: relative;
+  width: 50%;
+  height: 100%;
   overflow: hidden;
-  background: rgba(12, 17, 46, 0.48);
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 200s ease 0.5s;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.related--mag .project-card.isCurtain .curtainPanel {
+.related--mag .project-card.isCurtain .doorFront__half--left {
+  transform-origin: left center;
+}
+
+.related--mag .project-card.isCurtain .doorFront__half--right {
+  transform-origin: right center;
+}
+
+/* IMAGEN EN CADA PUERTA */
+.related--mag .project-card.isCurtain .doorImage {
+  position: absolute;
+  inset: 0;
+}
+
+.related--mag .project-card.isCurtain .doorImage img,
+.related--mag .project-card.isCurtain .doorImage .thumbFallback,
+.related--mag .project-card.isCurtain .doorImage + .thumbFallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.related--mag .project-card.isCurtain .doorFront__half--left .doorImage {
+  width: 200%;
+  left: 0;
+}
+
+.related--mag .project-card.isCurtain .doorFront__half--right .doorImage {
+  width: 200%;
+  left: -100%;
+}
+
+/* OVERLAY */
+.related--mag .project-card.isCurtain .doorOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 30, 0.42);
+}
+
+/* TITULO PARTIDO POR EL CENTRO VISUAL */
+.related--mag .project-card.isCurtain .doorTitleMask {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.related--mag .project-card.isCurtain .doorTitle {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  min-height: 76px;
-  display: flex;
-  align-items: center;
-  color: white;
-  border-top: 2px solid white;
-  border-bottom: 2px solid white;
-  padding: 0.8rem 1rem;
-}
-
-.related--mag .project-card.isCurtain .curtainHalf--left .curtainPanel {
-  left: 12%;
-  right: 0;
-  justify-content: flex-end;
-  border-left: 2px solid white;
-  text-align: right;
-}
-
-.related--mag .project-card.isCurtain .curtainHalf--right .curtainPanel {
-  right: 12%;
   left: 0;
-  justify-content: flex-start;
-  border-right: 2px solid white;
-  text-align: left;
-}
-
-.related--mag .project-card.isCurtain .curtainPanel span {
-  display: block;
+  width: 200%;
+  transform: translateY(-50%);
+  text-align: center;
   text-transform: uppercase;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.03em;
-  color: white;
+  color: var(--color-white);
+  font-family: var(--font-secondary);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: 0.015em;
+  text-wrap: balance;
+  padding: 0 8%;
+  text-shadow:
+    0 3px 16px rgba(5, 7, 13, 0.26),
+    0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.related--mag .project-card.isCurtain.isFeatured .curtainPanel span {
-  font-size: clamp(1rem, 1.3vw, 1.25rem);
+.related--mag .project-card.isCurtain .doorTitle--left {
+  left: 0;
 }
 
-.related--mag .project-card.isCurtain.isSecondary .curtainPanel span {
-  font-size: 0.95rem;
+.related--mag .project-card.isCurtain .doorTitle--right {
+  left: -100%;
 }
 
-.related--mag .project-card.isCurtain:hover .curtainHalf--left {
-  transform: translateX(-100%);
-  opacity: 0;
+.related--mag .project-card.isCurtain.isFeatured .doorTitle {
+  font-size: clamp(2.2rem, 3vw, 3.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.015em;
+  transform: translateY(-50%) scaleY(1.08);
 }
 
-.related--mag .project-card.isCurtain:hover .curtainHalf--right {
-  transform: translateX(100%);
-  opacity: 0;
+.related--mag .project-card.isCurtain.isSecondary .doorTitle {
+  font-size: clamp(1.14rem, 1.3vw, 1.45rem);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
 }
 
-.related--mag .project-card.isCurtain:hover .overlayInfo {
+/* HOVER */
+.related--mag .project-card.isCurtain:hover .doorFront__half--left {
+  transform: translateX(-80%);
+}
+
+.related--mag .project-card.isCurtain:hover .doorFront__half--right {
+  transform: translateX(80%);
+}
+
+.related--mag .project-card.isCurtain:hover .doorBackInfo {
   opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .related--mag .project-card.isCurtain .doorBackInfoInner {
+    width: min(88%, 100%);
+  }
+
+  .related--mag .project-card.isCurtain .doorBackInfo__grid {
+    grid-template-columns: 1fr;
+  }
 }

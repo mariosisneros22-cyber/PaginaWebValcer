@@ -110,7 +110,7 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   <EnfoqueSection />
 
-  <section class="section-2 section-featured-projects">
+  <section class="section-3 section-featured-projects">
     <div class="container">
       <div class="proyectos-ht">
 
@@ -130,7 +130,9 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   <section class="section">
     <div class="container">
-      <h2 class="clientes-titulo">Nuestros clientes</h2>
+      <h2 class="section-title section-title--left clientes-titulo">
+        Nuestros <span>clientes</span>
+      </h2>
       <Carrusel clients={clients} />
     </div>
   </section>
@@ -503,16 +505,11 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
   .proyectos-titulo {
     max-width: 12ch;
     margin: 0;
+    text-shadow: 0.05em 0.1em 0 rgba(40, 40, 40, 0.60);
   }
-
-  .proyectos-subtitulo {
-    max-width: 64ch;
-    margin: 0.85rem 0 0;
-    color: rgba(24, 29, 62, 0.8);
-    line-height: 1.75;
-    font-size: var(--text-base);
+  .proyectos-titulo span {
+    text-shadow: 0.05em 0.1em 0 rgba(40, 40, 40, 0.60);
   }
-
 
   @media (max-width: 768px) {
     .section-featured-projects::before {
@@ -532,7 +529,6 @@ const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((se
 
   /* Clientes */
   .clientes-titulo {
-    text-align: left;
     margin-bottom: var(--spacing-lg);
     max-width: 12ch;
   }

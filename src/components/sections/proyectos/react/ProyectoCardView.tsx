@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 
-import "../styles/card.css"
+import "../styles/card.css";
 
 import type { Projecto } from "../../../../lib/projects";
-import { estadoToKey,formatEstadoLabel, formatMonto, formatSimpleLabel } from "../../../../lib/projects";
+import {
+  estadoToKey,
+  formatEstadoLabel,
+  formatMonto,
+  formatSimpleLabel,
+} from "../../../../lib/projects";
+
 type ProjectWithCover = Projecto & { coverUrl: string };
 
 type Props = {
   project: ProjectWithCover;
-  href?: string;              // opcional: si quieres que toda la card navegue
+  href?: string;
   className?: string;
-  children?: React.ReactNode; // acciones
-  showServicios?:boolean;
+  children?: React.ReactNode;
+  showServicios?: boolean;
   mobileCompact?: boolean;
 };
 
@@ -24,144 +30,186 @@ export default function ProyectoCardView({
   mobileCompact = false,
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const cls = `project-card${mobileCompact ? " is-mobile-compact" : ""}${className ? ` ${className}` : ""}`;
-  const estadoKey = estadoToKey(project.estado);  
-  const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
 
-  const words = project.nombre.toUpperCase().split(" ");
-  const mid = Math.ceil(words.length / 2);
-  const leftText = words.slice(0, mid).join(" ");
-  const rightText = words.slice(mid).join(" ");
+  const cls = `project-card${mobileCompact ? " is-mobile-compact" : ""}${
+    className ? ` ${className}` : ""
+  }`;
+
+  const estadoKey = estadoToKey(project.estado);
+  const extra = Math.max(0, (project.servicios?.length ?? 0) - 2);
 
   const isFeatured = className?.includes("isFeatured");
   const isSecondary = className?.includes("isSecondary");
   const isCurtain = className?.includes("isCurtain");
-  
-  const Inner = isCurtain ? (
-    <>
-      <div className="thumb">
-        {project.coverUrl ? (
-          <img
-            src={project.coverUrl}
-            alt={project.nombre}
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-        ) : (
-          <div className="thumbFallback" />
-        )}
-      </div>
 
-      <div className="overlayInfo">
-        <h3 className="infoTitle">{project.nombre}</h3>
+  const curtainTitle = project.nombre.toUpperCase();
+  const curtainLocation = [
+    project.ubicacion?.distrito,
+    project.ubicacion?.departamento,
+  ]
+    .filter(Boolean)
+    .join(", ");
 
-        <p className="meta">
-          {project.ubicacion?.distrito ? `${project.ubicacion.distrito}, ` : ""}
-          {project.ubicacion?.departamento}
-        </p>
+const Inner = isCurtain ? (
+  <>
+    <div className="doorBackInfo">
+      <div className="doorBackInfoInner">
+        {curtainLocation ? (
+          <p className="doorBackInfo__eyebrow">{curtainLocation}</p>
+        ) : null}
+
+        <h3 className="doorBackInfo__title">{project.nombre}</h3>
 
         {isFeatured ? (
           <>
-            <p className="meta">{project.cliente}</p>
-            <p className="meta">{formatEstadoLabel(estadoKey)}</p>
-            {typeof project.monto === "number" ? (
-              <p className="meta">Monto: {formatMonto(project.monto)}</p>
-            ) : null}
-            {project.fecha_inicio ? (
-              <p className="meta">Inicio: {project.fecha_inicio}</p>
-            ) : null}
+            <p className="doorBackInfo__lead">{project.cliente}</p>
+
+            <div className="doorBackInfo__grid">
+              <p className="doorBackInfo__meta doorBackInfo__meta--status">
+                {formatEstadoLabel(estadoKey)}
+              </p>
+
+              {typeof project.monto === "number" ? (
+                <p className="doorBackInfo__meta">
+                  Monto: {formatMonto(project.monto)}
+                </p>
+              ) : null}
+
+              {project.fecha_inicio ? (
+                <p className="doorBackInfo__meta">
+                  Inicio: {project.fecha_inicio}
+                </p>
+              ) : null}
+            </div>
           </>
         ) : null}
 
         {isSecondary ? (
-          <>
-            <p className="meta">{formatEstadoLabel(estadoKey)}</p>
-            {typeof project.monto === "number" ? (
-              <p className="meta">Monto: {formatMonto(project.monto)}</p>
-            ) : null}
-          </>
-        ) : null}
-      </div>
-
-      <div className="curtain">
-        <div className="curtainHalf curtainHalf--left">
-          <div className="curtainPanel">
-            <span>{leftText}</span>
-          </div>
-        </div>
-
-        <div className="curtainHalf curtainHalf--right">
-          <div className="curtainPanel">
-            <span>{rightText}</span>
-          </div>
-        </div>
-      </div>
-    </>
-  ) : (
-    <>
-      <div className="thumb">
-        {project.coverUrl ? (
-          <img
-            src={project.coverUrl}
-            alt={project.nombre}
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-        ) : (
-          <div className="thumbFallback" />
-        )}
-      </div>
-
-      <div className="body">
-        <h3 className="title">{project.nombre}</h3>
-
-        <p className="meta metaLocation">
-          {project.ubicacion?.distrito ? `${project.ubicacion.distrito}, ` : ""}
-          {project.ubicacion?.departamento}
-        </p>
-
-        {typeof project.monto === "number" ? (
-          <p className="meta metaMonto">Monto: {formatMonto(project.monto)}</p>
-        ) : null}
-
-        <div className={`mobileDetails${isExpanded ? " is-expanded" : ""}`}>
-          <p className="meta metaClient">{project.cliente}</p>
-
-          <div className="badges">
-            <span className={`tech-badge estado-${estadoKey}`}>
+          <div className="doorBackInfo__grid doorBackInfo__grid--compact">
+            <p className="doorBackInfo__meta doorBackInfo__meta--status">
               {formatEstadoLabel(estadoKey)}
-            </span>
+            </p>
 
-            {showServicios && (
-              <>
-                {(project.servicios ?? []).slice(0, 2).map((s, i) => (
-                  <span className="tech-badge" key={`${s}-${i}`}>
-                    {formatSimpleLabel(s)}
-                  </span>
-                ))}
-                {extra > 0 ? <span className="tag">+{extra}</span> : null}
-              </>
-            )}
+            {typeof project.monto === "number" ? (
+              <p className="doorBackInfo__meta">
+                Monto: {formatMonto(project.monto)}
+              </p>
+            ) : null}
           </div>
+        ) : null}
+      </div>
+    </div>
+
+    <div className="doorFront">
+      <div className="doorFront__half doorFront__half--left">
+        <div className="doorImage">
+          {project.coverUrl ? (
+            <img
+              src={project.coverUrl}
+              alt={project.nombre}
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          ) : (
+            <div className="thumbFallback" />
+          )}
         </div>
 
-        {mobileCompact ? (
-          <button
-            type="button"
-            className="mobileExpandBtn"
-            aria-expanded={isExpanded}
-            onClick={() => setIsExpanded((prev) => !prev)}
-          >
-            {isExpanded ? "Ver menos" : "Ver mas"}
-          </button>
-        ) : null}
+        <div className="doorOverlay" />
 
-        {children ? <div className="cardActions">{children}</div> : null}
+        <div className="doorTitleMask">
+          <div className="doorTitle doorTitle--left">{curtainTitle}</div>
+        </div>
       </div>
-    </>
-  );
+
+      <div className="doorFront__half doorFront__half--right">
+        <div className="doorImage">
+          {project.coverUrl ? (
+            <img
+              src={project.coverUrl}
+              alt={project.nombre}
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          ) : (
+            <div className="thumbFallback" />
+          )}
+        </div>
+
+        <div className="doorOverlay" />
+
+        <div className="doorTitleMask">
+          <div className="doorTitle doorTitle--right">{curtainTitle}</div>
+        </div>
+      </div>
+    </div>
+  </>
+) : (
+  <>
+    <div className="thumb">
+      {project.coverUrl ? (
+        <img
+          src={project.coverUrl}
+          alt={project.nombre}
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
+        />
+      ) : (
+        <div className="thumbFallback" />
+      )}
+    </div>
+
+    <div className="body">
+      <h3 className="title">{project.nombre}</h3>
+
+      <p className="meta metaLocation">
+        {project.ubicacion?.distrito ? `${project.ubicacion.distrito}, ` : ""}
+        {project.ubicacion?.departamento}
+      </p>
+
+      {typeof project.monto === "number" ? (
+        <p className="meta metaMonto">Monto: {formatMonto(project.monto)}</p>
+      ) : null}
+
+      <div className={`mobileDetails${isExpanded ? " is-expanded" : ""}`}>
+        <p className="meta metaClient">{project.cliente}</p>
+
+        <div className="badges">
+          <span className={`tech-badge estado-${estadoKey}`}>
+            {formatEstadoLabel(estadoKey)}
+          </span>
+
+          {showServicios && (
+            <>
+              {(project.servicios ?? []).slice(0, 2).map((s, i) => (
+                <span className="tech-badge" key={`${s}-${i}`}>
+                  {formatSimpleLabel(s)}
+                </span>
+              ))}
+              {extra > 0 ? <span className="tag">+{extra}</span> : null}
+            </>
+          )}
+        </div>
+      </div>
+
+      {mobileCompact ? (
+        <button
+          type="button"
+          className="mobileExpandBtn"
+          aria-expanded={isExpanded}
+          onClick={() => setIsExpanded((prev) => !prev)}
+        >
+          {isExpanded ? "Ver menos" : "Ver mas"}
+        </button>
+      ) : null}
+
+      {children ? <div className="cardActions">{children}</div> : null}
+    </div>
+  </>
+);
 
   if (href) {
     return (
