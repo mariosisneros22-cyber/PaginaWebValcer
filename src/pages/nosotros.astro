@@ -18,7 +18,7 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
 ---
 
 <Layout title="Valcer - Nosotros" heroTitle="Nosotros" heroImage={nosotrosHero}>
-  <section class="section gerente-section">
+  <section class="section-2 gerente-section">
     <div class="container gerente-slider" data-gerente-slider>
       {gerentes.map((gerente, index) => (
         <div
@@ -38,7 +38,6 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
           </div>
 
           <div class="gerente-copy">
-            <span class="gerente-kicker">Mensaje de gerencia</span>
             <blockquote class="gerente-quote">
               "{gerente.message}"
             </blockquote>
@@ -122,21 +121,18 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateX(42px);
-    transition: opacity 0.55s ease, transform 0.55s ease, visibility 0.55s ease;
+    transition: opacity 0.55s ease, visibility 0.55s ease;
   }
 
   .gerente-grid.is-active {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateX(0);
   }
-
   .gerente-photo {
     max-width: 340px;
     width: 100%;
-    border-radius: 16px;
+    border-radius: 5px;
     overflow: hidden;
     border: 1px solid rgba(42, 43, 111, 0.08);
     box-shadow: 0 10px 22px rgba(32, 39, 87, 0.06);
@@ -155,29 +151,20 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
     padding: clamp(1rem, 2vw, 1.4rem) 0;
     max-width: 42rem;
   }
-
-  .gerente-kicker {
-    display: inline-flex;
-    padding: 0.38rem 0.8rem;
-    border-radius: 999px;
-    background: rgba(109, 186, 235, 0.12);
-    color: var(--color-primary);
-    font-size: var(--text-xs);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
   .gerente-quote {
     position: relative;
     margin: 0;
     padding-left: 1.8rem;
-    color: var(--color-text);
+
+    color: var(--color-white);
     font-size: clamp(1.15rem, 2vw, 1.5rem);
     line-height: 1.65;
-    font-weight: 500;
+
+    font-weight: 650;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
     max-width: 38ch;
+
+    text-align: justify; /* 👈 AQUÍ */
   }
 
   .gerente-quote::before,
@@ -190,20 +177,20 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
   }
 
   .gerente-quote::before {
-    content: '"';
+    content: '“';
     top: -0.25rem;
     left: 0;
   }
 
   .gerente-quote::after {
-    content: '"';
+    content: '”';
     right: 0;
     bottom: -1.1rem;
   }
 
   .gerente-name {
     margin: 1.25rem 0 0;
-    color: var(--color-text-light);
+    color: var(--color-white);
     font-size: var(--text-sm);
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -212,10 +199,12 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
 
   .gerente-role {
     margin: 0.35rem 0 0;
-    color: var(--color-text-lighter);
+    color: var(--color-white); 
     font-size: var(--text-sm);
-  }
+    font-weight: 700; 
+    text-align: left;
 
+  }
   .gerente-dots {
     display: flex;
     justify-content: center;
@@ -276,9 +265,13 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
     .gerente-copy {
       padding-top: 0;
       max-width: none;
-      text-align: center;
     }
 
+    .gerente-name,
+    .gerente-role {
+      text-align: left;
+      width: 100%;
+    }
     .gerente-quote {
       max-width: none;
       padding-left: 0.9rem;
@@ -295,7 +288,6 @@ import ProjectCta from '../components/sections/shared/ProjectCta.astro';
     .gerente-grid {
       inset: 0 0 2.5rem;
       gap: 0.9rem;
-      transform: translateX(20px);
     }
 
     .gerente-photo {

@@ -1,6 +1,6 @@
-import gerenteGeneralPhoto from "../assets/images/nosotros/timeline/imagetest.jpg";
-import gerenteOperacionesPhoto from "../assets/images/nosotros/timeline/imagetest.jpg";
-import gerenteComercialPhoto from "../assets/images/nosotros/nosotrosHero.jpg";
+import gerenteGeneralPhoto from "../assets/images/nosotros/gerentes/gerente.jpg";
+import gerenteOperacionesPhoto from "../assets/images/nosotros/gerentes/gerente.jpg";
+import gerenteComercialPhoto from "../assets/images/nosotros/gerentes/gerente.jpg";
 
 export const gerentes = [
   {
