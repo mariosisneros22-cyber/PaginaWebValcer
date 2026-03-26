@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import "../styles/card.css";
+import MiniMapProyecto from "./MiniMapProyecto";
 
 import type { Projecto } from "../../../../lib/projects";
 import {
@@ -41,6 +42,8 @@ export default function ProyectoCardView({
   const isFeatured = className?.includes("isFeatured");
   const isSecondary = className?.includes("isSecondary");
   const isCurtain = className?.includes("isCurtain");
+  const hasCoords =
+    typeof project.ubicacion?.lat === "number" && typeof project.ubicacion?.lng === "number";
 
   const curtainTitle = project.nombre.toUpperCase();
   const curtainLocation = [
@@ -49,6 +52,25 @@ export default function ProyectoCardView({
   ]
     .filter(Boolean)
     .join(", ");
+
+  const mediaFallback = hasCoords ? (
+    <div className="thumbFallback thumbFallback--map" aria-label={`Ubicacion de ${project.nombre}`}>
+      <MiniMapProyecto
+        lng={project.ubicacion.lng!}
+        lat={project.ubicacion.lat!}
+        zoom={9}
+        lazy
+        initOnIdle
+        releaseOnExit
+        rootMargin="120px 0px"
+        showMarker={false}
+        showAttribution={false}
+        className="miniMap miniMap--card"
+      />
+    </div>
+  ) : (
+    <div className="thumbFallback" />
+  );
 
 const Inner = isCurtain ? (
   <>
@@ -112,7 +134,7 @@ const Inner = isCurtain ? (
               fetchPriority="low"
             />
           ) : (
-            <div className="thumbFallback" />
+            mediaFallback
           )}
         </div>
 
@@ -134,7 +156,7 @@ const Inner = isCurtain ? (
               fetchPriority="low"
             />
           ) : (
-            <div className="thumbFallback" />
+            mediaFallback
           )}
         </div>
 
@@ -158,7 +180,7 @@ const Inner = isCurtain ? (
           fetchPriority="low"
         />
       ) : (
-        <div className="thumbFallback" />
+        mediaFallback
       )}
     </div>
 
