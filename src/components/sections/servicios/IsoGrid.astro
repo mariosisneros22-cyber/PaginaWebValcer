@@ -5,39 +5,25 @@ type IsoItem = {
   id: string;
   number: string;
   title: string;
-  scope: string;
+  scope?: string;
   status?: "vigente" | "en_proceso";
   year?: number;
   certificate?: string | null;
 };
 
 const iso = isoRaw as IsoItem[];
-const isoThemes: Record<string, { tone: string; eyebrow: string; icon: string }> = {
-  "9001:2015": {
-    tone: "quality",
-    eyebrow: "Calidad",
-    icon: "QC",
-  },
-  "14001:2015": {
-    tone: "environment",
-    eyebrow: "Ambiente",
-    icon: "AM",
-  },
-  "37001:2016": {
-    tone: "ethics",
-    eyebrow: "Integridad",
-    icon: "ET",
-  },
-  "45001:2018": {
-    tone: "safety",
-    eyebrow: "Seguridad",
-    icon: "SS",
-  },
-  "50001:2018": {
-    tone: "energy",
-    eyebrow: "Energia",
-    icon: "EN",
-  },
+
+const getPreviewFromCertificate = (certificate?: string | null) =>
+  certificate
+    ? certificate
+        .replace("/iso/pdf/", "/iso/webp/")
+        .replace(/\.pdf$/i, ".webp")
+    : null;
+
+const getStatusLabel = (status?: "vigente" | "en_proceso") => {
+  if (status === "vigente") return "Vigente";
+  if (status === "en_proceso") return "En proceso";
+  return "";
 };
 ---
 
@@ -49,52 +35,52 @@ const isoThemes: Record<string, { tone: string; eyebrow: string; icon: string }>
 
     <div class="iso-grid" role="list">
       {iso.map((item) => {
-        const theme = isoThemes[item.number] ?? {
-          tone: "default",
-          eyebrow: "Norma",
-          icon: "ISO",
-        };
+        const previewSrc = getPreviewFromCertificate(item.certificate);
+        const statusLabel = getStatusLabel(item.status);
 
         return (
-          <article class={`iso-card iso-card--${theme.tone}`} role="listitem" aria-label={`ISO ${item.number}`}>
-            <div class="iso-top">
-              <div class="iso-label">
-                <span class="iso-icon" aria-hidden="true">{theme.icon}</span>
-                <span class="iso-eyebrow">{theme.eyebrow}</span>
-                <span class="iso-label__text">ISO</span>
-                <span class="iso-number">{item.number}</span>
-              </div>
+          <article class="iso-item" role="listitem" aria-label={`ISO ${item.number}`}>
+            {previewSrc && (
+              <a
+                class="iso-thumb-link"
+                href={item.certificate ?? "#"}
+                target="_blank"
+                rel="noopener"
+                aria-label={`Abrir certificado ISO ${item.number}`}
+              >
+                <img
+                  class="iso-thumb"
+                  src={previewSrc}
+                  alt={`Vista previa del certificado ISO ${item.number}`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
 
-              {item.status && (
-                <span class={`iso-badge iso-badge--${item.status}`}>
-                  {item.status === "vigente" ? "Vigente" : "En proceso"}
-                </span>
-              )}
-            </div>
-
-            <div class="iso-body">
-              <h3 class="iso-title">{item.title}</h3>
-              <p class="iso-scope">{item.scope}</p>
-              {typeof item.year === "number" && <p class="iso-year">Versión {item.year}</p>}
-            </div>
-
-            <div class="iso-foot">
+            <div class="iso-text">
               {item.certificate ? (
-                <a class="iso-link" href={item.certificate} target="_blank" rel="noopener">
-                  Ver certificado
+                <a
+                  class="iso-number"
+                  href={item.certificate}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`Abrir certificado ISO ${item.number}`}
+                >
+                  {item.number}
                 </a>
               ) : (
-                <span class="iso-muted">Certificado disponible a solicitud</span>
+                <span class="iso-number">{item.number}</span>
               )}
+
+              <h3 class="iso-title">{item.title}</h3>
+
+              {statusLabel && <p class="iso-status">{statusLabel}</p>}
             </div>
           </article>
         );
       })}
     </div>
-
-    <p class="iso-note">
-      Estas certificaciones respaldan procedimientos aplicados en obra, operación y mantenimiento, y la documentación puede revisarse según el alcance de cada proyecto.
-    </p>
   </div>
 </section>
 

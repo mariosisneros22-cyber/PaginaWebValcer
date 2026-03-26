@@ -8,10 +8,11 @@
 }
 
 .iso-head {
-  margin: 0;
+  margin: 0 0 1rem;
 }
 
 .iso-head h2 {
+  margin: 0;
   text-transform: uppercase;
   font-size: var(--text-3xl);
   line-height: 0.92;
@@ -22,164 +23,69 @@
   text-shadow: 0.05em 0.1em 0 rgba(0, 0, 0, 0.65);
 }
 
-.iso-card * {
-  min-width: 0;
-}
-
 .iso-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.1rem;
   align-items: stretch;
 }
 
-.iso-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(42, 43, 111, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 8px 18px rgba(32, 39, 87, 0.05);
+.iso-item {
+  display: grid;
+  gap: 0.85rem;
   padding: 1rem;
+}
+
+.iso-thumb-link {
+  display: block;
+  text-decoration: none;
+}
+
+.iso-thumb {
+  width: 100%;
+  max-width: 110px;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(42, 43, 111, 0.08);
+  box-shadow: 0 6px 14px rgba(32, 39, 87, 0.08);
+  background: #fff;
+}
+
+.iso-text {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 0.8rem;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
-}
-
-@media (hover: hover) {
-  .iso-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(42, 43, 111, 0.12);
-    box-shadow: 0 12px 22px rgba(32, 39, 87, 0.08);
-  }
-}
-
-.iso-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.9rem;
-  flex-wrap: wrap;
-}
-
-.iso-label {
-  display: grid;
-  gap: 0.18rem;
-}
-
-.iso-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 12px;
-  background: rgba(42, 43, 111, 0.05);
-  color: var(--color-primary);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.iso-eyebrow {
-  color: var(--color-text-light);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.iso-label__text {
-  display: inline-block;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-text-lighter);
+  gap: 0.32rem;
 }
 
 .iso-number {
-  display: block;
+  display: inline-block;
+  margin: 0;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--color-primary);
-  font-size: clamp(1.65rem, 2vw, 2.1rem);
+  font-size: clamp(1.25rem, 1.8vw, 1.8rem);
   line-height: 1;
-  margin-top: 0.08rem;
+  text-decoration: none;
 }
 
-.iso-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.36rem 0.72rem;
-  border-radius: 999px;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  border: 1px solid rgba(42, 43, 111, 0.12);
-  background: rgba(255, 255, 255, 0.9);
-  white-space: normal;
-}
-
-.iso-badge--vigente {
-  background: rgba(47, 143, 106, 0.1);
-  color: var(--color-success);
-  border-color: rgba(47, 143, 106, 0.2);
-}
-
-.iso-badge--en_proceso {
-  background: rgba(185, 133, 36, 0.15);
-  color: var(--color-warning);
-  border-color: rgba(185, 133, 36, 0.25);
-}
-
-.iso-body {
-  display: grid;
-  gap: 0.5rem;
+.iso-number:hover {
+  color: var(--color-secondary);
 }
 
 .iso-title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 650;
-  line-height: 1.3;
+  line-height: 1.32;
   color: var(--color-text);
 }
 
-.iso-scope {
+.iso-status {
   margin: 0;
+  font-size: 0.88rem;
   color: var(--color-text-light);
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-.iso-year {
-  margin: 0;
-  color: var(--color-text-lighter);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.iso-foot {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.iso-link {
-  font-weight: 700;
-  font-size: var(--text-sm);
-  color: var(--color-secondary);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.iso-link:hover {
-  opacity: 0.85;
-}
-
-.iso-muted {
-  font-size: var(--text-sm);
-  color: var(--color-text-lighter);
+  line-height: 1.4;
 }
 
 .iso-note {
@@ -191,13 +97,23 @@
   text-wrap: balance;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .iso-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
   .iso-grid {
     grid-template-columns: 1fr;
   }
 
-  .iso-card {
-    border-radius: 14px;
-    padding: 1rem;
+  .iso-item {
+    padding: 0.9rem;
+  }
+
+  .iso-thumb {
+    max-width: 90px;
+    height: 118px;
   }
 }
