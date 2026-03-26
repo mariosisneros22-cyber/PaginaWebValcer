@@ -6,15 +6,17 @@
 }
 
 .services-title {
+  margin: 0;
+  text-transform: uppercase;
   font-size: var(--text-3xl);
-  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  color: var(--color-primary);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+  paint-order: stroke fill;
+  text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 0.65);
 }
 
-.services-subtitle {
-  font-size: var(--text-xl);
-  color: var(--color-text-light);
-  line-height: 1.6;
-}
 
 .services-folders__tabs {
   display: grid;
@@ -70,18 +72,6 @@
   line-height: 1.25;
 }
 
-.services-folders__tabMeta {
-  font-size: 0.76rem;
-  line-height: 1.2;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(109, 186, 235, 0.92);
-}
-
-.services-folders__tab.is-active .services-folders__tabMeta {
-  color: rgba(255, 255, 255, 0.68);
-}
-
 .services-folders__panel {
   border: 1px solid rgba(42, 43, 111, 0.1);
   border-radius: var(--radius);
@@ -101,7 +91,6 @@
   object-fit: cover;
   aspect-ratio: 16 / 7.5;
   max-height: 280px;
-  animation: svcMedia 760ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity, filter;
 }
 
@@ -121,7 +110,6 @@
 
 .services-folders__content {
   padding: 1.15rem 1.2rem 1.3rem;
-  animation: svcContent 620ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity, filter;
   display: grid;
   gap: 0.85rem;
@@ -277,10 +265,6 @@
     font-size: var(--text-2xl);
   }
 
-  .services-subtitle {
-    font-size: var(--text-base);
-    line-height: 1.6;
-  }
 
   .services-folders__tabs {
     grid-template-columns: 1fr;

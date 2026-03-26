@@ -89,9 +89,6 @@ export default function ServiciosSplitReact({
       {/* Tabs tipo archivador */}
       <div className="container cnt-service">
           <h2 className="services-title">Nuestros Servicios</h2>
-          <p className="services-subtitle">
-            Ingeniería y ejecución especializada para proyectos de alto impacto.
-          </p>
       </div>
 
       <div className="services-folders__tabs" role="tablist" aria-label="Servicios">
@@ -108,9 +105,6 @@ export default function ServiciosSplitReact({
               onClick={() => setActiveId(s.id)} // ✅ opcional: toggle (0 o 1 abierto)
             >
               <span className="services-folders__tabTitle">{s.title.replaceAll("\n", " ")}</span>
-              <span className="services-folders__tabMeta">
-                {(projectsByService[s.id] ?? []).length} proyectos
-              </span>
             </button>
           );
         })}

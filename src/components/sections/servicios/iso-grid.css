@@ -8,21 +8,18 @@
 }
 
 .iso-head {
-  max-width: 52rem;
-  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  margin: 0;
 }
 
 .iso-head h2 {
-  margin: 0;
+  text-transform: uppercase;
   font-size: var(--text-3xl);
-  font-weight: 700;
-}
-
-.iso-lead {
-  margin: 0.85rem 0 0;
-  max-width: 68ch;
-  color: var(--color-text-light);
-  line-height: 1.75;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  color: var(--color-secondary);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+  paint-order: stroke fill;
+  text-shadow: 0.05em 0.1em 0 rgba(0, 0, 0, 0.65);
 }
 
 .iso-card * {

@@ -5,9 +5,7 @@
     "nombre": "Proyecto Agua Potable Ancahuachanan",
     "cliente": "Municipalidad distrital de Huancabamba",
     "estado": "arbitraje",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Oxapampa",
@@ -54,9 +52,7 @@
     "nombre": "Proyecto Uchumarca",
     "cliente": "Gobierno regional de Pasco",
     "estado": "en_ejecucion",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica", "ingenieria-consultoria"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Daniel Alcides Carrion",
@@ -103,9 +99,7 @@
     "nombre": "Proyecto Centro Salud Mancos",
     "cliente": "Gobierno Regional de Ancash",
     "estado": "en_ejecucion",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "ingenieria-consultoria"],
     "ubicacion": {
       "departamento": "Ancash",
       "provincia": "Yungay",
@@ -152,9 +146,7 @@
     "nombre": "Proyecto Transitabilidad Yanahuanca - Huarautambo",
     "cliente": "Municipalidad provincial Daniel Alcides Carrión",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Daniel Alcides Carrion",
@@ -201,9 +193,7 @@
     "nombre": "Proyecto Enrocado Casma",
     "cliente": "Municipalidad distrital de comandante Noel",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Ancash",
       "provincia": "Casma",
@@ -299,9 +289,7 @@
     "nombre": "Proyecto Transitabilidad Pozuzo",
     "cliente": "Gobierno Regional de Pasco Sede Central",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Oxapampa",
@@ -397,9 +385,7 @@
     "nombre": "Proyecto Transitabilidad Yanahuanca - Yanachocha",
     "cliente": "Municipalidad Provincial de Daniel Carrión - Yanacocha",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Daniel Alcides Carrion",
@@ -446,9 +432,7 @@
     "nombre": "Proyecto Transitabilidad Llamahuire",
     "cliente": "Municipalidad distrital de Challhuahuacho",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Apurimac",
       "provincia": "Cotabambas",
@@ -642,9 +626,7 @@
     "nombre": "Proyecto Transitabilidad Charcana",
     "cliente": "Proyecto de desarrollo Integral Andino",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Arequipa",
       "provincia": "La Union",
@@ -691,9 +673,7 @@
     "nombre": "Proyecto Plaza de Armas Tinyahuarco",
     "cliente": "Sociedad Minera el Brocal S,A,A,",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "industria-mineria"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Pasco",
@@ -740,9 +720,7 @@
     "nombre": "Proyecto Transitabilidad Chaupimarca",
     "cliente": "Sociedad Minera el Brocal S,A,A,",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "industria-mineria"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Pasco",
@@ -887,9 +865,7 @@
     "nombre": "Proyecto Drenaje Pluvial Chaupimarca",
     "cliente": "Gobierno Regional de Pasco sede Central",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Pasco",
@@ -985,9 +961,7 @@
     "nombre": "Proyecto Transitabilidad Alto Huallaga",
     "cliente": "Dirección Regional de Transportes y Comunicaciones San Martín",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica", "ingenieria-consultoria"],
     "ubicacion": {
       "departamento": "San Martin",
       "provincia": "Huallaga",
@@ -1034,9 +1008,7 @@
     "nombre": "Proyecto Transitabilidad Dela Red Vial Vecinal",
     "cliente": "Municipalidad Provincial de Pasco",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Pasco",
@@ -1083,9 +1055,7 @@
     "nombre": "Proyecto Infraestructura Educativa San Juan de Lurigancho",
     "cliente": "Unidad ejecutora 108 - PRONIED",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "ingenieria-consultoria"],
     "ubicacion": {
       "departamento": "Lima",
       "provincia": "Lima",
@@ -1230,9 +1200,7 @@
     "nombre": "Proyecto Transitabilidad Yurimaguas",
     "cliente": "Corporación Peruana de Aeropuertos y Aviación Comercial S,A",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "maquinaria-logistica"],
     "ubicacion": {
       "departamento": "Loreto",
       "provincia": "Alto Amazonas",
@@ -1573,9 +1541,7 @@
     "nombre": "Proyecto Planta Tratamiento Huallay",
     "cliente": "Municipalidad distrital de Huayllay",
     "estado": "finalizado",
-    "servicios": [
-      "construccion-infraestructura"
-    ],
+    "servicios": ["construccion-infraestructura", "industria-mineria"],
     "ubicacion": {
       "departamento": "Pasco",
       "provincia": "Pasco",
