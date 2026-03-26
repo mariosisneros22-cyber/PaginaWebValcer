@@ -143,7 +143,7 @@ export default function MiniMapaProyecto({
         center: [lng, lat],
         zoom,
         interactive: false,
-        attributionControl: showAttribution,
+        attributionControl: showAttribution ? undefined : false,
       });
 
       mapRef.current = map;

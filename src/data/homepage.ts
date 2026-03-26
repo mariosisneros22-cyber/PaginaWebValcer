@@ -6,11 +6,16 @@ import img2 from '../assets/images/index/hero/hero_2.jpg';
 import img3 from '../assets/images/index/hero/hero_3.jpg';
 import img4 from '../assets/images/index/hero/hero_4.jpg';
 
+import img5 from '../assets/images/nosotros/img1.jpg';   
+import img6 from '../assets/images/nosotros/img2.jpg';
+import img7 from '../assets/images/nosotros/img3.jpg';
+import img8 from '../assets/images/nosotros/img4.jpg';
+
 import about from '../assets/images/index/about.jpg';
 
 // Hero images for slider
 export const heroImages = [img1, img2, img3, img4];
-
+export const ImagNosotros = [img5, img6, img7, img8];
 // About section image
 export { about };
 
