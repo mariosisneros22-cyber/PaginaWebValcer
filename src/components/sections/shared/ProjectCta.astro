@@ -1,0 +1,44 @@
+---
+import Button from "../../ui/button.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+  buttonHref?: string;
+  sectionClass?: string;
+}
+
+const {
+  title = "¿Tienes un proyecto en mente?",
+  description = "Conversemos sobre cómo podemos ayudarte.",
+  buttonLabel = "Conversemos",
+  buttonHref = "/contacto",
+  sectionClass = "section",
+} = Astro.props;
+---
+
+<section class={sectionClass}>
+  <div class="container project-cta">
+    <h2 class="project-cta__title">{title}</h2>
+    <p class="project-cta__description">{description}</p>
+    <Button href={buttonHref}>{buttonLabel}</Button>
+  </div>
+</section>
+
+<style>
+  .project-cta {
+    text-align: center;
+  }
+
+  .project-cta__title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-cta__description {
+    font-size: var(--text-xl);
+    margin: 0 auto;
+  }
+</style>

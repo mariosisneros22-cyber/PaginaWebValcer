@@ -59,7 +59,7 @@ const { title, image, eager = true } = Astro.props;
   .page-hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,.6), rgba(0,0,0,.3));
+    background: linear-gradient(to bottom, rgba(19, 23, 58, .72), rgba(42, 43, 111, .34));
     z-index: 1;
     pointer-events: none;
   }
@@ -81,11 +81,11 @@ const { title, image, eager = true } = Astro.props;
   }
 
   .page-hero-content h1 {
-    color: #fff;
+    color: var(--color-white);
     font-size: var(--text-4xl);
     margin: 0;
     text-align: left;
-    text-shadow: 0 2px 8px rgba(0,0,0,.4);
+    text-shadow: 0 8px 24px rgba(12, 16, 40, .32);
   }
 
 
@@ -101,9 +101,9 @@ const { title, image, eager = true } = Astro.props;
 
     background: linear-gradient(
       to bottom,
-      rgba(255,255,255,0) 0%,
-      rgba(255,255,255,0.7) 60%,
-      #ffffff 100%
+      rgba(245,249,253,0) 0%,
+      rgba(245,249,253,0.76) 60%,
+      var(--color-background-2) 100%
     );
 
     z-index: 1;

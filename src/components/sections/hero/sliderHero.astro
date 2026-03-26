@@ -1,13 +1,20 @@
 ---
 import { Image } from 'astro:assets';
 
-interface Props {
-  images: any[];
-  title: string;
-  subtitle?: string;
+interface HeroButton{
+  label: string;
+  href: string;
 }
 
-const { images, title, subtitle } = Astro.props;
+interface Props {
+  images: any[];
+  titleImage: string;
+  subtitle?: string;
+  primaryButton?: HeroButton;
+  secondaryButton?: HeroButton;
+}
+
+const { images, titleImage, subtitle, primaryButton, secondaryButton } = Astro.props;
 ---
 
 <section class="hero" aria-label="Hero carousel">
@@ -18,14 +25,37 @@ const { images, title, subtitle } = Astro.props;
           src={image} 
           alt={`Slide ${index + 1}`} 
           loading={index === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchpriority={index === 0 ? "high" : "auto"}
+          format="avif"
+          widths={[768, 1024, 1440, 1920]}
+          sizes="100vw"
+          quality={70}
         />
       </div>
     ))}
     
     <div class="hero-content">
       <div class="hero-container">
-        <h1>{title}</h1>
-        {subtitle && <p>{subtitle}</p>}
+        <div class="hero-text">
+          <img src={titleImage} alt="Valcer" class="hero-title-image" />
+
+          {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+
+          <div class="hero-actions">
+            {primaryButton && (
+              <a href={primaryButton.href} class="btn btn-primary hero-btn">
+                {primaryButton.label}
+              </a>
+            )}
+
+            {secondaryButton && (
+              <a href={secondaryButton.href} class="btn btn-secondary hero-btn hero-btn-outline">
+                {secondaryButton.label}
+              </a>
+            )}
+          </div>
+        </div>
       </div>
     </div>
     
@@ -33,13 +63,13 @@ const { images, title, subtitle } = Astro.props;
       class="slide-btn prev" 
       data-slide-prev
       aria-label="Previous slide"
-    >‹</button>
+    ><img src="icons/arrow.svg" alt = ""></button>
     
     <button 
       class="slide-btn next" 
       data-slide-next
       aria-label="Next slide"
-    >›</button>
+    > <img src="icons/arrow.svg" alt = ""></button>
     
     <div class="slide-indicators" role="tablist">
       {images.map((_, index) => (
@@ -62,8 +92,59 @@ const { images, title, subtitle } = Astro.props;
     height: min(95vh, 900px);
     overflow: hidden;
   }
+  .hero-text {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
 
-  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem; /* controla la separación vertical */
+  }
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .hero-title-image {
+    display: block;
+    width: min(100%, 720px);
+    height: auto;
+  }
+
+  .hero-subtitle {
+    color: var(--color-white);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    text-align: center;
+    max-width: 700px;
+  }
+
+  .hero-btn {
+    min-width: 180px;
+    justify-content: center;
+    padding: 0.9rem 1.6rem;
+    border-radius: 10px;
+    font-size: var(--text-base);
+  }
+
+  .hero-btn-outline {
+    color: var(--color-white);
+    border-color: rgba(109, 186, 235, 0.85);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .hero-btn-outline:hover {
+    background: rgba(109, 186, 235, 0.18);
+    color: var(--color-white);
+  }
   .hero-slider {
     position: relative;
     width: 100%;
@@ -74,7 +155,7 @@ const { images, title, subtitle } = Astro.props;
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.40);
+    background: linear-gradient(135deg, rgba(16, 21, 52, 0.64), rgba(42, 43, 111, 0.42));
     z-index: 2;
     pointer-events: none;
   }
@@ -111,42 +192,52 @@ const { images, title, subtitle } = Astro.props;
     margin: 0 auto;
     padding: 0 2rem;
   }
-
-  .hero-content h1 {
-    color: white;
-    margin-bottom: 1rem;
-    font-size: var(--text-4xl);
-    font-weight: bold;
-  }
-
-  .hero-content p {
-    color: white;
-    font-size: var(--text-2xl);
-  }
-
   .slide-btn {
-    color: white;
-    transition: background 0.3s;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(70, 70, 70, 0.5);
+    background: transparent;
     border: none;
-    font-size: 3rem;
-    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
     cursor: pointer;
     z-index: 10;
+    transition: transform 0.25s ease, opacity 0.25s ease;
   }
-  
-  .slide-btn:hover {
-    background: rgba(70, 70, 70, 0.8);
+
+  .slide-btn img {
+    width: 42px;
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    opacity: 0.95;
+  }
+
+  .slide-btn.next img {
+    transform: rotate(180deg);
+  }
+
+  .slide-btn:hover img {
+    opacity: 1;
+  }
+
+  .slide-btn.prev:hover img {
+    transform: translateX(-4px);
+  }
+
+  .slide-btn.next:hover img {
+    transform: rotate(180deg) translateX(-4px);
   }
 
   .slide-btn:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
+    outline: 2px solid var(--color-white);
+    outline-offset: 4px;
+    border-radius: 6px;
   }
-  
+
   .slide-btn.prev {
     left: 20px;
   }
@@ -169,18 +260,18 @@ const { images, title, subtitle } = Astro.props;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.42);
     border: none;
     cursor: pointer;
     transition: background 0.3s;
   }
   
   .indicator:hover {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(109, 186, 235, 0.72);
   }
   
   .indicator.active {
-    background: white;
+    background: var(--color-white);
   }
   
   @media (max-width: 768px) {
@@ -199,12 +290,30 @@ const { images, title, subtitle } = Astro.props;
     .hero-content p {
       font-size: var(--text-xl);
     }
-    
-    .slide-btn {
-      font-size: 2rem;
-      padding: 0.5rem 1rem;
+
+    .hero-actions {
+      gap: 0.75rem;
     }
-    
+
+    .hero-btn {
+      min-width: 150px;
+      padding: 0.8rem 1.2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.5rem;
+    }
+        
+    .slide-btn {
+      padding: 0.5rem;
+    }
+
+    .slide-btn img {
+      width: 34px;
+    }
+      
     .slide-indicators {
       bottom: 1rem;
     }
@@ -218,13 +327,15 @@ const { images, title, subtitle } = Astro.props;
 
 <script>
   function initSlider() {
-    const slider = document.querySelector('[data-hero-slider]');
+    const slider = document.querySelector<HTMLElement>('[data-hero-slider]');
     if (!slider) return;
 
     let currentSlide = 0;
     const slides = slider.querySelectorAll('.slide');
     const indicators = slider.querySelectorAll('.indicator');
     const totalSlides = slides.length;
+    const controller = new AbortController();
+    const { signal } = controller;
     
     if (totalSlides === 0) return;
     
@@ -265,17 +376,17 @@ const { images, title, subtitle } = Astro.props;
     }
 
     // Event listeners para botones
-    slider.querySelector('[data-slide-prev]')?.addEventListener('click', () => {
+    slider.querySelector<HTMLButtonElement>('[data-slide-prev]')?.addEventListener('click', () => {
       prevSlide();
       stopAutoSlide();
       startAutoSlide();
-    });
+    }, { signal });
 
-    slider.querySelector('[data-slide-next]')?.addEventListener('click', () => {
+    slider.querySelector<HTMLButtonElement>('[data-slide-next]')?.addEventListener('click', () => {
       nextSlide();
       stopAutoSlide();
       startAutoSlide();
-    });
+    }, { signal });
 
     // Event listeners para indicadores
     indicators.forEach((indicator, index) => {
@@ -284,12 +395,12 @@ const { images, title, subtitle } = Astro.props;
         showSlide(currentSlide);
         stopAutoSlide();
         startAutoSlide();
-      });
+      }, { signal });
     });
 
     // Pausar en hover
-    slider.addEventListener('mouseenter', stopAutoSlide);
-    slider.addEventListener('mouseleave', startAutoSlide);
+    slider.addEventListener('mouseenter', stopAutoSlide, { signal });
+    slider.addEventListener('mouseleave', startAutoSlide, { signal });
 
     // Pausar cuando tab está inactivo
     document.addEventListener('visibilitychange', () => {
@@ -298,12 +409,15 @@ const { images, title, subtitle } = Astro.props;
       } else {
         startAutoSlide();
       }
-    });
+    }, { signal });
 
     startAutoSlide();
 
     // Cleanup function
-    return () => stopAutoSlide();
+    return () => {
+      controller.abort();
+      stopAutoSlide();
+    };
   }
 
   // Ejecutar y guardar cleanup

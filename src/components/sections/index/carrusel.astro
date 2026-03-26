@@ -6,28 +6,64 @@ interface Client {
   logo: ImageMetadata;
 }
 
-interface Props{
+interface Props {
   clients: Client[];
 }
 
 const { clients } = Astro.props;
+const pageSize = 7;
+const totalPages = Math.max(1, Math.ceil(clients.length / pageSize));
 ---
 
+<div
+  class="clientes-stack"
+  data-clientes-stack
+  data-page-size={pageSize}
+  data-total-pages={totalPages}
+>
+  <div class="clientes-controls">
+    <button
+      type="button"
+      class="clientes-control-btn clientes-control-btn--up"
+      data-clientes-up
+      aria-label="Ver clientes anteriores"
+    >
+      <img src="/icons/up.svg" alt="" aria-hidden="true" />
+    </button>
 
-<div class="carrusel-wrapper">
-  <div class="carrusel-track">
-    {clients.map((client) => (
-      <div class="cliente-logo">
+    <button
+      type="button"
+      class="clientes-control-btn clientes-control-btn--down"
+      data-clientes-down
+      aria-label="Ver más clientes"
+    >
+      <img src="/icons/up.svg" alt="" aria-hidden="true" />
+    </button>
+  </div>
+
+  <div
+    class="clientes-grid"
+    role="list"
+    aria-label={`Listado de ${clients.length} clientes`}
+  >
+    {clients.map((client, index) => (
+      <div
+        class="cliente-logo"
+        role="listitem"
+        data-client-item
+        data-index={index}
+        hidden={index >= pageSize}
+      >
         <div class="logo-box">
-          <Image 
-            src={client.logo} 
-            alt={client.name} 
+          <Image
+            src={client.logo}
+            alt={client.name}
             loading="lazy"
             decoding="async"
             width={180}
             height={180}
             quality={70}
-            sizes="(max-width: 768px) 140px, 180px"
+            sizes="(max-width: 768px) 45vw, (max-width: 1200px) 18vw, 180px"
             densities={[1, 2]}
           />
         </div>
@@ -36,65 +72,152 @@ const { clients } = Astro.props;
   </div>
 </div>
 
+<script>
+  document.querySelectorAll<HTMLElement>("[data-clientes-stack]").forEach((stack) => {
+    const grid = stack.querySelector<HTMLElement>(".clientes-grid");
+    const items = Array.from(
+      stack.querySelectorAll<HTMLElement>("[data-client-item]")
+    );
+    const btnUp = stack.querySelector<HTMLButtonElement>("[data-clientes-up]");
+    const btnDown = stack.querySelector<HTMLButtonElement>("[data-clientes-down]");
+    const pageSize = Number(stack.dataset.pageSize || 7);
+    const totalPages = Number(stack.dataset.totalPages || 1);
+
+    let currentPage = 0;
+
+    function renderPage(direction: "up" | "down" = "down") {
+      const start = currentPage * pageSize;
+      const end = start + pageSize;
+
+      if (grid) {
+        grid.classList.remove("is-animating-up", "is-animating-down");
+      }
+
+      let visibleOrder = 0;
+
+      items.forEach((item, index) => {
+        const visible = index >= start && index < end;
+        item.hidden = !visible;
+
+        if (visible) {
+          item.style.animationDelay = `${visibleOrder * 0.03}s`;
+          visibleOrder += 1;
+        } else {
+          item.style.animationDelay = "";
+        }
+      });
+
+      if (grid) {
+        void grid.offsetWidth;
+        grid.classList.add(direction === "up" ? "is-animating-up" : "is-animating-down");
+      }
+
+      if (btnUp) btnUp.disabled = currentPage === 0;
+      if (btnDown) btnDown.disabled = currentPage >= totalPages - 1;
+    }
+
+    btnUp?.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage -= 1;
+        renderPage("up");
+      }
+    });
+
+    btnDown?.addEventListener("click", () => {
+      if (currentPage < totalPages - 1) {
+        currentPage += 1;
+        renderPage("down");
+      }
+    });
+
+    renderPage("down");
+  });
+</script>
+
 <style>
-  .carrusel-wrapper {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 10%,
-      black 90%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 10%,
-      black 90%,
-      transparent 100%
-    );
+  .clientes-stack {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(0.9rem, 1.6vw, 1.2rem);
+    align-items: start;
   }
 
-  .carrusel-track {
+  .clientes-controls {
     display: flex;
-    width: max-content; /* ✅ importante */
-    gap: var(--spacing-md, 1.5rem);
-    animation: scroll-infinite 60s linear infinite;
-    will-change: transform;
+    flex-direction: column;
+    gap: 0.7rem;
   }
 
-  .carrusel-wrapper:hover .carrusel-track {
-    animation-play-state: paused;
+  .clientes-control-btn {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(42, 43, 111, 0.12);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 10px 18px rgba(17, 24, 39, 0.06);
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  .clientes-control-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(42, 43, 111, 0.22);
+    box-shadow: 0 16px 26px rgba(17, 24, 39, 0.1);
+  }
+
+  .clientes-control-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 6px 14px rgba(17, 24, 39, 0.04);
+  }
+
+  .clientes-control-btn img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+
+  .clientes-control-btn--down img {
+    transform: rotate(180deg);
+  }
+
+  .clientes-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    align-items: stretch;
   }
 
   .cliente-logo {
-    flex-shrink: 0;
-    width: clamp(120px, 12vw, 180px);
-    height: clamp(120px, 12vw, 180px);
+    min-height: clamp(92px, 11vw, 128px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
+    background: #fff;
+    border: 1px solid rgba(42, 43, 111, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(17, 24, 39, 0.05);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    min-width: 0;
+  }
+
+  .cliente-logo[hidden] {
+    display: none !important;
   }
 
   .logo-box {
     width: 100%;
     height: 100%;
-    padding: 1.2rem;
+    padding: clamp(1rem, 2vw, 1.25rem);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-
-  .logo-box img {
-    opacity: 0.75;
-    transition: opacity 0.25s ease;
-    /* evita filter si notas jank: quítalo */
-  }
-
-  .cliente-logo:hover img { opacity: 1; }
 
   .logo-box :global(img) {
     width: 100%;
@@ -102,76 +225,85 @@ const { clients } = Astro.props;
     object-fit: contain;
     object-position: center;
     filter: grayscale(100%);
-    opacity: 0.65;
+    opacity: 0.72;
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .cliente-logo:hover {
+    transform: translateY(-3px);
+    border-color: rgba(42, 43, 111, 0.18);
+    box-shadow: 0 18px 32px rgba(17, 24, 39, 0.08);
   }
 
   .cliente-logo:hover :global(img) {
     filter: grayscale(0%);
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
-  
+
   @media (prefers-reduced-motion: reduce) {
-    .carrusel-track { animation: none; transform: none; }
-  }
-  
-  @keyframes scroll-infinite {
-    0% {
-      transform: translateX(0);
+    .cliente-logo,
+    .logo-box :global(img),
+    .clientes-control-btn {
+      transition: none;
     }
-    100% {
-      transform: translateX(-50%);
+  }
+
+  @media (max-width: 1200px) {
+    .clientes-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 768px) {
-    .cliente-logo {
-      width: clamp(100px, 15vw, 140px);
-      height: clamp(100px, 15vw, 140px);
+    .clientes-stack {
+      grid-template-columns: 1fr;
     }
 
-    .logo-box {
-      padding: 1rem;
+    .clientes-controls {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .clientes-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .clientes-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+  }
+
+  .clientes-grid.is-animating-down .cliente-logo:not([hidden]) {
+    animation: clientesSlideDown 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .clientes-grid.is-animating-up .cliente-logo:not([hidden]) {
+    animation: clientesSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes clientesSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes clientesSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 </style>
-
-<script>
-  function initCarrusel() {
-    document.querySelectorAll('.carrusel-track').forEach((track) => {
-      // ✅ idempotente: no volver a clonar si ya se hizo
-      if (track.getAttribute('data-initialized') === 'true') return;
-      track.setAttribute('data-initialized', 'true');
-
-      const originals = Array.from(track.children);
-      if (originals.length === 0) return;
-
-      // Medir cuánto necesitamos duplicar para cubrir al menos 2 pantallas
-      const wrapper = track.closest('.carrusel-wrapper');
-      const targetWidth = (wrapper?.clientWidth ?? window.innerWidth) * 2;
-
-      // Clonar hasta exceder targetWidth (máximo límite por seguridad)
-      let guard = 0;
-      while (track.scrollWidth < targetWidth && guard < 10) {
-        originals.forEach((item) => {
-          track.appendChild(item.cloneNode(true));
-        });
-        guard++;
-      }
-
-      // ✅ Duplicación final exacta 1 vez para loop perfecto (2 copias)
-      originals.forEach((item) => {
-        track.appendChild(item.cloneNode(true));
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCarrusel, { once: true });
-  } else {
-    initCarrusel();
-  }
-
-  document.addEventListener('astro:page-load', initCarrusel);
-</script>

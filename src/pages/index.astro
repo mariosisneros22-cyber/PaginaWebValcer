@@ -1,4 +1,4 @@
----
+﻿---
 import { Image } from 'astro:assets';
 
 import Layout from '../layouts/Layout.astro';
@@ -9,129 +9,149 @@ import SliderHero from '../components/sections/hero/sliderHero.astro';
 import Button from '../components/ui/button.astro';
 
 import Carrusel from '../components/sections/index/carrusel.astro';
+import EnfoqueSection from '../components/sections/index/EnfoqueSection.astro';
 
-import {serviceTabs} from '../utils/exportContent.ts'
-import { heroImages, about, infoSliders } from '../utils/indexImage.ts';
+import { heroImages, about, infoSliders } from '../data/homepage';
 
 import { clients } from "../utils/clients";
-import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
+import serviciosRaw from '../data/servicios.json';
+
+type InicioServicio = {
+  id: string;
+  title: string;
+  tagline: string;
+};
+
+const serviceHighlights = (serviciosRaw as InicioServicio[]).slice(0, 4).map((service, index) => ({
+  id: service.id,
+  title: service.title.replaceAll('\n', ' '),
+  icon: [
+    '/icons/services/construccion.svg',
+    '/icons/services/helmet.svg',
+    '/icons/services/tractor.svg',
+    '/icons/services/mineria.svg',
+  ][index] ?? '/icons/services/construccion.svg',
+}));
 ---
 
 <Layout title="Valcer - Inicio">
   <SliderHero 
     images={heroImages}
-    title="Bienvenido a Valcer"
+    titleImage="/icons/logo/logo_head.png"
     subtitle="Tu empresa de confianza"
+    primaryButton={{ label: "Nosotros", href: "/nosotros" }}
+    secondaryButton={{ label: "Contacto", href: "/contacto" }}
   />
-  <section class = "section-2">
-    <div class = "container containerabout">
-      <!--About us -->
-      <div class ="about-us">
-        <div class="about-us-content">
-          <h3>Sobre Nosotros</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          
-        </div>
-        
-        <div class = "about-us-image"> 
-          <Image src={about} alt="Sobre Nosotros"  loading= "eager" width={800} height={600} quality={85} densities={[1, 2]}/>
-        </div>
-      </div>
 
-      <Slider slider={infoSliders} />
-
-    </div>
+  <section class="index-slider-band">
+    <Slider slider={infoSliders} />
   </section>
 
-  <!-- Servicios Interactivos -->
-  <ServiceIntro   buttonHref="/servicios" buttonLabel="Ver nuestros servicios"/>
-
-  <!-- Valor Diferencial -->
-  <section class="section section-video">
-    <video
-      class="section-video-bg"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="none"
-    >
-      <source
-        src="/videos/fondo-video.mp4"
-        type="video/mp4"
-      />
-      <source
-        src="/videos/fondo-video.webm"
-        type="video/webm"
-      />
-    </video>
-
-    <div class="section-overlay"></div>
-
-    <div class="container section-content">
-
-      <h2 class="valor-titulo">Nuestro enfoque en cada proyecto</h2>
-
-      <p class="valor-subtitulo">
-        Un proceso estructurado que garantiza planificación técnica, ejecución controlada y entrega conforme a especificaciones.
-      </p>
-
-      <div class="valor-grid valor-grid-3">
-        <div class="valor-item">
-          <div class="valor-index">01</div>
-          <h3>Planificamos</h3>
-          <p>
-            Definimos alcance, riesgos, cronograma y recursos antes de iniciar,
-            asegurando claridad operativa desde el primer día.
+  <section class="section about-home-section" style={`--about-bg: url(${about.src})`}>
+    <div class="container containerabout">
+      <div class="about-us">
+        <div class="about-us-copy">
+          <p class="section-copy section-copy--lead">
+            Ejecutamos proyectos con criterio técnico, capacidad operativa y una manera de trabajar que pone orden desde el primer día.
           </p>
+          <p class="section-copy">
+            Detrás de cada obra hay una empresa que coordina, responde y sostiene el proceso completo con seriedad. En nuestra historia, equipo y enfoque está la diferencia que hace que un proyecto avance con confianza.
+          </p>
+
+          <div class="about-us-actions">
+            <Button href="/nosotros" class="about-us-button">Conócenos</Button>
+          </div>
         </div>
 
-        <div class="valor-item">
-          <div class="valor-index">02</div>
-          <h3>Ejecutamos</h3>
-          <p>
-            Supervisión en campo, coordinación técnica y control continuo
-            para mantener calidad y seguridad durante toda la intervención.
-          </p>
-        </div>
-
-        <div class="valor-item">
-          <div class="valor-index">03</div>
-          <h3>Garantizamos</h3>
-          <p>
-            Validación final, documentación técnica y entrega estructurada
-            conforme a requerimientos del cliente.
-          </p>
-        </div>
+        <h3 class="about-us-title">Sobre <span>Nosotros</span></h3>
       </div>
     </div>
   </section>
 
-  <!-- Proyectos Destacados -->
-  <section class="section-2">
+  <section class="section services-brief">
+    <div class="container services-layout">
+      <h2 class="section-title section-title--left">
+        Nuestros <span>Servicios</span>
+      </h2>
+
+      <div class="services-diamonds">
+        {serviceHighlights.map((service) => (
+          <a
+            class="service-diamond"
+            href={`/servicios?tab=${encodeURIComponent(service.id)}`}
+            aria-label={`Ver más sobre ${service.title}`}
+          >
+            <div class="service-diamond__inner">
+              <div class="service-diamond__face service-diamond__face--front">
+                <div class="service-diamond__content">
+                  <div class="service-diamond__icon-wrap" aria-hidden="true">
+                    <img
+                      src={service.icon}
+                      alt=""
+                      class="service-diamond__icon"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="service-diamond__title">{service.title}</div>
+                </div>
+              </div>
+
+              <div class="service-diamond__face service-diamond__face--back">
+                <div class="service-diamond__content">
+                  <div class="service-diamond__cta">Ver más</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <EnfoqueSection />
+
+  <section class="section-3 section-featured-projects">
     <div class="container">
       <div class="proyectos-ht">
-        <h2 class="proyectos-titulo">Proyectos destacados</h2>
-        <Button href="/proyectos">Leer más</Button>
+
+        <h2 class="section-title section-title--left proyectos-titulo">
+          Proyectos <span>destacados</span>
+        </h2>
+        <Button href="/proyectos" class="btn-third">Conocer más proyectos</Button>
+
       </div>
 
       <RelatedProyecto
-        ids={["proj_001", "proj_002", "proj_005", "proj_004"]}
+        ids={["proj_002", "proj_003", "proj_004", "proj_005"]}
         limit={4}
       />
     </div>
   </section>
 
-  <!-- Nuestros Clientes -->
   <section class="section">
     <div class="container">
-      <h2 class="clientes-titulo">Nuestros Clientes</h2>
+      <h2 class="section-title section-title--left clientes-titulo">
+        Nuestros <span>clientes</span>
+      </h2>
       <Carrusel clients={clients} />
     </div>
   </section>
 </Layout>
 
 <style>
+  .about-home-section {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(12, 18, 38, 0.5), rgba(12, 18, 38, 0.8)),
+      var(--about-bg) center/cover no-repeat;
+  }
+
+  .index-slider-band {
+    position: relative;
+    z-index: 1;
+  }
+
   /* about us */
   .containerabout{
     display: flex;
@@ -141,286 +161,376 @@ import ServiceIntro from '../components/sections/servicios/ServiceIntro.astro';
 
   .about-us {
     display: flex;
-    align-items: stretch;
-    gap: var(--spacing-lg);
-  }
-
-  .about-us-content{
-    flex: 3;
-    min-width: 0;
-  }
-
-  .about-us-image{
-    flex:2;
-    min-width: 0;
-  }
-
-  .about-us-content h3 {
-    font-size: var(--text-3xl);
-    margin-bottom: var(--spacing-md);
-    letter-spacing: -0.5px;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-
-  .about-us-content p {
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: var(--spacing-md);
-    line-height: 2;
-    font-size: var(--text-lg);
-  }
-
-  .about-us-image {
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: clamp(0.45rem, 1vw, 0.85rem);
+    min-height: clamp(300px, 32vw, 420px);
+    padding: clamp(1rem, 2vw, 1.6rem);
     overflow: hidden;
-    aspect-ratio: 4 / 3;
-    border-radius: 8px;
+    border-radius: 32px;
   }
 
-  .about-us-image :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  .about-us-copy{
+    flex: 0 1 32rem;
+    min-width: 0;
+    max-width: 32rem;
+    padding: 0;
+  }
+
+  .about-us-title {
+    flex: 0 1 11ch;
+    margin: 0;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 5.2vw, 4.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .about-us-title span {
     display: block;
-    border: 1px solid var(--color-border);
+    color: var(--color-secondary);
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .about-us-copy p {
+    margin-bottom: 0.9rem;
+    max-width: 54ch;
+    color: var(--color-white);
+  }
+
+  .about-us-copy .section-copy--lead {
+    font-size: clamp(1.02rem, 1.4vw, 1.14rem);
+    color: var(--color-white);
+  }
+
+  .about-us-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+
+  .about-us-actions :global(.about-us-button) {
+    border: 1px solid rgba(255, 255, 255, 0.42);
   }
 
 
   @media (max-width: 768px) {
     .about-us {
-      flex-direction: column;
-      gap: 2rem;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      min-height: auto;
+      gap: 0.75rem;
+      padding: 1rem;
     }
 
-    .about-us-content,
-    .about-us-image {
-      flex: 1;
-      width: 100%;
+    .about-us-actions {
+      justify-content: flex-start;
     }
 
-    .about-us-image {
-      aspect-ratio: 4 / 3;
+    .about-us-copy {
+      max-width: 100%;
+    }
+
+    .about-us-title {
+      text-align: left;
     }
   }
 
-  /* valor diferencial */
+  .services-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+  }
+  .services-layout .section-title {
+    flex: 0 0 220px; /* controla ancho del título */
 
-  .section-video {
-    position: relative;
+  }
+  .services-layout .services-diamonds {
+    flex: 1;
+  }
+  .section-title {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 5.2vw, 4.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 1);
+  }
+  .services-brief .section-title {
+    margin-bottom: var(--spacing-lg);
+    max-width: 12ch;
+  }
+  .section-title span {
+    display: block;
+    color: var(--color-secondary);
+    text-shadow: 0.05em 0.1em 0 rgba(255, 255, 255, 1);
+  }
+
+  /* variantes */
+  .section-title--right {
+    text-align: right;
+  }
+
+  .section-title--left {
+    text-align: left;
+  }
+
+  .services-brief {
     overflow: hidden;
-    min-height: 500px;
   }
 
-  .video-poster {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #272c60 0%, #1a1e45 100%);
-    z-index: 0;
+  .services-diamonds {
+    --offset-x-1: 0px;
+    --offset-x-2: 0px;
+    --offset-x-3: 0px;
+    --offset-x-4: 0px;
+
+    --offset-y-1: 0px;
+    --offset-y-2: 170px;
+    --offset-y-3: 0px;
+    --offset-y-4: 170px;
+
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.75rem);
+    justify-items: center;
+    align-items: start;
+    padding-block: 1.5rem 4rem;
   }
 
-  .section-video-bg {
-    position: absolute;
-    inset: 0;
+  .services-diamonds .service-diamond:nth-child(1) {
+    margin-left: var(--offset-x-1);
+    margin-top: var(--offset-y-1);
+  }
+
+  .services-diamonds .service-diamond:nth-child(2) {
+    margin-left: var(--offset-x-2);
+    margin-top: var(--offset-y-2);
+  }
+
+  .services-diamonds .service-diamond:nth-child(3) {
+    margin-left: var(--offset-x-3);
+    margin-top: var(--offset-y-3);
+  }
+
+  .services-diamonds .service-diamond:nth-child(4) {
+    margin-left: var(--offset-x-4);
+    margin-top: var(--offset-y-4);
+  }
+  .service-diamond {
+    --diamond-size: clamp(180px, 16vw, 220px);
+
+    position: relative;
+    display: block;
+    width: var(--diamond-size);
+    height: var(--diamond-size);
+    text-decoration: none;
+    perspective: 1200px;
+  }
+
+  .service-diamond__inner {
+    position: relative;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 1s ease-in;
+    transform-style: preserve-3d;
+    transition: transform 0.7s ease;
   }
 
-  .section-video-bg[data-loaded="true"] {
-    opacity: 1;
+  .service-diamond:hover .service-diamond__inner,
+  .service-diamond:focus-visible .service-diamond__inner {
+    transform: rotateY(180deg);
   }
 
-  .section-overlay {
+  .service-diamond__face {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(15, 20, 45, 0.88) 0%,
-      rgba(20, 25, 55, 0.78) 50%,
-      rgba(15, 20, 45, 0.88) 100%
-    );
-    z-index: 1;
-  }
-
-  .section-content {
-    position: relative;
-    z-index: 2;
-  }
-
-  .section-video h2,
-  .section-video h3,
-  .section-video p {
-    color: #fff;
-  }
-
-  .valor-titulo {
-    text-align: center;
-    font-size: var(--text-3xl);
-    letter-spacing: -0.5px;
-  }
-  .valor-index {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.25);
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.9);
+    overflow: hidden;
+    border-radius: 24px;
+    backface-visibility: hidden;
+    
+    transform: rotate(45deg);
+  }
+
+  .service-diamond__face--front {
+    background: white;
+    border: 1px solid rgba(42, 43, 111, 0.1);
+    box-shadow: 0 16px 32px rgba(28, 37, 74, 0.12);
+    filter: drop-shadow(10px 5px 0 rgba(0, 0, 0, 0.8));
+  }
+    
+  .service-diamond__face--front::after {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 5px solid var(--color-primary-dark);
+    pointer-events: none;
+    border-radius: 10px;
+  }
+  .service-diamond__face--back {
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transform: rotate(45deg) rotateY(180deg);
+    box-shadow: 0 16px 32px rgba(10, 10, 10, 0.22);
+    filter: drop-shadow(-10px 5px 0 rgba(255, 255, 255, 1));
+  }
+
+  .service-diamond__face--back::after {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 5px solid var(--color-secondary-dark);
+    pointer-events: none;
+    border-radius: 10px;
+  }
+
+  .service-diamond__content {
+    width: 72%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    text-align: center;
+    transform: rotate(-45deg);
+  }
+
+  .service-diamond__icon-wrap {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .service-diamond__icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(16%) sepia(17%) saturate(2670%) hue-rotate(202deg) brightness(93%) contrast(92%);
+  }
+
+  .service-diamond__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 12ch;
+    font-family: var(--font-secondary);
+    font-size: clamp(0.88rem, 0.3vw + 0.82rem, 1rem);
+    font-weight: 650;
+    line-height: 1.25;
+    color: var(--color-primary-dark);
+  }
+
+  .service-diamond__cta {
+    font-family: var(--font-secondary);
     font-size: var(--text-md);
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
+    font-weight: 650;
+    color: var(--color-white);
+    transform: rotate(90deg)
   }
 
-  .valor-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
+  .service-diamond:focus-visible {
+    outline: none;
   }
 
-  .valor-item {
-    text-align: center;
-    padding: var(--spacing-md);
-    transition: transform 0.3s ease;
+  .service-diamond:focus-visible .service-diamond__face--front,
+  .service-diamond:focus-visible .service-diamond__face--back {
+    box-shadow:
+      0 0 0 3px rgba(109, 186, 235, 0.28),
+      0 16px 32px rgba(28, 37, 74, 0.12);
   }
 
-  .valor-item:hover {
-    transform: translateY(-8px);
-  }
+  @media (max-width: 1100px) {
+    .services-diamonds {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 2rem;
+    }
 
-  .valor-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .valor-subtitulo {
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto var(--spacing-lg);
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.7;
-    font-size: var(--text-lg);
-  }
-
-  .valor-item h3 {
-    font-weight: 700;
-    margin-bottom: var(--spacing-xs);
-    font-size: var(--text-xl);
-  }
-
-  .valor-item p {
-    font-size: var(--text-base);
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  @media (max-width: 900px) {
-    .valor-grid-3 {
-      grid-template-columns: 1fr;
+    .services-diamonds .service-diamond:nth-child(1),
+    .services-diamonds .service-diamond:nth-child(2),
+    .services-diamonds .service-diamond:nth-child(3),
+    .services-diamonds .service-diamond:nth-child(4) {
+      margin-top: 0;
+      margin-left: 0;
     }
   }
 
-  @media (max-width: 480px) {
-    .valor-grid {
+  @media (max-width: 640px) {
+    .services-diamonds {
       grid-template-columns: 1fr;
+    }
+
+    .service-diamond {
+      --diamond-size: 160px;
     }
   }
 
   /* proyectos destacados */
+  .section-featured-projects {
+    position: relative;
+  }
+
+  .section-featured-projects::before {
+    display: none;
+  }
+
   .proyectos-ht {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
     margin-bottom: var(--spacing-lg);
     flex-wrap: wrap;
     gap: var(--spacing-md);
+    position: relative;
+    z-index: 1;
+  }
+
+  .proyectos-copy {
+    max-width: 52rem;
   }
 
   .proyectos-titulo {
-    margin: -0.5rem;
-    letter-spacing: -0.5px;
-    font-size: var(--text-3xl);
-    font-weight: 600;
+    max-width: 12ch;
+    margin: 0;
+    text-shadow: 0.05em 0.1em 0 rgba(40, 40, 40, 0.60);
+  }
+  .proyectos-titulo span {
+    text-shadow: 0.05em 0.1em 0 rgba(40, 40, 40, 0.60);
+  }
+
+  @media (max-width: 768px) {
+    .section-featured-projects::before {
+      inset: 1rem 0 auto;
+      height: 180px;
+    }
+
+    .proyectos-ht {
+      align-items: start;
+    }
+
+    .proyectos-subtitulo {
+      font-size: var(--text-sm);
+      line-height: 1.7;
+    }
   }
 
   /* Clientes */
   .clientes-titulo {
-    text-align: left;
     margin-bottom: var(--spacing-lg);
-    letter-spacing: -0.5px;
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    
+    max-width: 12ch;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .section-video-bg,
-    .valor-item {
-      transition: none;
-    }
-  }
 </style>
-
-<script>
-  // Lazy load video optimizado
-  function initVideoLazyLoad() {
-    const video = document.querySelector<HTMLVideoElement>('.section-video-bg');
-    if (!video) return;
-
-    // Detectar si el usuario prefiere datos reducidos
-    const prefersReducedData = 
-      'connection' in navigator && 
-      (navigator as any).connection?.saveData === true;
-
-    // No cargar video en conexiones lentas o con ahorro de datos
-    if (prefersReducedData) {
-      console.log('Video no cargado: ahorro de datos activado');
-      return;
-    }
-
-    // Usar Intersection Observer para cargar solo cuando sea visible
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Cargar video solo cuando esté cerca del viewport
-            const sources = video.querySelectorAll('source');
-            sources.forEach(source => {
-              const src = source.getAttribute('src');
-              if (src && !source.hasAttribute('data-loaded')) {
-                source.setAttribute('data-loaded', 'true');
-              }
-            });
-
-            video.load();
-            
-            video.addEventListener('loadeddata', () => {
-              video.setAttribute('data-loaded', 'true');
-            }, { once: true });
-
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        rootMargin: '200px' // Comenzar a cargar 200px antes
-      }
-    );
-
-    observer.observe(video);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVideoLazyLoad);
-  } else {
-    initVideoLazyLoad();
-  }
-
-  document.addEventListener('astro:page-load', initVideoLazyLoad);
-</script>

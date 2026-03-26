@@ -6,7 +6,7 @@
     "scope": "Ejecución y supervisión de obras civiles y prestación de servicios asociados.",
     "status": "vigente",
     "year": 2015,
-    "certificate": "/pdf/ISO9001-2015.pdf"
+    "certificate": "/iso/pdf/ISO9001-2015.pdf"
   },
   {
     "id": "iso-14001-2015",
@@ -15,7 +15,7 @@
     "scope": "Gestión ambiental aplicada a proyectos de infraestructura, operaciones y mantenimiento.",
     "status": "vigente",
     "year": 2015,
-    "certificate": "/pdf/ISO14001-2015.pdf"
+    "certificate": "/iso/pdf/ISO14001-2015.pdf"
   },
   {
     "id": "iso-37001-2016",
@@ -24,7 +24,7 @@
     "scope": "Implementación de controles y políticas para la prevención de soborno y prácticas corruptas.",
     "status": "vigente",
     "year": 2016,
-    "certificate": "/pdf/ISO37001-2016.pdf"
+    "certificate": "/iso/pdf/ISO37001-2016.pdf"
   },
   {
     "id": "iso-45001-2018",
@@ -33,7 +33,7 @@
     "scope": "Gestión de seguridad y salud ocupacional en operaciones, obra y planta.",
     "status": "vigente",
     "year": 2018,
-    "certificate": "/pdf/ISO45001-2018.pdf"
+    "certificate": "/iso/pdf/ISO45001-2018.pdf"
   },
   {
     "id": "iso-50001-2018",
@@ -42,6 +42,6 @@
     "scope": "Gestión eficiente del consumo energético y mejora continua del desempeño energético.",
     "status": "vigente",
     "year": 2018,
-    "certificate": "/pdf/ISO50001-2018.pdf"
+    "certificate": "/iso/pdf/ISO50001-2018.pdf"
   }
 ]

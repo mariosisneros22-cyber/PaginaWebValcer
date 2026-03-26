@@ -1,48 +1,72 @@
 :root {
   /* Colores */
-  --color-primary: #323850;
-  --color-primary-dark: #0044ff;
-  --color-secondary: #79a5f5;
-  --color-text: #333;
-  --color-text-light: #666;
-  --color-text-lighter: #999;
-  --color-background: #fffffff5;
-  --color-background-2: #ffffff;
-  --color-background-light: #ffefcc;
-  --color-border: #cfcfcf;
-  
+  --color-primary: #2a2b6f;
+  --color-primary-dark: #1d1f56;
+  --color-secondary: #6dbaeb;
+  --color-secondary-dark: #4f9fd5;
+  --color-accent-soft: #d9eefb;
+  --color-accent-strong: #d4e8f8;
+  --color-text: #17191f;
+  --color-text-light: #4f5870;
+  --color-text-lighter: #77829a;
+  --color-text-soft: #607089;
+  --color-background: #fdfefe;
+  --color-background-2: #f5f9fd;
+  --color-background-light: #eaf4fb;
+  --color-surface: #ffffff;
+  --color-surface-tinted: #f0f6fc;
+  --color-surface-dark: #1f225a;
+  --color-border: #d6dfec;
+  --color-border-strong: #a9bcd6;
+  --color-black: #05070d;
+  --color-white: #ffffff;
+  --color-overlay: rgba(12, 16, 40, 0.5);
+  --color-success: #2f8f6a;
+  --color-success-soft: #e8f7f0;
+  --color-error: #c84c5c;
+  --color-error-soft: #fdecef;
+  --color-warning: #b98524;
+  --color-warning-soft: #fbf4e5;
+
   /* Espaciados responsive */
   --spacing-xs: clamp(0.5rem, 2vw, 1rem);
   --spacing-sm: clamp(1rem, 3vw, 1.5rem);
   --spacing-md: clamp(2rem, 5vw, 3rem);
   --spacing-lg: clamp(3rem, 7vw, 5rem);
   --spacing-xl: clamp(4rem, 10vw, 8rem);
-  
-  /* ✏️ TIPOGRAFÍA - AQUÍ CAMBIAS LOS TAMAÑOS */
-  --text-xs: clamp(0.7rem, 1.5vw, 0.8rem);      /* Más pequeño */
-  --text-sm: clamp(0.8rem, 2vw, 0.9rem);        /* Pequeño */
-  --text-base: clamp(0.9rem, 2.5vw, 1rem);      /* Base - reducido */
-  --text-md: clamp(0.95rem, 2.8vw, 1.1rem);
-  --text-lg: clamp(1rem, 3vw, 1.2rem);          /* Grande */
-  --text-xl: clamp(1.2rem, 4vw, 1.5rem);        /* Extra grande */
-  --text-2xl: clamp(1.5rem, 5vw, 2.5rem);       /* 2XL */
-  --text-3xl: clamp(2rem, 6vw, 3.5rem);         /* 3XL */
-  --text-4xl: clamp(2.5rem, 7vw, 4.5rem);         /* 3XL */
-  
-  /* 🎨 FUENTE - AQUÍ CAMBIAS EL TIPO DE LETRA */
+
+  /* Tipografia */
+  --text-xs: clamp(0.76rem, 0.2vw + 0.72rem, 0.84rem);
+  --text-sm: clamp(0.9rem, 0.2vw + 0.86rem, 0.98rem);
+  --text-base: clamp(1rem, 0.26vw + 0.94rem, 1.08rem);
+  --text-md: clamp(1.08rem, 0.4vw + 0.98rem, 1.2rem);
+  --text-lg: clamp(1.12rem, 0.64vw + 0.98rem, 1.28rem);
+  --text-xl: clamp(1.24rem, 0.82vw + 1.02rem, 1.56rem);
+  --text-2xl: clamp(1.48rem, 1.3vw + 1.12rem, 2.04rem);
+  --text-3xl: clamp(1.88rem, 2vw + 1.18rem, 2.82rem);
+  --text-4xl: clamp(2.24rem, 2.8vw + 1.26rem, 3.52rem);
+
+  /* Fuentes */
   --font-primary: 'Manrope', system-ui, -apple-system, sans-serif;
-  --font-secondary: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-secondary: 'Sora', 'Manrope', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Consolas', monospace;
-  
+
+  /* Ritmo tipografico */
+  --leading-tight: 1.08;
+  --leading-snug: 1.18;
+  --leading-copy: 1.75;
+  --tracking-tight: -0.035em;
+  --tracking-soft: -0.02em;
+
   /* Anchos */
   --container-width: 1250px;
   --header-height: 60px;
-  
+
   /* Sombras */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
-  
+  --shadow-sm: 0 8px 18px rgba(28, 37, 74, 0.08);
+  --shadow-md: 0 16px 32px rgba(28, 37, 74, 0.12);
+  --shadow-lg: 0 22px 48px rgba(28, 37, 74, 0.16);
+
   /* Transiciones */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;

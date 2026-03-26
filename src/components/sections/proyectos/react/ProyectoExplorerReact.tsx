@@ -258,8 +258,8 @@ export default function ProyectoExplorer({ projects }: Props) {
             paint: {
               "circle-radius": ["step", ["get", "point_count"], 16, 10, 20, 25, 26, 50, 32],
               "circle-stroke-width": 2,
-              "circle-stroke-color": "#fff",
-              "circle-color": "#111",
+              "circle-stroke-color": "#ffffff",
+              "circle-color": "#2a2b6f",
             },
           });
         }
@@ -275,7 +275,7 @@ export default function ProyectoExplorer({ projects }: Props) {
               "text-field": "{point_count_abbreviated}",
               "text-size": 12,
             },
-            paint: { "text-color": "#fff" },
+            paint: { "text-color": "#ffffff" },
           });
         }
 
@@ -288,9 +288,9 @@ export default function ProyectoExplorer({ projects }: Props) {
             filter: ["!", ["has", "point_count"]],
             paint: {
               "circle-radius": 7,
-              "circle-color": "#111",
+              "circle-color": "#2a2b6f",
               "circle-stroke-width": 2,
-              "circle-stroke-color": "#fff",
+              "circle-stroke-color": "#ffffff",
             },
           });
         }

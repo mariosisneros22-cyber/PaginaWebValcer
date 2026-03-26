@@ -2,10 +2,7 @@
 type TextBlock = { title: string; body: string };
 
 type Props = {
-  title?: string;        // título del bloque (opcional)
-  manifesto?: string;    // frase fuerte (opcional)
 
-  // Labels cortos (no genéricos)
   leftTag?: string;      // ej: "Propósito" o "Hoy"
   rightTag?: string;     // ej: "Rumbo" o "Futuro"
 
@@ -14,164 +11,187 @@ type Props = {
 };
 
 const {
-  title = "Propósito y rumbo",
-  manifesto = "Construimos infraestructura con seguridad y rigor técnico, para generar confianza hoy y desarrollo mañana.",
-
-  leftTag = "Propósito",
-  rightTag = "Rumbo",
+  leftTag = "MISION",
+  rightTag = "VISION",
 
   mission,
   vision,
 } = Astro.props;
 ---
 
-<section class="section">
-  <div class="container mvx" data-mv>
-    <header class="mvx__header" data-reveal style="--d:0ms">
-      <h2 class="mvx__title">{title}</h2>
+<section class="section-3">
+  <div class="container mvx">
+    <div class="mvx-grid">
 
-      {manifesto ? (
-        <p class="mvx__manifesto" aria-label="Declaración">
-          {manifesto}
-        </p>
-      ) : null}
-    </header>
+      <div class="mvx-main-title">
+        <span class="mvx-main-title__part">NUESTRO</span>
+        <span class="mvx-main-title__part mvx-main-title__part--accent">PROPOSITO</span>
+      </div>
 
-    <div class="mvx__cols" role="group" aria-label="Propósito y rumbo">
-      <article class="mvx__block" data-reveal style="--d:140ms" aria-labelledby="mvx-left-tag">
-        <p class="mvx__tag" id="mvx-left-tag">{leftTag}</p>
-        <h3 class="mvx__label">{mission.title}</h3>
-        <p class="mvx__text">{mission.body}</p>
-      </article>
+      <div class="mvx-side-label mvx-side-label--mission">
+        {leftTag}
+      </div>
 
-      <article class="mvx__block" data-reveal style="--d:240ms" aria-labelledby="mvx-right-tag">
-        <p class="mvx__tag" id="mvx-right-tag">{rightTag}</p>
-        <h3 class="mvx__label">{vision.title}</h3>
-        <p class="mvx__text">{vision.body}</p>
-      </article>
+      <div class="mvx-content mvx-content--mission">
+        <h3 class="mvx-label">{mission.title}</h3>
+        <p class="mvx-text">{mission.body}</p>
+      </div>
+
+      <div class="mvx-content mvx-content--vision">
+        <h3 class="mvx-label">{vision.title}</h3>
+        <p class="mvx-text">{vision.body}</p>
+      </div>
+
+      <div class="mvx-side-label mvx-side-label--vision">
+        {rightTag}
+      </div>
+
     </div>
   </div>
 </section>
 
 <style>
-  .mvx{
-    /* reveal */
-    --reveal-duration: 1100ms;
-    --reveal-ease: cubic-bezier(.22, 1, .36, 1);
-    --reveal-distance: 12px;
-  }
-
-  /* Header centrado */
-  .mvx__header{
-    text-align: center;
-    max-width: 72ch;
-    margin: 0 auto 1.75rem;
-    padding-bottom: 5rem;
-  }
-
-  .mvx__title{
-    margin: 0;
-    font-weight: 700;
-    font-size: var(--text-3xl);
-  }
-
-  .mvx__manifesto{
-    margin: .9rem auto 0;
-    font-size: clamp(1.15rem, 1.4vw, 1.55rem);
-    line-height: 1.35;
-    letter-spacing: .01em;
-  }
-
-  /* Dos columnas sin separadores */
-  .mvx__cols{
-    max-width: 1100px;
-    margin: 0 auto;
-
+  .mvx-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2.5rem, 5vw, 6rem);
-    align-items: start;
+    grid-template-columns: 120px 80px minmax(0, 1fr);
+    grid-template-rows: minmax(220px, 1fr) minmax(220px, 1fr);
+    gap: 1.5rem;
+    align-items: stretch;
   }
 
-  .mvx__block{
-    text-align: center;
-    padding: 1rem;
-
+  .mvx-main-title {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
   }
 
-  .mvx__tag{
-    margin: 0 0 .35rem;
-    font-size: .82rem;
-    letter-spacing: .14em;
+  .mvx-main-title__part {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    margin: 0;
     text-transform: uppercase;
-    opacity: .65;
+    font-size: var(--text-3xl);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    font-weight: 800;
+    color: var(--color-primary);
+    -webkit-text-stroke: 1px var(--color-primary);
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.1em 0 rgba(95, 95, 95, 0.6);
+    text-align: center;
   }
 
-  .mvx__label{
-    margin: 0 0 .85rem;
-    font-weight: 650;
-    letter-spacing: .02em;
-    font-size: var(--text-xl);
-    line-height: 1.25;
+  .mvx-main-title__part--accent {
+    color: var(--color-secondary);
+    -webkit-text-stroke: 1px var(--color-secondary);
   }
 
-  .mvx__text{
-    margin: 0 auto;
-    max-width: 52ch;
-    line-height: 2.5;
-    white-space: pre-line;
+  .mvx-side-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    text-align: center;
+
+    margin: 0;
+    text-transform: uppercase;
     font-size: var(--text-md);
-    opacity: .92;
+    line-height: 0.9;
+    letter-spacing: 0.08em;
+    font-weight: 900;
 
+    color: var(--color-primary);
+    -webkit-text-stroke: 0.8px var(--color-primary);
+    paint-order: stroke fill;
+    text-shadow: 0.04em 0.08em 0 rgba(255, 255, 255, 0.6);
+
+    opacity: 1;
   }
 
-  /* Reveal */
-  @media (prefers-reduced-motion: no-preference){
-    [data-mv] [data-reveal]{
-      opacity: 0;
-      transform: translateY(var(--reveal-distance));
-      transition:
-        opacity var(--reveal-duration) var(--reveal-ease),
-        transform var(--reveal-duration) var(--reveal-ease);
-      transition-delay: var(--d, 0ms);
-      will-change: opacity, transform;
-    }
-
-    [data-mv].is-reveal [data-reveal]{
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .mvx-side-label--mission {
+    grid-column: 2;
+    grid-row: 1;
   }
 
-  @media (max-width: 900px){
-    .mvx__cols{
+  .mvx-content--mission {
+    grid-column: 3 / 5;
+    grid-row: 1;
+  }
+
+  .mvx-content--vision {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+
+  .mvx-side-label--vision {
+    grid-column: 4;
+    grid-row: 2;
+  }
+
+  .mvx-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .mvx-content--vision {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .mvx-content--mission {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .mvx-label {
+    margin: 0 0 0.5rem;
+  }
+
+  .mvx-text {
+    margin: 0;
+    line-height: 1.85;
+    font-size: clamp(1rem, 0.643rem + 0.952vw, 1.5rem);
+    max-width: 62ch;
+  }
+
+  @media (max-width: 900px) {
+    .mvx-grid {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      grid-template-rows: auto;
+    }
+
+    .mvx-main-title,
+    .mvx-side-label--mission,
+    .mvx-side-label--vision,
+    .mvx-content--mission,
+    .mvx-content--vision {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .mvx-main-title {
+      justify-content: flex-start;
+      gap: 0.4rem;
+    }
+
+    .mvx-main-title__part,
+    .mvx-side-label {
+      writing-mode: initial;
+      text-orientation: initial;
+    }
+
+    .mvx-content--mission,
+    .mvx-content--vision {
+      text-align: left;
+      align-items: flex-start;
     }
   }
 </style>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const root = document.querySelector("[data-mv]");
-    if (!root) return;
-
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    if (reduced) {
-      root.classList.add("is-reveal");
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          obs.disconnect();
-          requestAnimationFrame(() => root.classList.add("is-reveal"));
-        }
-      },
-      { threshold: 0.25, rootMargin: "-10% 0px -10% 0px" }
-    );
-
-    obs.observe(root);
-  });
-</script>

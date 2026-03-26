@@ -4,10 +4,11 @@ export const prerender = true;
 import MiniMapProyecto from "../../components/sections/proyectos/react/MiniMapProyecto.tsx"
 import Layout from "../../layouts/Layout.astro";
 import { Image , getImage} from "astro:assets";
-import type { ImageMetadata } from "astro";
+import proyectoHero from "../../assets/images/proyecto/proyectoHero.jpg";
 
 import proyectos from "../../data/proyectos.json";
-import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel, formatSimpleLabel } from "../../lib/projects";
+import { isVisibleProject, assertValidProjects, estadoToKey, formatEstadoLabel, formatMonto, formatSimpleLabel, getUniqueProjectsBySlug } from "../../lib/projects";
+import { getProjectImageFromPath } from "../../utils/proyectoImages";
 
 import RelatedProyecto from "../../components/sections/proyectos/astro/RelatedProyecto.astro";
 
@@ -15,7 +16,7 @@ import ProyectoGallery from "../../components/sections/proyectos/react/ProyectoG
 
 
 export function getStaticPaths() {
-  return proyectos.filter(isVisibleProject).map((p) => ({ params: { slug: p.slug } }));
+  return getUniqueProjectsBySlug(proyectos.filter(isVisibleProject)).map((p) => ({ params: { slug: p.slug } }));
 }
 assertValidProjects(proyectos);
 
@@ -30,26 +31,13 @@ if (!proyecto || !isVisibleProject(proyecto)) {
 
 
 const estadoKey = estadoToKey(proyecto.estado);
-
-type ImgModule = { default: ImageMetadata };
-
-const imgs = import.meta.glob<ImgModule>(
-  "../../assets/images/proyecto/**/*.{png,jpg,jpeg,webp,avif}",
-  { eager: true }
-);
-
-function resolveImg(relPath: string): ImageMetadata {
-  const key = `../../assets/images/proyecto/${relPath}`;
-  const mod = imgs[key];
-  if (!mod) throw new Error(`Imagen no encontrada: ${key}`);
-  return mod.default;
-}
-
-const portada = resolveImg(proyecto.portada);
+const portada = getProjectImageFromPath(proyecto.portada) ?? proyectoHero;
 
 const galeria = await Promise.all(
-  (proyecto.galeria ?? []).map(async (g) => {
-    const srcMeta = resolveImg(g.src);
+  (proyecto.galeria ?? [])
+    .filter((g) => !!getProjectImageFromPath(g.src))
+    .map(async (g) => {
+    const srcMeta = getProjectImageFromPath(g.src)!;
     const alt = g.alt ?? proyecto.nombre;
 
     // Thumb real para la columna de miniaturas
@@ -100,7 +88,10 @@ const title = `Valcer - ${proyecto.nombre}`;
 
 <Layout title={title} heroTitle={proyecto.nombre} heroImage={portada}>
   <section class="proyecto-container">
-    <a class="proyecto-back" href={`/proyectos${backQuery}`} data-proyectos-back>Volver a proyectos</a>
+    <a class="proyecto-back" href={`/proyectos${backQuery}`} data-proyectos-back>
+      <img src="/icons/back-button.svg" alt="" aria-hidden="true" />
+      <span>Volver a proyectos</span>
+    </a>
 
     {/* MAPA FULL */}
     <section class="proyecto-mapwide">
@@ -151,6 +142,13 @@ const title = `Valcer - ${proyecto.nombre}`;
             <span class="tech-label">Fin</span>
             <span class="tech-value">
               {proyecto.fecha_fin ?? "En ejecución"}
+            </span>
+          </div>
+
+          <div class="tech-item">
+            <span class="tech-label">Monto</span>
+            <span class="tech-value">
+              {typeof proyecto.monto === "number" ? formatMonto(proyecto.monto) : "No disponible"}
             </span>
           </div>
 
@@ -209,18 +207,18 @@ const title = `Valcer - ${proyecto.nombre}`;
     padding:8px 14px;
 
     border-radius: 999px;
-    background: rgba(236, 236, 236, 0.05);
+    background: rgba(109, 186, 235, 0.08);
 
     font-size: var(--text-sm);
     font-weight:500;
     text-decoration:none;
-    color:#111;
+    color: var(--color-primary);
 
     transition: background .2s ease, transform .2s ease;
   }
 
   .proyecto-back:hover{
-    background: rgba(0,0,0,.1);
+    background: rgba(109, 186, 235, .16);
     transform: translateX(-2px);
   }
 
@@ -229,6 +227,31 @@ const title = `Valcer - ${proyecto.nombre}`;
     font-size: var(--text-sm);
     opacity: .8;
   }
+  .proyecto-back{
+    gap:6px;
+    padding:4px 0;
+    border-radius:0;
+    background:transparent;
+    transition: transform .2s ease, opacity .2s ease;
+    color: var(--color-text-light);
+  }
+
+  .proyecto-back:hover{
+    background:transparent;
+    opacity:.86;
+  }
+
+  .proyecto-back::before{
+    content:none;
+  }
+
+  .proyecto-back img{
+    width: 0.95em;
+    height: 0.95em;
+    flex:0 0 auto;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(15%) saturate(589%) hue-rotate(182deg) brightness(93%) contrast(89%);
+  }
+
   .proyecto-fotos{
     margin-top: 28px;
   }
@@ -236,7 +259,7 @@ const title = `Valcer - ${proyecto.nombre}`;
   .proyecto-related{
     margin-top: 32px;
     padding-top: 28px;
-    border-top: 1px solid rgba(0,0,0,.08);
+    border-top: 1px solid rgba(42, 43, 111, .08);
   }
   .proyecto-mapwide { margin: 14px 0 18px; }
 
@@ -270,8 +293,9 @@ const title = `Valcer - ${proyecto.nombre}`;
   .proyecto-tech,
   .proyecto-resumen{
     padding: 22px;
-    border: 1px solid rgba(0,0,0,.08);
+    border: 1px solid rgba(42, 43, 111, .08);
     border-radius: 14px;
+    background: rgba(255, 255, 255, .86);
 
   }
 
@@ -346,8 +370,8 @@ const title = `Valcer - ${proyecto.nombre}`;
     justify-content:center;
     height: 260px;
     border-radius: 12px;
-    background: rgba(0,0,0,.04);
-    border: 1px dashed rgba(0,0,0,.18);
+    background: rgba(109, 186, 235, .08);
+    border: 1px dashed rgba(42, 43, 111, .18);
     font-size: var(--text-sm);
   }
 

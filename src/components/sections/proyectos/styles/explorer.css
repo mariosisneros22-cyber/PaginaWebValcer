@@ -49,9 +49,9 @@
 }
 
 .clearBtn{
-  border: 1px solid rgba(220, 38, 38, .35);
-  background: rgba(220, 38, 38, .10);
-  color: rgb(185, 28, 28);
+  border: 1px solid rgba(200, 76, 92, .28);
+  background: rgba(200, 76, 92, .1);
+  color: var(--color-error);
   border-radius: 10px;
   padding: 10px 14px;
   cursor: pointer;
@@ -64,11 +64,11 @@
 .filtersBar select,
 .filtersBar input{
   width: 100%;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(42, 43, 111, .12);
   border-radius: 5px;
   padding: 10px 10px;
   font-size: .95rem;
-  background: white;
+  background: rgba(255, 255, 255, .92);
 }
 
 
@@ -98,8 +98,8 @@
 
 
 .empty {
-  border: 1px dashed rgba(0,0,0,.18);
-  border-radius: 5px;
+  border: 1px dashed rgba(42, 43, 111, .18);
+  border-radius: 10px;
   padding: 18px;
   opacity: .9;
 }
@@ -119,8 +119,8 @@
   gap:8px;
   padding:6px 10px;
   border-radius:999px;
-  border:1px solid rgba(0,0,0,.12);
-  background: rgba(255,255,255,.7);
+  border:1px solid rgba(42, 43, 111, .12);
+  background: rgba(255,255,255,.82);
   font-size:.85rem;
   cursor:pointer;
 }
@@ -128,10 +128,10 @@
 .clearBig{
   display:inline-flex;
   margin-top:10px;
-  border:1px solid rgba(0,0,0,.12);
+  border:1px solid rgba(42, 43, 111, .12);
   padding:10px 14px;
   border-radius:5px;
-  background:white;
+  background: rgba(255, 255, 255, .92);
   cursor:pointer;
   width: fit-content;
 }
@@ -141,9 +141,9 @@
 }
 
 .loadMoreBtn{
-  border: 1px solid rgba(0,0,0,.14);
-  background: #fff;
-  color: #111;
+  border: 1px solid rgba(42, 43, 111, .14);
+  background: var(--color-white);
+  color: var(--color-primary);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: var(--text-sm);
@@ -188,7 +188,7 @@
     z-index: 40;
     background: var(--color-background);
     padding-top: 6px;
-    border-bottom: 1px solid rgba(0,0,0,.08);
+    border-bottom: 1px solid rgba(42, 43, 111, .08);
   }
 
   .quickFilters{
@@ -205,10 +205,10 @@
   }
 
   .quickChip{
-    border: 1px solid rgba(0,0,0,.12);
+    border: 1px solid rgba(42, 43, 111, .12);
     border-radius: 999px;
-    background: #fff;
-    color: #111;
+    background: var(--color-white);
+    color: var(--color-primary);
     padding: 8px 12px;
     font-size: var(--text-sm);
     white-space: nowrap;
@@ -216,9 +216,9 @@
   }
 
   .quickChip.is-active{
-    background: #111;
-    color: #fff;
-    border-color: #111;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
   }
 
   .loadMoreWrap{

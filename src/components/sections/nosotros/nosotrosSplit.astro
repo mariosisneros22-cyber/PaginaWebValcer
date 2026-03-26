@@ -1,39 +1,23 @@
 ---
+import type { ImageMetadata } from "astro";
 import Diagonal from './diagonal.astro';
 
-type Img = { src: string; alt?: string };
-
 interface Props {
-  title: string;
-  lead?: string;
-  paragraphs: string[];
-  images: Img[];
+  images: ImageMetadata[];
 }
 
-const { title, lead, paragraphs, images } = Astro.props;
-const imgs = (images ?? []).slice(0, 4);
+const { images } = Astro.props;
+const imgs = (images ?? []).slice(0, 4).map((img, i) => ({
+  src: img,
+  alt: `Imagen ${i + 1}`
+}));
 ---
 
 <section class="section section-who">
   <div class="container who-wrap">
-
-    <!-- Fila superior: 2 columnas -->
-    <div class="who-top">
-      <div class="who-top__left">
-        {paragraphs.map((p) => <p>{p}</p>)}
-      </div>
-
-      <div class="who-top__right">
-        <h2>{title}</h2>
-        {lead ? <p class="who-lead">{lead}</p> : null}
-      </div>
-    </div>
-
-    <!-- Fila inferior: imágenes a todo el ancho -->
     <div class="who-bottom">
       <Diagonal images={imgs} ratio="16/9" />
     </div>
-
   </div>
 </section>
 
@@ -51,8 +35,12 @@ const imgs = (images ?? []).slice(0, 4);
     align-items: start;
   }
   .who-top__left{
+    padding: clamp(1.3rem, 2vw, 2rem);
     font-size: var(--text-lg);
-    margin-top: 1rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
   .who-top__left,
   .who-top__right{
@@ -65,22 +53,22 @@ const imgs = (images ?? []).slice(0, 4);
   }
   /* Tipografía */
   .who-top__right h2{
-    font-size: var(--text-3xl);
     margin: 0 0 12px;
-    font-weight: 700;
+    margin-left: auto;
   }
 
   .who-lead{
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     line-height: 1.6;
-    color: var(--color-text-light);
+    color: var(--color-primary-dark);
     margin: 0;
     max-width: 40ch;
+    margin-left: auto;
   }
 
   .who-top__left p{
     margin: 0 0 12px;
-    line-height: 1.7;
+    line-height: 1.85;
     max-width: 75ch;
   }
 
@@ -97,6 +85,12 @@ const imgs = (images ?? []).slice(0, 4);
 
     /* si quieres que el título vaya primero en móvil */
     .who-top__right{ order: -1; }
+    .who-top__right,
+    .who-lead,
+    .who-top__right h2{
+      text-align: left;
+      margin-left: 0;
+    }
   }
 
 

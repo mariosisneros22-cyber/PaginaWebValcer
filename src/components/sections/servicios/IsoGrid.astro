@@ -5,57 +5,81 @@ type IsoItem = {
   id: string;
   number: string;
   title: string;
-  scope: string;
+  scope?: string;
   status?: "vigente" | "en_proceso";
   year?: number;
   certificate?: string | null;
 };
 
 const iso = isoRaw as IsoItem[];
+
+const getPreviewFromCertificate = (certificate?: string | null) =>
+  certificate
+    ? certificate
+        .replace("/iso/pdf/", "/iso/webp/")
+        .replace(/\.pdf$/i, ".webp")
+    : null;
+
+const getStatusLabel = (status?: "vigente" | "en_proceso") => {
+  if (status === "vigente") return "Vigente";
+  if (status === "en_proceso") return "En proceso";
+  return "";
+};
 ---
 
-<section class="section" id="iso">
+<section class="section-3 iso-section" id="iso">
   <div class="container">
     <header class="iso-head">
       <h2>Certificaciones ISO</h2>
-      <p class="iso-lead">
-        Estándares internacionales que respaldan nuestros procesos, seguridad operativa y gestión.
-      </p>
     </header>
 
     <div class="iso-grid" role="list">
-      {iso.map((item) => (
-        <article class="iso-card" role="listitem" aria-label={`ISO ${item.number}`}>
-          <div class="iso-top">
-            <div class="iso-label">
-              <span class="iso-label__text">ISO</span>
-              <span class="iso-number">{item.number}</span>
-            </div>
+      {iso.map((item) => {
+        const previewSrc = getPreviewFromCertificate(item.certificate);
+        const statusLabel = getStatusLabel(item.status);
 
-            {item.status && (
-              <span class={`iso-badge iso-badge--${item.status}`}>
-                {item.status === "vigente" ? "Vigente" : "En proceso"}
-              </span>
-            )}
-          </div>
-
-          <div class="iso-body">
-            <h3 class="iso-title">{item.title}</h3>
-            <p class="iso-scope">{item.scope}</p>
-            {typeof item.year === "number" && <p class="iso-year">Año: {item.year}</p>}
-          </div>
-
-          <div class="iso-foot">
-            {item.certificate ? (
-              <a class="iso-link" href={item.certificate} target="_blank" rel="noopener">
-                Ver certificado
+        return (
+          <article class="iso-item" role="listitem" aria-label={`ISO ${item.number}`}>
+            {previewSrc && (
+              <a
+                class="iso-thumb-link"
+                href={item.certificate ?? "#"}
+                target="_blank"
+                rel="noopener"
+                aria-label={`Abrir certificado ISO ${item.number}`}
+              >
+                <img
+                  class="iso-thumb"
+                  src={previewSrc}
+                  alt={`Vista previa del certificado ISO ${item.number}`}
+                  loading="lazy"
+                  decoding="async"
+                />
               </a>
-            ) : (
-              <span class="iso-muted">Certificado disponible a solicitud</span>
             )}
-          </div>
-        </article>
-      ))}
+
+            <div class="iso-text">
+              {item.certificate ? (
+                <a
+                  class="iso-number"
+                  href={item.certificate}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`Abrir certificado ISO ${item.number}`}
+                >
+                  {item.number}
+                </a>
+              ) : (
+                <span class="iso-number">{item.number}</span>
+              )}
+
+              <h3 class="iso-title">{item.title}</h3>
+
+              {statusLabel && <p class="iso-status">{statusLabel}</p>}
+            </div>
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>

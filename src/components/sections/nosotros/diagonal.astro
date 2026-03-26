@@ -1,5 +1,7 @@
 ---
-type Img = { src: string; alt?: string };
+import { Image } from "astro:assets";
+
+type Img = { src: ImageMetadata; alt?: string };
 
 interface Props {
   images: Img[];
@@ -10,75 +12,76 @@ const { images, ratio = "16 / 7" } = Astro.props as Props;
 const imgs = (images ?? []).slice(0, 4);
 ---
 
-<div class="diag-lamellas" style={`--ratio:${ratio};`} data-lamellas>
+<div class="diag-lamellas" style={`--ratio:${ratio};`}>
   {imgs.map((img, i) => (
     <button
       type="button"
-      class={`lamella ${i === 0 ? "is-active" : ""}`}
-      style={`background-image:url('${img.src}')`}
+      class="lamella"
       aria-label={img.alt ?? `Imagen ${i + 1}`}
-    />
+    >
+      <Image
+        src={img.src}
+        alt={img.alt ?? `Imagen ${i + 1}`}
+        loading={i === 0 ? "eager" : "lazy"}
+        decoding="async"
+        widths={[480, 720, 960, 1280]}
+        sizes="(max-width: 768px) 50vw, 25vw"
+        quality={72}
+      />
+    </button>
   ))}
 </div>
 
 <style>
-  .diag-lamellas{
-    /* controla proporción */
-    aspect-ratio: var(--ratio, 16 / 7);   /* ✅ ajusta aquí */
-    height: auto;
+  .diag-lamellas {
+    aspect-ratio: var(--ratio, 16 / 7);
     width: 100%;
-
-    /* ✅ sin borde ni fondo */
-    border: 0;
-    background: transparent;
-    border-radius: 0;
-
-    /* si quieres que los cortes no se salgan */
-    overflow: hidden;
-
+    height: auto;
     display: flex;
+    gap: 12px;
+    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
   }
 
-
-  .lamella{
+  .lamella {
     flex: 1 1 0;
+    position: relative;
     border: 0;
     padding: 0;
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-
+    overflow: hidden;
     cursor: pointer;
-
-    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-
-    transition: flex .35s cubic-bezier(.4,0,.2,1), filter .25s ease;
-    filter: saturate(.9) contrast(.95) brightness(.95);
+    border-radius: 10px;
+    background: transparent;
+    transition: flex 0.35s cubic-bezier(.4, 0, .2, 1), filter 0.25s ease, transform 0.25s ease;
+    filter: saturate(.92) contrast(.96) brightness(.96);
   }
 
-  .lamella + .lamella{
-    box-shadow: inset 1px 0 0 rgba(255,255,255,.25);
+  .lamella :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  .diag-lamellas:hover .lamella{
-    flex: 0.8 1 0;
-    filter: saturate(.8) brightness(.85);
+  .diag-lamellas:hover .lamella {
+    flex: 0.05 1 0; 
+    filter: saturate(.82) brightness(.86);
   }
 
-  .diag-lamellas:hover .lamella:hover,
-  .lamella.is-active{
-    flex: 2.2 1 0;
+  .diag-lamellas:hover .lamella:hover {
+    flex: 0.85 1 0; 
     filter: saturate(1) contrast(1) brightness(1);
   }
-
-  .lamella:focus-visible{
+  
+  .lamella:focus-visible {
     outline: 0;
-    box-shadow: inset 0 0 0 3px rgba(44,118,255,.35);
+    box-shadow: inset 0 0 0 3px rgba(109, 186, 235, 0.42);
   }
 
-  @media (max-width: 768px){
-    .diag-lamellas{
+  @media (max-width: 768px) {
+    .diag-lamellas {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -86,29 +89,9 @@ const imgs = (images ?? []).slice(0, 4);
       overflow: visible;
     }
 
-    .lamella{
-      aspect-ratio: 4/3;
-      clip-path: none;
-      border-radius: 10px; /* opcional */
+    .lamella {
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
     }
   }
 </style>
-
-<script>
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll<HTMLElement>('[data-lamellas]').forEach((root) => {
-      const items = root.querySelectorAll<HTMLButtonElement>('.lamella');
-      if (!items.length) return;
-
-      const setActive = (el: HTMLButtonElement) => {
-        items.forEach((x) => x.classList.remove('is-active'));
-        el.classList.add('is-active');
-      };
-
-      items.forEach((el) => {
-        el.addEventListener('click', () => setActive(el));
-        el.addEventListener('focus', () => setActive(el));
-      });
-    });
-  });
-</script>

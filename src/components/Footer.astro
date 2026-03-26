@@ -34,7 +34,7 @@ const year = new Date().getFullYear();
           estandares de calidad y seguridad.
         </p>
         <ul class="footer-kpis" aria-label="Indicadores">
-          <li><strong>{totalProyectos}+</strong> proyectos</li>
+          <li><strong>{totalProyectos - 5}+ </strong> proyectos</li>
           <li><strong>{servicios.length}</strong> lineas de servicio</li>
         </ul>
       </section>
@@ -45,6 +45,7 @@ const year = new Date().getFullYear();
           <li><a href="/">Inicio</a></li>
           <li><a href="/proyectos">Proyectos</a></li>
           <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/equipos">Equipos</a></li>
           <li><a href="/nosotros">Nosotros</a></li>
           <li><a href="/contacto">Contacto</a></li>
         </ul>
@@ -106,7 +107,9 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background: var(--color-primary);
+    background:
+      radial-gradient(circle at top right, rgba(109, 186, 235, 0.18), transparent 28%),
+      linear-gradient(135deg, #22245d 0%, #2a2b6f 58%, #1c1f52 100%);
     color: #fff;
     padding: var(--spacing-lg) 0 var(--spacing-sm);
     margin-top: var(--spacing-lg);
@@ -119,8 +122,8 @@ const year = new Date().getFullYear();
     gap: var(--spacing-sm);
     padding: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
-    background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
-    border: 1px solid rgba(255,255,255,.2);
+    background: linear-gradient(135deg, rgba(109, 186, 235, .18), rgba(255,255,255,.06));
+    border: 1px solid rgba(255,255,255,.18);
     border-radius: 14px;
   }
 
@@ -141,7 +144,7 @@ const year = new Date().getFullYear();
     align-items: center;
     justify-content: center;
     padding: .7rem 1.1rem;
-    background: #fff;
+    background: var(--color-secondary);
     color: var(--color-primary);
     border-radius: 10px;
     font-weight: 700;
@@ -150,7 +153,7 @@ const year = new Date().getFullYear();
   }
 
   .btn-footer:hover {
-    opacity: .92;
+    background: #92cdf2;
   }
 
   .footer-grid {
@@ -177,7 +180,7 @@ const year = new Date().getFullYear();
     width: 36px;
     height: 2px;
     margin-top: .45rem;
-    background: rgba(255,255,255,.45);
+    background: rgba(109, 186, 235, .85);
   }
 
   .footer-col p,
